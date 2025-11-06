@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <meta name="description" content="Autoregistro - Sistema de Reservas">
+    <title>Autoregistro - Sistema de Reservas</title>
+    <link rel="manifest" href="/manifest.json">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #667eea;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-error {
+            background: #fee;
+            color: #c33;
+            border: 1px solid #fcc;
+        }
+
+        .alert-success {
+            background: #efe;
+            color: #3c3;
+            border: 1px solid #cfc;
+        }
+
+        .alert-info {
+            background: #e7f3ff;
+            color: #0066cc;
+            border: 1px solid #b3d9ff;
+        }
+
+        .loader {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .loader.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .evento-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+        }
+
+        .evento-info h3 {
+            color: #667eea;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .evento-info p {
+            color: #666;
+            font-size: 14px;
+            margin: 3px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>🎫 Autoregistro</h1>
+            <p>Sistema de Reservas y Control</p>
+        </div>
+
+        <!-- Información del evento (si aplica) -->
+        <div id="eventoInfo" class="evento-info" style="display: none;">
+            <h3>📅 Registro para evento</h3>
+            <p id="eventoDetalle">Cargando información...</p>
+        </div>
+
+        <!-- Alertas -->
+        <div id="alert" class="alert"></div>
+
+        <!-- Formulario -->
+        <form id="registroForm">
+            <div class="form-group">
+                <label for="nsa">NSA (Número de Servicio Activo)</label>
+                <input 
+                    type="text" 
+                    id="nsa" 
+                    name="nsa" 
+                    placeholder="Ingrese su NSA"
+                    autocomplete="off"
+                >
+                <p class="help-text">Si no tiene NSA, ingrese su DNI abajo</p>
+            </div>
+
+            <div class="form-group">
+                <label for="dni">DNI (Documento Nacional de Identidad)</label>
+                <input 
+                    type="text" 
+                    id="dni" 
+                    name="dni" 
+                    placeholder="Ingrese su DNI"
+                    autocomplete="off"
+                >
+                <p class="help-text">Debe ingresar al menos NSA o DNI</p>
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn">
+                Registrarse
+            </button>
+
+            <div class="loader" id="loader">
+                <div class="spinner"></div>
+                <p style="margin-top: 10px; color: #666;">Procesando registro...</p>
+            </div>
+        </form>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Elementos del DOM
+        const form = document.getElementById('registroForm');
+        const nsaInput = document.getElementById('nsa');
+        const dniInput = document.getElementById('dni');
+        const submitBtn = document.getElementById('submitBtn');
+        const loader = document.getElementById('loader');
+        const alertBox = document.getElementById('alert');
+        const eventoInfo = document.getElementById('eventoInfo');
+        const eventoDetalle = document.getElementById('eventoDetalle');
+
+        // Variables globales
+        let idEvento = null;
+
+        // Función para mostrar alertas
+        function mostrarAlerta(mensaje, tipo = 'error') {
+            alertBox.textContent = mensaje;
+            alertBox.className = `alert alert-${tipo} show`;
+            
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 5000);
+        }
+
+        // Función para obtener parámetros de la URL
+        function obtenerParametroURL(nombre) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(nombre);
+        }
+
+        // Inicializar página
+        function inicializar() {
+            // Verificar si ya está autenticado
+            auth.redirectIfAuthenticated();
+
+            // Detectar evento en URL
+            idEvento = obtenerParametroURL('evento');
+            
+            if (idEvento) {
+                eventoInfo.style.display = 'block';
+                eventoDetalle.textContent = `Se está registrando para un evento específico`;
+                console.log('📅 Detectado evento:', idEvento);
+            } else {
+                console.log('ℹ️ Registro sin evento (personal local)');
+            }
+        }
+
+        // Manejar envío del formulario
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nsa = nsaInput.value.trim();
+            const dni = dniInput.value.trim();
+
+            // Validación básica
+            if (!nsa && !dni) {
+                mostrarAlerta('Debe ingresar al menos NSA o DNI', 'error');
+                return;
+            }
+
+            // Deshabilitar formulario
+            submitBtn.disabled = true;
+            loader.classList.add('show');
+            alertBox.classList.remove('show');
+
+            try {
+                // Llamar a la edge function
+                const response = await fetch(CONFIG.getEndpointURL('REGISTRO'), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': CONFIG.SUPABASE_ANON_KEY
+                    },
+                    body: JSON.stringify({
+                        nsa: nsa || null,
+                        dni: dni || null,
+                        id_evento: idEvento || null
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok || !result.success) {
+                    throw new Error(result.error || 'Error en el registro');
+                }
+
+                console.log('✅ Registro exitoso:', result.data);
+
+                // Guardar datos usando AuthGuard
+                auth.saveUserData(result.data);
+
+                // Mostrar éxito
+                mostrarAlerta(
+                    `¡Registro exitoso! Bienvenido/a ${result.data.nombre}`,
+                    'success'
+                );
+
+                // Redirigir después de 2 segundos
+                setTimeout(() => {
+                    window.location.href = CONFIG.ROUTES.HOME;
+                }, 2000);
+
+            } catch (error) {
+                console.error('❌ Error en registro:', error);
+                mostrarAlerta(error.message, 'error');
+                
+                // Re-habilitar formulario
+                submitBtn.disabled = false;
+                loader.classList.remove('show');
+            }
+        });
+
+        // Limpiar espacios al escribir
+        nsaInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.trim().toUpperCase();
+        });
+
+        dniInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.trim();
+        });
+
+        // Inicializar al cargar la página
+        inicializar();
+    </script>
+</body>
+</html>
