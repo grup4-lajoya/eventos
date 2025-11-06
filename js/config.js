@@ -12,9 +12,9 @@ const CONFIG = {
     
     // Rutas de la app
     ROUTES: {
-        REGISTRO: 'registro.html',
-        HOME: 'index.html',
-        RESERVAS: 'reservas.html' // Próximamente
+        REGISTRO: '/eventos/registro.html',
+        HOME: '/eventos/index.html',
+        RESERVAS: '/eventos/reservas.html'
     },
     
     // LocalStorage keys
