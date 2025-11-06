@@ -235,8 +235,8 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/config.js"></script>
-    <script src="js/auth.js"></script>
+    <script src="/eventos/js/config.js"></script>
+    <script src="/eventos/js/auth.js"></script>
     <script>
         // Elementos del DOM
         const form = document.getElementById('registroForm');
@@ -267,12 +267,66 @@
             return urlParams.get(nombre);
         }
 
+        // Generar device fingerprint
+        async function generarDeviceFingerprint() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.textBaseline = 'top';
+            ctx.font = '14px Arial';
+            ctx.fillText('fingerprint', 2, 2);
+            
+            const fingerprint = {
+                canvas: canvas.toDataURL(),
+                userAgent: navigator.userAgent,
+                language: navigator.language,
+                platform: navigator.platform,
+                screen: `${screen.width}x${screen.height}x${screen.colorDepth}`,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                plugins: Array.from(navigator.plugins).map(p => p.name).join(','),
+                cores: navigator.hardwareConcurrency || 0
+            };
+
+            const fingerprintString = JSON.stringify(fingerprint);
+            const encoder = new TextEncoder();
+            const data = encoder.encode(fingerprintString);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Hash del PIN
+        async function hashPIN(pin) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(pin);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Solicitar PIN
+        async function solicitarPIN() {
+            return new Promise((resolve) => {
+                const pin = prompt('Crea un PIN de 4 dígitos para tu cuenta:\n(Lo necesitarás para futuros accesos)');
+                
+                if (!pin) {
+                    mostrarAlerta('El PIN es obligatorio', 'error');
+                    resolve(null);
+                    return;
+                }
+
+                if (!/^\d{4,}$/.test(pin)) {
+                    mostrarAlerta('El PIN debe tener al menos 4 dígitos', 'error');
+                    resolve(null);
+                    return;
+                }
+
+                resolve(pin);
+            });
+        }
+
         // Inicializar página
         function inicializar() {
-            // Verificar si ya está autenticado
             auth.redirectIfAuthenticated();
-
-            // Detectar evento en URL
             idEvento = obtenerParametroURL('evento');
             
             if (idEvento) {
@@ -280,7 +334,7 @@
                 eventoDetalle.textContent = `Se está registrando para un evento específico`;
                 console.log('📅 Detectado evento:', idEvento);
             } else {
-                console.log('ℹ️ Registro sin evento (personal local)');
+                console.log('ℹ️ Registro sin evento (personal local GRUP4)');
             }
         }
 
@@ -291,30 +345,50 @@
             const nsa = nsaInput.value.trim();
             const dni = dniInput.value.trim();
 
-            // Validación básica
             if (!nsa && !dni) {
                 mostrarAlerta('Debe ingresar al menos NSA o DNI', 'error');
                 return;
             }
 
-            // Deshabilitar formulario
+            // Solicitar PIN
+            const pin = await solicitarPIN();
+            if (!pin) return;
+
+            // Confirmar PIN
+            const pinConfirm = prompt('Confirma tu PIN de 4 dígitos:');
+            if (pin !== pinConfirm) {
+                mostrarAlerta('Los PINs no coinciden', 'error');
+                return;
+            }
+
             submitBtn.disabled = true;
             loader.classList.add('show');
             alertBox.classList.remove('show');
 
             try {
+                // Generar fingerprint y hash del PIN
+                const [deviceFingerprint, pinHash] = await Promise.all([
+                    generarDeviceFingerprint(),
+                    hashPIN(pin)
+                ]);
+
+                console.log('🔐 Device fingerprint:', deviceFingerprint.substring(0, 16) + '...');
+
                 // Llamar a la edge function
                 const response = await fetch(CONFIG.getEndpointURL('REGISTRO'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'apikey': CONFIG.SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`  // ✅ AGREGAR ESTO
+                        'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
                     },
                     body: JSON.stringify({
                         nsa: nsa || null,
                         dni: dni || null,
-                        id_evento: idEvento || null
+                        id_evento: idEvento || null,
+                        pin_hash: pinHash,
+                        device_fingerprint: deviceFingerprint,
+                        user_agent: navigator.userAgent
                     })
                 });
 
@@ -326,16 +400,17 @@
 
                 console.log('✅ Registro exitoso:', result.data);
 
-                // Guardar datos usando AuthGuard
+                // Guardar datos
                 auth.saveUserData(result.data);
 
-                // Mostrar éxito
+                // Guardar device fingerprint en localStorage
+                localStorage.setItem('device_fingerprint', deviceFingerprint);
+
                 mostrarAlerta(
                     `¡Registro exitoso! Bienvenido/a ${result.data.nombre}`,
                     'success'
                 );
 
-                // Redirigir después de 2 segundos
                 setTimeout(() => {
                     window.location.href = CONFIG.ROUTES.HOME;
                 }, 2000);
@@ -343,8 +418,6 @@
             } catch (error) {
                 console.error('❌ Error en registro:', error);
                 mostrarAlerta(error.message, 'error');
-                
-                // Re-habilitar formulario
                 submitBtn.disabled = false;
                 loader.classList.remove('show');
             }
@@ -359,8 +432,8 @@
             e.target.value = e.target.value.trim();
         });
 
-        // Inicializar al cargar la página
         inicializar();
     </script>
 </body>
 </html>
+   
