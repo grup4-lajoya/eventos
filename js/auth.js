@@ -76,7 +76,8 @@ class AuthGuard {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'apikey': CONFIG.SUPABASE_ANON_KEY
+                    'apikey': CONFIG.SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`  // ✅ AGREGAR ESTO
                 },
                 body: JSON.stringify({ token_acceso: token })
             });
