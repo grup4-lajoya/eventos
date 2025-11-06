@@ -1,13 +1,13 @@
 // js/config.js
 const CONFIG = {
     // Supabase
-    SUPABASE_URL: 'https://tu-proyecto.supabase.co',
-    SUPABASE_ANON_KEY: 'tu-anon-key-aqui',
+    SUPABASE_URL: 'https://qgbixgvidxeaoxxpyiyw.supabase.co',
+    SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFnYml4Z3ZpZHhlYW94eHB5aXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxOTU3NzMsImV4cCI6MjA3NTc3MTc3M30.NQ5n_vFnHDp8eNjV3I9vRujfWDWWGAywgyICpqX0OKQ',
     
     // Edge Functions
     ENDPOINTS: {
-        REGISTRO: '/functions/v1/registro-usuario-qr',
-        VALIDAR_TOKEN: '/functions/v1/validar-token-acceso'
+        REGISTRO: 'https://qgbixgvidxeaoxxpyiyw.supabase.co/functions/v1/registro-usuario-qr',
+        VALIDAR_TOKEN: 'https://qgbixgvidxeaoxxpyiyw.supabase.co/functions/v1/validar-token-acceso'
     },
     
     // Rutas de la app
