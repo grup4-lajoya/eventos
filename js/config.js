@@ -6,8 +6,8 @@ const CONFIG = {
     
     // Edge Functions
     ENDPOINTS: {
-        REGISTRO: 'https://qgbixgvidxeaoxxpyiyw.supabase.co/functions/v1/registro-usuario-qr',
-        VALIDAR_TOKEN: 'https://qgbixgvidxeaoxxpyiyw.supabase.co/functions/v1/validar-token-acceso'
+        REGISTRO: '/functions/v1/registro-usuario-qr',
+        VALIDAR_TOKEN: '/functions/v1/validar-token-acceso'
     },
     
     // Rutas de la app
