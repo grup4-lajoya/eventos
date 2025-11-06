@@ -6,8 +6,8 @@ const CONFIG = {
     
     // Edge Functions
     ENDPOINTS: {
-        REGISTRO: '/functions/v1/registro-usuario-qr',
-        VALIDAR_TOKEN: '/functions/v1/validar-token-acceso'
+        REGISTRO: '/functions/v1/public-registro',  // ✅ Cambiar
+        VALIDAR_TOKEN: '/functions/v1/public-validar-token'  // ✅ Cambiar
     },
     
     // Rutas de la app
