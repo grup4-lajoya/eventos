@@ -564,10 +564,22 @@
             cargarInfoUsuario();
         });
         // Manejar botón logout
+        let isLoggingOut = false; // ⭐ Flag para prevenir doble click
+        
         document.querySelector('[data-logout]').addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            if (confirm('¿Estás seguro de cerrar sesión?')) {
+            
+            // ⭐ Prevenir doble ejecución
+            if (isLoggingOut) {
+                console.log('⚠️ Ya se está cerrando sesión...');
+                return;
+            }
+            
+            const confirmar = confirm('¿Estás seguro de cerrar sesión?');
+            
+            if (confirmar) {
+                isLoggingOut = true; // ⭐ Marcar como ejecutándose
                 auth.hardLogout();
             }
         });
