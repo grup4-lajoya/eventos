@@ -586,6 +586,13 @@
         window.addEventListener('load', () => {
             cargarInfoUsuario();
         });
+           // Manejar botón logout
+        document.querySelector('[data-logout]').addEventListener('click', () => {
+            if (confirm('¿Estás seguro de cerrar sesión?')) {
+                auth.hardLogout();
+            }
+        });
     </script>
+ 
 </body>
 </html>
