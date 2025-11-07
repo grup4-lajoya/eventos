@@ -401,17 +401,27 @@
             });
         }
 
-        // Generar device fingerprint
+        // ✅ SOLUCIÓN: Fingerprint sin timestamp
         async function generarFingerprint() {
             const deviceData = {
                 ua: navigator.userAgent,
                 lang: navigator.language,
                 tz: new Date().getTimezoneOffset(),
-                screen: `${screen.width}x${screen.height}`,
-                ts: Date.now()
+                screen: `${screen.width}x${screen.height}x${screen.colorDepth}`,
+                platform: navigator.platform,
+                cpus: navigator.hardwareConcurrency || 0,
+                memory: navigator.deviceMemory || 0
             };
             
-            const deviceString = JSON.stringify(deviceData);
+            // Ordenar las claves para consistencia
+            const orderedData = Object.keys(deviceData)
+                .sort()
+                .reduce((obj, key) => {
+                    obj[key] = deviceData[key];
+                    return obj;
+                }, {});
+            
+            const deviceString = JSON.stringify(orderedData);
             const encoder = new TextEncoder();
             const data = encoder.encode(deviceString);
             const hashBuffer = await crypto.subtle.digest('SHA-256', data);
