@@ -235,9 +235,14 @@
     </div>
 
     <!-- Scripts -->
-    <script src="/eventos/js/config.js"></script>
-    <script src="/eventos/js/auth.js"></script>
+    <script src="/eventos/js/config.js?v=3"></script>
+    <script src="/eventos/js/auth.js?v=3"></script>
     <script>
+        // 🔄 Forzar limpieza de caché
+        if (performance.navigation.type !== 1) {
+            console.log('🔄 Forzando recarga...');
+            location.reload(true);
+        }
         // Elementos del DOM
         const form = document.getElementById('registroForm');
         const nsaInput = document.getElementById('nsa');
