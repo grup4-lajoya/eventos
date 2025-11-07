@@ -246,6 +246,57 @@
             </div>
         </form>
     </div>
+    <!-- Install PWA Banner -->
+    <div class="install-banner" id="installBanner">
+        <div class="install-banner-icon">📱</div>
+        <div class="install-banner-content">
+            <h3>¡Instala la App!</h3>
+            <p>Accede más rápido sin necesidad del navegador</p>
+        </div>
+        <button class="btn-install" id="btnInstall">Instalar</button>
+        <button class="btn-close-banner" id="btnCloseBanner">×</button>
+    </div>
+
+    <script>
+        // 📱 PWA Installation Logic
+        let deferredPrompt;
+        const installBanner = document.getElementById('installBanner');
+        const btnInstall = document.getElementById('btnInstall');
+        const btnCloseBanner = document.getElementById('btnCloseBanner');
+
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            installBanner.style.display = 'none';
+        }
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const bannerClosed = localStorage.getItem('pwa_banner_closed');
+            if (!bannerClosed) {
+                installBanner.classList.add('show');
+            }
+        });
+
+        btnInstall.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                installBanner.classList.remove('show');
+            }
+            deferredPrompt = null;
+        });
+
+        btnCloseBanner.addEventListener('click', () => {
+            installBanner.classList.remove('show');
+            localStorage.setItem('pwa_banner_closed', 'true');
+        });
+
+        window.addEventListener('appinstalled', () => {
+            installBanner.classList.remove('show');
+            deferredPrompt = null;
+        });
+    </script>
 
     <script>
         // Configuración
