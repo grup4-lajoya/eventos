@@ -161,23 +161,47 @@
         }
 
         .evento-info {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 20px;
+            border-radius: 15px;
             margin-bottom: 25px;
-            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .evento-info h3 {
-            color: #667eea;
-            font-size: 16px;
-            margin-bottom: 5px;
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .evento-info p {
-            color: #666;
+            color: #555;
             font-size: 14px;
-            margin: 3px 0;
+            margin: 5px 0;
+        }
+
+        .evento-info strong {
+            color: #333;
+        }
+
+        .evento-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #e67e22;
+            margin-top: 8px;
+        }
+
+        .loading-evento {
+            text-align: center;
+            padding: 15px;
+            color: #666;
         }
     </style>
 </head>
@@ -188,10 +212,10 @@
             <p>Sistema de Reservas y Control</p>
         </div>
 
-        <!-- Información del evento (si aplica) -->
+        <!-- Información del evento -->
         <div id="eventoInfo" class="evento-info" style="display: none;">
-            <h3>📅 Registro para evento</h3>
-            <p id="eventoDetalle">Cargando información...</p>
+            <h3><span id="eventoIcono">📅</span> <span id="eventoTitulo">Evento</span></h3>
+            <div id="eventoDetalle" class="loading-evento">Cargando información del evento...</div>
         </div>
 
         <!-- Alertas -->
@@ -234,15 +258,23 @@
         </form>
     </div>
 
-    <!-- Scripts -->
-    <script src="/eventos/js/config.js?v=3"></script>
-    <script src="/eventos/js/auth.js?v=3"></script>
     <script>
-        // 🔄 Forzar limpieza de caché
-        if (performance.navigation.type !== 1) {
-            console.log('🔄 Forzando recarga...');
-            location.reload(true);
-        }
+        // Configuración
+        const CONFIG = {
+            SUPABASE_URL: 'https://qgbixgvidxeaoxxpyiyw.supabase.co',
+            SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFnYml4Z3ZpZHhlYW94eHB5aXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxOTU3NzMsImV4cCI6MjA3NTc3MTc3M30.NQ5n_vFnHDp8eNjV3I9vRujfWDWWGAywgyICpqX0OKQ',
+            ENDPOINTS: {
+                REGISTRO: '/functions/v1/public-registro'
+            },
+            ROUTES: {
+                HOME: '/eventos/index.html'
+            }
+        };
+
+        CONFIG.getEndpointURL = function(endpoint) {
+            return `${this.SUPABASE_URL}${this.ENDPOINTS[endpoint]}`;
+        };
+
         // Elementos del DOM
         const form = document.getElementById('registroForm');
         const nsaInput = document.getElementById('nsa');
@@ -252,9 +284,12 @@
         const alertBox = document.getElementById('alert');
         const eventoInfo = document.getElementById('eventoInfo');
         const eventoDetalle = document.getElementById('eventoDetalle');
+        const eventoTitulo = document.getElementById('eventoTitulo');
+        const eventoIcono = document.getElementById('eventoIcono');
 
         // Variables globales
         let idEvento = null;
+        let eventoData = null;
 
         // Función para mostrar alertas
         function mostrarAlerta(mensaje, tipo = 'error') {
@@ -271,7 +306,83 @@
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(nombre);
         }
-   
+
+        // Función para formatear fecha
+        function formatearFecha(fechaStr) {
+            const fecha = new Date(fechaStr);
+            return fecha.toLocaleDateString('es-PE', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Cargar información del evento
+        async function cargarEvento(eventoId) {
+            try {
+                const response = await fetch(
+                    `${CONFIG.SUPABASE_URL}/rest/v1/evento?id=eq.${eventoId}&select=*`,
+                    {
+                        headers: {
+                            'apikey': CONFIG.SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
+                        }
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok || !data || data.length === 0) {
+                    throw new Error('Evento no encontrado');
+                }
+
+                eventoData = data[0];
+
+                // Validar que el evento esté activo
+                if (!eventoData.activo) {
+                    throw new Error('El evento no está activo');
+                }
+
+                // Validar vigencia
+                const hoy = new Date();
+                hoy.setHours(0, 0, 0, 0);
+                const fechaInicio = new Date(eventoData.fecha_inicio);
+                const fechaFin = new Date(eventoData.fecha_fin);
+                fechaFin.setHours(23, 59, 59, 999);
+
+                if (hoy < fechaInicio) {
+                    throw new Error(`El evento aún no ha comenzado. Inicia el ${formatearFecha(eventoData.fecha_inicio)}`);
+                }
+
+                if (hoy > fechaFin) {
+                    throw new Error(`El evento ya finalizó el ${formatearFecha(eventoData.fecha_fin)}`);
+                }
+
+                // Mostrar información del evento
+                eventoInfo.style.display = 'block';
+                eventoIcono.textContent = '🎉';
+                eventoTitulo.textContent = 'Registro para Evento';
+                eventoDetalle.innerHTML = `
+                    <p><strong>Evento:</strong> ${eventoData.nombre}</p>
+                    <p><strong>Unidad Anfitriona:</strong> ${eventoData.unidad_anfitriona}</p>
+                    <p><strong>Vigencia:</strong> ${formatearFecha(eventoData.fecha_inicio)} - ${formatearFecha(eventoData.fecha_fin)}</p>
+                    <span class="evento-badge">🎫 Registro de Visitante</span>
+                `;
+
+                console.log('✅ Evento cargado:', eventoData.nombre);
+
+            } catch (error) {
+                console.error('❌ Error cargando evento:', error);
+                eventoInfo.style.display = 'block';
+                eventoIcono.textContent = '⚠️';
+                eventoTitulo.textContent = 'Error';
+                eventoDetalle.innerHTML = `<p style="color: #c33;">${error.message}</p>`;
+                submitBtn.disabled = true;
+                
+                mostrarAlerta(error.message, 'error');
+            }
+        }
+
         // Solicitar PIN
         async function solicitarPIN() {
             return new Promise((resolve) => {
@@ -293,117 +404,158 @@
             });
         }
 
+        // Generar device fingerprint
+        async function generarFingerprint() {
+            const deviceData = {
+                ua: navigator.userAgent,
+                lang: navigator.language,
+                tz: new Date().getTimezoneOffset(),
+                screen: `${screen.width}x${screen.height}`,
+                ts: Date.now()
+            };
+            
+            const deviceString = JSON.stringify(deviceData);
+            const encoder = new TextEncoder();
+            const data = encoder.encode(deviceString);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Hash del PIN
+        async function hashPIN(pin) {
+            const encoder = new TextEncoder();
+            const pinData = encoder.encode(pin);
+            const pinHashBuffer = await crypto.subtle.digest('SHA-256', pinData);
+            const pinHashArray = Array.from(new Uint8Array(pinHashBuffer));
+            return pinHashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Guardar datos del usuario
+        function saveUserData(userData) {
+            localStorage.setItem('token_acceso', userData.token_acceso);
+            localStorage.setItem('usuario_id', userData.usuario_id);
+            localStorage.setItem('tipo_usuario', userData.tipo_usuario);
+            localStorage.setItem('tipo_acceso', userData.tipo_acceso);
+            localStorage.setItem('nombre_usuario', userData.nombre);
+            localStorage.setItem('usuario_data', JSON.stringify(userData));
+            
+            if (userData.evento_id) {
+                localStorage.setItem('evento_id', userData.evento_id);
+                localStorage.setItem('evento_nombre', userData.evento_nombre);
+                localStorage.setItem('evento_fecha_fin', userData.evento_fecha_fin);
+            }
+        }
+
         // Inicializar página
-        function inicializar() {
-            auth.redirectIfAuthenticated();
+        async function inicializar() {
+            // Verificar si ya está autenticado
+            const token = localStorage.getItem('token_acceso');
+            if (token) {
+                console.log('Usuario ya autenticado, redirigiendo...');
+                window.location.href = CONFIG.ROUTES.HOME;
+                return;
+            }
+
             idEvento = obtenerParametroURL('evento');
             
             if (idEvento) {
-                eventoInfo.style.display = 'block';
-                eventoDetalle.textContent = `Se está registrando para un evento específico`;
                 console.log('📅 Detectado evento:', idEvento);
+                await cargarEvento(idEvento);
             } else {
                 console.log('ℹ️ Registro sin evento (personal local GRUP4)');
+                eventoInfo.style.display = 'block';
+                eventoIcono.textContent = '🏠';
+                eventoTitulo.textContent = 'Registro Personal Local';
+                eventoDetalle.innerHTML = `
+                    <p>Registro para personal de la unidad GRUP4</p>
+                    <span class="evento-badge" style="color: #0066cc;">🏠 Acceso Permanente</span>
+                `;
             }
         }
+
         // Manejar envío del formulario
-form.addEventListener('submit', async (e) => {
-    e.preventDefault();
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-    const nsa = nsaInput.value.trim();
-    const dni = dniInput.value.trim();
+            const nsa = nsaInput.value.trim();
+            const dni = dniInput.value.trim();
 
-    if (!nsa && !dni) {
-        mostrarAlerta('Debe ingresar al menos NSA o DNI', 'error');
-        return;
-    }
+            if (!nsa && !dni) {
+                mostrarAlerta('Debe ingresar al menos NSA o DNI', 'error');
+                return;
+            }
 
-    // Solicitar PIN
-    const pin = await solicitarPIN();
-    if (!pin) return;
+            // Solicitar PIN
+            const pin = await solicitarPIN();
+            if (!pin) return;
 
-    // Confirmar PIN
-    const pinConfirm = prompt('Confirma tu PIN de 4 dígitos:');
-    if (pin !== pinConfirm) {
-        mostrarAlerta('Los PINs no coinciden', 'error');
-        return;
-    }
+            // Confirmar PIN
+            const pinConfirm = prompt('Confirma tu PIN de 4 dígitos:');
+            if (pin !== pinConfirm) {
+                mostrarAlerta('Los PINs no coinciden', 'error');
+                return;
+            }
 
-    submitBtn.disabled = true;
-    loader.classList.add('show');
-    alertBox.classList.remove('show');
+            submitBtn.disabled = true;
+            loader.classList.add('show');
+            alertBox.classList.remove('show');
 
-    try {
-        // Generar fingerprint SIMPLIFICADO (sin canvas)
-        const deviceData = {
-            ua: navigator.userAgent,
-            lang: navigator.language,
-            tz: new Date().getTimezoneOffset(),
-            screen: `${screen.width}x${screen.height}`,
-            ts: Date.now()
-        };
-        
-        const deviceString = JSON.stringify(deviceData);
-        const encoder = new TextEncoder();
-        const data = encoder.encode(deviceString);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const deviceFingerprint = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            try {
+                // Generar fingerprint y hash del PIN
+                const deviceFingerprint = await generarFingerprint();
+                const pinHash = await hashPIN(pin);
 
-        // Hash del PIN
-        const pinData = encoder.encode(pin);
-        const pinHashBuffer = await crypto.subtle.digest('SHA-256', pinData);
-        const pinHashArray = Array.from(new Uint8Array(pinHashBuffer));
-        const pinHash = pinHashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                console.log('🔐 Fingerprint:', deviceFingerprint.substring(0, 16) + '...');
 
-        console.log('🔐 Fingerprint:', deviceFingerprint.substring(0, 16) + '...');
+                // Llamar a la edge function
+                const response = await fetch(CONFIG.getEndpointURL('REGISTRO'), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': CONFIG.SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
+                    },
+                    body: JSON.stringify({
+                        nsa: nsa || null,
+                        dni: dni || null,
+                        id_evento: idEvento || null,
+                        pin_hash: pinHash,
+                        device_fingerprint: deviceFingerprint,
+                        user_agent: navigator.userAgent
+                    })
+                });
 
-        // Llamar a la edge function
-        const response = await fetch(CONFIG.getEndpointURL('REGISTRO'), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'apikey': CONFIG.SUPABASE_ANON_KEY,
-                'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
-            },
-            body: JSON.stringify({
-                nsa: nsa || null,
-                dni: dni || null,
-                id_evento: idEvento || null,
-                pin_hash: pinHash,
-                device_fingerprint: deviceFingerprint,
-                user_agent: navigator.userAgent
-            })
+                const result = await response.json();
+
+                if (!response.ok || !result.success) {
+                    throw new Error(result.error || 'Error en el registro');
+                }
+
+                console.log('✅ Registro exitoso:', result.data);
+
+                // Guardar datos
+                saveUserData(result.data);
+                localStorage.setItem('device_fingerprint', deviceFingerprint);
+
+                const tipoRegistro = idEvento ? 'visitante' : 'personal local';
+                mostrarAlerta(
+                    `¡Registro exitoso como ${tipoRegistro}! Bienvenido/a ${result.data.nombre}`,
+                    'success'
+                );
+
+                setTimeout(() => {
+                    window.location.href = CONFIG.ROUTES.HOME;
+                }, 2000);
+
+            } catch (error) {
+                console.error('❌ Error en registro:', error);
+                mostrarAlerta(error.message, 'error');
+                submitBtn.disabled = false;
+                loader.classList.remove('show');
+            }
         });
 
-        const result = await response.json();
-
-        if (!response.ok || !result.success) {
-            throw new Error(result.error || 'Error en el registro');
-        }
-
-        console.log('✅ Registro exitoso:', result.data);
-
-        // Guardar datos
-        auth.saveUserData(result.data);
-        localStorage.setItem('device_fingerprint', deviceFingerprint);
-
-        mostrarAlerta(
-            `¡Registro exitoso! Bienvenido/a ${result.data.nombre}`,
-            'success'
-        );
-
-        setTimeout(() => {
-            window.location.href = CONFIG.ROUTES.HOME;
-        }, 2000);
-
-    } catch (error) {
-        console.error('❌ Error en registro:', error);
-        mostrarAlerta(error.message, 'error');
-        submitBtn.disabled = false;
-        loader.classList.remove('show');
-    }
-});
         // Limpiar espacios al escribir
         nsaInput.addEventListener('input', (e) => {
             e.target.value = e.target.value.trim().toUpperCase();
@@ -413,8 +565,8 @@ form.addEventListener('submit', async (e) => {
             e.target.value = e.target.value.trim();
         });
 
+        // Inicializar
         inicializar();
     </script>
 </body>
 </html>
-   
