@@ -106,11 +106,10 @@ class App {
         });
     }
 
-    // Manejar cierre de sesión
     handleLogout() {
-        const confirmLogout = confirm('¿Desea cerrar sesión?');
+        const confirmLogout = confirm('¿Estás seguro de cerrar sesión?');
         if (confirmLogout) {
-            auth.softLogout(); // Cambiar a hardLogout() si quieres borrar el token
+            auth.hardLogout(); // ✅
         }
     }
 
