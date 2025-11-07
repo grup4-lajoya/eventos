@@ -6,17 +6,18 @@ const CONFIG = {
     
     // Edge Functions
     ENDPOINTS: {
-        REGISTRO: '/functions/v1/public-registro',  // ✅ Cambiar
-        VALIDAR_TOKEN: '/functions/v1/public-validar-token'  // ✅ Cambiar
+        REGISTRO: '/functions/v1/public-registro',
+        LOGIN: '/functions/v1/public-login',
+        VALIDAR_TOKEN: '/functions/v1/public-validar-token'
     },
     
     // Rutas de la app
-        ROUTES: {
-            REGISTRO: '/registro.html',
-            LOGIN: '/eventos/login.html',      // ← AGREGAR ESTA LÍNEA
-            HOME: '/eventos/index.html',
-            RESERVAS: '/eventos/reservas.html'
-        }
+    ROUTES: {
+        REGISTRO: '/registro.html',
+        LOGIN: '/eventos/login.html',
+        HOME: '/eventos/index.html',
+        RESERVAS: '/eventos/reservas.html'
+    },  // ← AGREGAR ESTA COMA
     
     // LocalStorage keys
     STORAGE_KEYS: {
@@ -28,12 +29,12 @@ const CONFIG = {
         EVENTO_ID: 'evento_id',
         EVENTO_NOMBRE: 'evento_nombre',
         EVENTO_FECHA_FIN: 'evento_fecha_fin',
-        USUARIO_DATA: 'usuario_data' // JSON completo
+        USUARIO_DATA: 'usuario_data'
     },
     
     // Configuración de validación
     VALIDATION: {
-        TOKEN_CHECK_INTERVAL: 5 * 60 * 1000, // 5 minutos
+        TOKEN_CHECK_INTERVAL: 5 * 60 * 1000,
         AUTO_LOGOUT_ON_ERROR: true
     },
     
