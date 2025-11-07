@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <meta name="description" content="Iniciar Sesión - Sistema de Reservas">
+    <title>Iniciar Sesión - Sistema de Reservas</title>
+    <link rel="manifest" href="/eventos/manifest.json">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #667eea;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-error {
+            background: #fee;
+            color: #c33;
+            border: 1px solid #fcc;
+        }
+
+        .alert-success {
+            background: #efe;
+            color: #3c3;
+            border: 1px solid #cfc;
+        }
+
+        .loader {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .loader.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .register-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f0f7ff;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #0066cc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>🔐 Iniciar Sesión</h1>
+            <p>Sistema de Reservas GRUP4</p>
+        </div>
+
+        <div class="security-badge">
+            <span style="font-size: 20px;">🛡️</span>
+            <span>Sesión segura con validación de dispositivo</span>
+        </div>
+
+        <!-- Alertas -->
+        <div id="alert" class="alert"></div>
+
+        <!-- Formulario -->
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="documento">NSA, DNI o Pasaporte</label>
+                <input 
+                    type="text" 
+                    id="documento" 
+                    name="documento" 
+                    placeholder="Ingrese su documento"
+                    autocomplete="username"
+                    required
+                >
+                <p class="help-text">Use el mismo documento con el que se registró</p>
+            </div>
+
+            <div class="form-group">
+                <label for="pin">PIN de 4 dígitos</label>
+                <input 
+                    type="password" 
+                    id="pin" 
+                    name="pin" 
+                    placeholder="••••"
+                    maxlength="10"
+                    inputmode="numeric"
+                    autocomplete="current-password"
+                    required
+                >
+                <p class="help-text">Ingrese el PIN que creó al registrarse</p>
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn">
+                Iniciar Sesión
+            </button>
+
+            <div class="loader" id="loader">
+                <div class="spinner"></div>
+                <p style="margin-top: 10px; color: #666;">Verificando credenciales...</p>
+            </div>
+        </form>
+
+        <div class="register-link">
+            <p>¿No tienes una cuenta? <a href="/registro.html">Regístrate aquí</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Configuración
+        const CONFIG = {
+            SUPABASE_URL: 'https://qgbixgvidxeaoxxpyiyw.supabase.co',
+            SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFnYml4Z3ZpZHhlYW94eHB5aXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxOTU3NzMsImV4cCI6MjA3NTc3MTc3M30.NQ5n_vFnHDp8eNjV3I9vRujfWDWWGAywgyICpqX0OKQ',
+            ENDPOINTS: {
+                LOGIN: '/functions/v1/public-login'
+            },
+            ROUTES: {
+                HOME: '/eventos/index.html',
+                REGISTRO: '/registro.html'
+            }
+        };
+
+        CONFIG.getEndpointURL = function(endpoint) {
+            return `${this.SUPABASE_URL}${this.ENDPOINTS[endpoint]}`;
+        };
+
+        // Elementos del DOM
+        const form = document.getElementById('loginForm');
+        const documentoInput = document.getElementById('documento');
+        const pinInput = document.getElementById('pin');
+        const submitBtn = document.getElementById('submitBtn');
+        const loader = document.getElementById('loader');
+        const alertBox = document.getElementById('alert');
+
+        // Función para mostrar alertas
+        function mostrarAlerta(mensaje, tipo = 'error') {
+            alertBox.textContent = mensaje;
+            alertBox.className = `alert alert-${tipo} show`;
+            
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 5000);
+        }
+
+        // Generar device fingerprint
+        async function generarFingerprint() {
+            const deviceData = {
+                ua: navigator.userAgent,
+                lang: navigator.language,
+                tz: new Date().getTimezoneOffset(),
+                screen: `${screen.width}x${screen.height}`,
+                ts: Date.now()
+            };
+            
+            const deviceString = JSON.stringify(deviceData);
+            const encoder = new TextEncoder();
+            const data = encoder.encode(deviceString);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Hash del PIN
+        async function hashPIN(pin) {
+            const encoder = new TextEncoder();
+            const pinData = encoder.encode(pin);
+            const pinHashBuffer = await crypto.subtle.digest('SHA-256', pinData);
+            const pinHashArray = Array.from(new Uint8Array(pinHashBuffer));
+            return pinHashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Guardar datos del usuario
+        function saveUserData(userData) {
+            localStorage.setItem('token_acceso', userData.token_acceso);
+            localStorage.setItem('usuario_id', userData.usuario_id);
+            localStorage.setItem('tipo_usuario', userData.tipo_usuario);
+            localStorage.setItem('tipo_acceso', userData.tipo_acceso);
+            localStorage.setItem('nombre_usuario', userData.nombre);
+            localStorage.setItem('usuario_data', JSON.stringify(userData));
+            
+            if (userData.evento_id) {
+                localStorage.setItem('evento_id', userData.evento_id);
+                localStorage.setItem('evento_nombre', userData.evento_nombre);
+                localStorage.setItem('evento_fecha_fin', userData.evento_fecha_fin);
+            }
+        }
+
+        // Verificar si ya está autenticado
+        function verificarAutenticacion() {
+            const token = localStorage.getItem('token_acceso');
+            if (token) {
+                console.log('Usuario ya autenticado, redirigiendo...');
+                window.location.href = CONFIG.ROUTES.HOME;
+            }
+        }
+
+        // Manejar envío del formulario
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const documento = documentoInput.value.trim().toUpperCase();
+            const pin = pinInput.value.trim();
+
+            if (!documento) {
+                mostrarAlerta('Debe ingresar su documento', 'error');
+                return;
+            }
+
+            if (!pin) {
+                mostrarAlerta('Debe ingresar su PIN', 'error');
+                return;
+            }
+
+            if (!/^\d{4,}$/.test(pin)) {
+                mostrarAlerta('El PIN debe tener al menos 4 dígitos', 'error');
+                return;
+            }
+
+            // Detectar tipo de documento
+            let tipoDocumento = 'nsa';
+            let valorNSA = null;
+            let valorDNI = null;
+            let valorPasaporte = null;
+
+            if (/^\d{8}$/.test(documento)) {
+                tipoDocumento = 'dni';
+                valorDNI = documento;
+            } else if (/^[A-Z0-9]{6,12}$/.test(documento) && documento.length >= 7) {
+                if (/[A-Z]/.test(documento)) {
+                    tipoDocumento = 'pasaporte';
+                    valorPasaporte = documento;
+                } else {
+                    tipoDocumento = 'nsa';
+                    valorNSA = documento;
+                }
+            } else {
+                tipoDocumento = 'nsa';
+                valorNSA = documento;
+            }
+
+            console.log('📄 Documento ingresado:', documento);
+            console.log('📋 Tipo detectado:', tipoDocumento);
+
+            submitBtn.disabled = true;
+            loader.classList.add('show');
+            alertBox.classList.remove('show');
+
+            try {
+                // Generar fingerprint y hash del PIN
+                const deviceFingerprint = await generarFingerprint();
+                const pinHash = await hashPIN(pin);
+
+                console.log('🔐 Fingerprint:', deviceFingerprint.substring(0, 16) + '...');
+
+                // Llamar a la edge function
+                const response = await fetch(CONFIG.getEndpointURL('LOGIN'), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': CONFIG.SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
+                    },
+                    body: JSON.stringify({
+                        nsa: valorNSA,
+                        dni: valorDNI,
+                        pasaporte: valorPasaporte,
+                        pin_hash: pinHash,
+                        device_fingerprint: deviceFingerprint,
+                        user_agent: navigator.userAgent
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok || !result.success) {
+                    throw new Error(result.error || 'Error en el login');
+                }
+
+                console.log('✅ Login exitoso:', result.data);
+
+                // Guardar datos
+                saveUserData(result.data);
+                localStorage.setItem('device_fingerprint', deviceFingerprint);
+
+                mostrarAlerta(
+                    `¡Bienvenido/a ${result.data.nombre}!`,
+                    'success'
+                );
+
+                setTimeout(() => {
+                    window.location.href = CONFIG.ROUTES.HOME;
+                }, 1500);
+
+            } catch (error) {
+                console.error('❌ Error en login:', error);
+                mostrarAlerta(error.message, 'error');
+                submitBtn.disabled = false;
+                loader.classList.remove('show');
+            }
+        });
+
+        // Limpiar y formatear inputs
+        documentoInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.trim().toUpperCase();
+        });
+
+        pinInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/\D/g, ''); // Solo dígitos
+        });
+
+        // Inicializar
+        verificarAutenticacion();
+    </script>
+</body>
+</html>
