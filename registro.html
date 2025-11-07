@@ -266,46 +266,27 @@
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(nombre);
         }
-
-        // Generar device fingerprint
-// Generar device fingerprint
+        // Generar device fingerprint (sin canvas para evitar errores)
 async function generarDeviceFingerprint() {
     try {
-        const canvas = document.createElement('canvas');
-        canvas.width = 200;
-        canvas.height = 50;
-        
-        // Agregar al DOM temporalmente (necesario en algunos navegadores)
-        canvas.style.display = 'none';
-        document.body.appendChild(canvas);
-        
-        const ctx = canvas.getContext('2d');
-        ctx.textBaseline = 'top';
-        ctx.font = '14px Arial';
-        ctx.fillStyle = '#000';
-        ctx.fillText('fingerprint', 2, 2);
-        
-        let canvasData = '';
-        try {
-            canvasData = canvas.toDataURL();
-        } catch (e) {
-            console.warn('Canvas fingerprint fallback');
-            canvasData = 'fallback-canvas';
-        }
-        
-        // Remover del DOM
-        document.body.removeChild(canvas);
-        
         const fingerprint = {
-            canvas: canvasData,
             userAgent: navigator.userAgent,
             language: navigator.language,
+            languages: navigator.languages ? navigator.languages.join(',') : '',
             platform: navigator.platform,
             screen: `${screen.width}x${screen.height}x${screen.colorDepth}`,
+            screenAvail: `${screen.availWidth}x${screen.availHeight}`,
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-            plugins: Array.from(navigator.plugins || []).map(p => p.name).join(','),
+            timezoneOffset: new Date().getTimezoneOffset(),
             cores: navigator.hardwareConcurrency || 0,
-            timestamp: Date.now()
+            memory: navigator.deviceMemory || 0,
+            touchPoints: navigator.maxTouchPoints || 0,
+            vendor: navigator.vendor || '',
+            cookieEnabled: navigator.cookieEnabled,
+            doNotTrack: navigator.doNotTrack || '',
+            plugins: Array.from(navigator.plugins || []).slice(0, 5).map(p => p.name).join(','),
+            timestamp: Date.now(),
+            random: Math.random().toString(36).substring(7)
         };
 
         const fingerprintString = JSON.stringify(fingerprint);
@@ -313,11 +294,14 @@ async function generarDeviceFingerprint() {
         const data = encoder.encode(fingerprintString);
         const hashBuffer = await crypto.subtle.digest('SHA-256', data);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
-        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        const hash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        
+        console.log('🔐 Fingerprint generado exitosamente');
+        return hash;
         
     } catch (error) {
-        console.error('Error generando fingerprint:', error);
-        // Fingerprint de emergencia
+        console.error('❌ Error generando fingerprint:', error);
+        // Fingerprint de emergencia ultra simple
         const fallback = `${navigator.userAgent}-${Date.now()}-${Math.random()}`;
         const encoder = new TextEncoder();
         const data = encoder.encode(fallback);
@@ -326,6 +310,8 @@ async function generarDeviceFingerprint() {
         return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 }
+
+
 
         // Hash del PIN
         async function hashPIN(pin) {
