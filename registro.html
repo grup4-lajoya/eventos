@@ -307,9 +307,11 @@
             return urlParams.get(nombre);
         }
 
-        // Función para formatear fecha
+        // Función para formatear fecha (sin problemas de zona horaria)
         function formatearFecha(fechaStr) {
-            const fecha = new Date(fechaStr);
+            // Parsear la fecha como UTC para evitar desfases de zona horaria
+            const [year, month, day] = fechaStr.split('T')[0].split('-');
+            const fecha = new Date(year, month - 1, day);
             return fecha.toLocaleDateString('es-PE', {
                 year: 'numeric',
                 month: 'long',
