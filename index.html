@@ -422,29 +422,6 @@
             </p>
         </div>
     </div>
-            // Detectar iOS y mostrar instrucciones
-        function isIOS() {
-            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        }
-        
-        function isInStandaloneMode() {
-            return window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
-        }
-        
-        if (isIOS() && !isInStandaloneMode()) {
-            // Mostrar banner con instrucciones para iOS
-            const installBanner = document.getElementById('installBanner');
-            installBanner.innerHTML = `
-                <div class="install-banner-icon">📱</div>
-                <div class="install-banner-content">
-                    <h3>¡Instala la App!</h3>
-                    <p>1. Toca el icono <strong>Compartir</strong> ⎙</p>
-                    <p>2. Selecciona <strong>"Añadir a pantalla de inicio"</strong></p>
-                </div>
-                <button class="btn-close-banner" onclick="document.getElementById('installBanner').style.display='none'">×</button>
-            `;
-            installBanner.classList.add('show');
-        }
 
     <!-- Scripts -->
     <script src="js/config.js"></script>
