@@ -6,8 +6,8 @@
     <meta name="theme-color" content="#667eea">
     <meta name="description" content="Sistema de Reservas y Control">
     <title>Inicio - Sistema de Reservas</title>
-    <link rel="manifest" href="/manifest.json">
-    <link rel="apple-touch-icon" href="/assets/icons/icon-192x192.png">
+    <link rel="manifest" href="/eventos/manifest.json">
+    <link rel="apple-touch-icon" href="/eventos/assets/icons/icon-192x192.png">
     <style>
         * {
             margin: 0;
@@ -55,6 +55,86 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+        }
+
+        /* Install PWA Banner */
+        .install-banner {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            animation: slideDown 0.3s ease;
+        }
+
+        .install-banner.show {
+            display: flex;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .install-banner-icon {
+            font-size: 32px;
+        }
+
+        .install-banner-content {
+            flex: 1;
+        }
+
+        .install-banner-content h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .install-banner-content p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .btn-install {
+            background: white;
+            color: #4CAF50;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn-install:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-close-banner {
+            background: transparent;
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px 10px;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .btn-close-banner:hover {
+            opacity: 1;
         }
 
         /* User Card */
@@ -240,6 +320,15 @@
             .menu-grid {
                 grid-template-columns: 1fr;
             }
+
+            .install-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .btn-install {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -256,6 +345,17 @@
 
     <!-- Container -->
     <div class="container">
+        <!-- Install PWA Banner -->
+        <div class="install-banner" id="installBanner">
+            <div class="install-banner-icon">📱</div>
+            <div class="install-banner-content">
+                <h3>¡Instala la App!</h3>
+                <p>Accede más rápido sin necesidad del navegador</p>
+            </div>
+            <button class="btn-install" id="btnInstall">Instalar</button>
+            <button class="btn-close-banner" id="btnCloseBanner">×</button>
+        </div>
+
         <!-- User Card -->
         <div class="user-card">
             <div class="user-info">
@@ -323,10 +423,83 @@
     <script src="js/auth.js"></script>
     <script src="js/app.js"></script>
     <script>
+        // 📱 PWA Installation Logic
+        let deferredPrompt;
+        const installBanner = document.getElementById('installBanner');
+        const btnInstall = document.getElementById('btnInstall');
+        const btnCloseBanner = document.getElementById('btnCloseBanner');
+
+        // Detectar si ya está instalado
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            console.log('✅ App ya está instalada');
+            installBanner.style.display = 'none';
+        }
+
+        // Capturar el evento beforeinstallprompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('📱 Prompt de instalación disponible');
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Verificar si el usuario ya cerró el banner
+            const bannerClosed = localStorage.getItem('pwa_banner_closed');
+            if (!bannerClosed) {
+                installBanner.classList.add('show');
+            }
+        });
+
+        // Manejar click en botón instalar
+        btnInstall.addEventListener('click', async () => {
+            if (!deferredPrompt) {
+                alert('La instalación no está disponible en este momento');
+                return;
+            }
+
+            // Mostrar el prompt de instalación
+            deferredPrompt.prompt();
+
+            // Esperar la respuesta del usuario
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`Usuario eligió: ${outcome}`);
+
+            if (outcome === 'accepted') {
+                console.log('✅ Usuario aceptó la instalación');
+                installBanner.classList.remove('show');
+            }
+
+            // Limpiar el prompt
+            deferredPrompt = null;
+        });
+
+        // Cerrar el banner
+        btnCloseBanner.addEventListener('click', () => {
+            installBanner.classList.remove('show');
+            localStorage.setItem('pwa_banner_closed', 'true');
+        });
+
+        // Detectar cuando se instala la app
+        window.addEventListener('appinstalled', () => {
+            console.log('✅ PWA instalada correctamente');
+            installBanner.classList.remove('show');
+            deferredPrompt = null;
+        });
+
+        // 🔄 Registrar Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/eventos/service-worker.js')
+                    .then((registration) => {
+                        console.log('✅ Service Worker registrado:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.error('❌ Error al registrar Service Worker:', error);
+                    });
+            });
+        }
+
         // Funciones específicas del home
         function irAReservas() {
             alert('Módulo de reservas en desarrollo');
-            // window.location.href = 'reservas.html';
         }
 
         function mostrarQR() {
@@ -348,7 +521,6 @@
             const userData = auth.getUserData();
             if (!userData) return;
 
-            // Mostrar unidad si es personal
             const unidadElement = document.getElementById('userUnidad');
             if (userData.unidad) {
                 unidadElement.textContent = `Unidad: ${userData.unidad}`;
@@ -358,7 +530,6 @@
                 unidadElement.textContent = 'Personal externo';
             }
 
-            // Mostrar información del evento si es visitante
             if (userData.tipo_acceso === 'visitante') {
                 const eventoNombre = document.getElementById('eventoNombre');
                 const eventoFechaFin = document.getElementById('eventoFechaFin');
@@ -376,7 +547,6 @@
                     });
                 }
 
-                // Actualizar badge
                 const badges = document.querySelectorAll('[data-tipo-acceso]');
                 badges.forEach(badge => {
                     badge.className = 'badge badge-visitante';
@@ -385,7 +555,6 @@
             }
         }
 
-        // Ejecutar después de que app.js inicialice
         window.addEventListener('load', () => {
             cargarInfoUsuario();
         });
