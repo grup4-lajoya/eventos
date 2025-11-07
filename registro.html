@@ -256,6 +256,7 @@
                 REGISTRO: '/functions/v1/public-registro'
             },
             ROUTES: {
+                LOGIN: '/eventos/login.html',
                 HOME: '/eventos/index.html'
             }
         };
@@ -425,22 +426,6 @@
             const pinHashBuffer = await crypto.subtle.digest('SHA-256', pinData);
             const pinHashArray = Array.from(new Uint8Array(pinHashBuffer));
             return pinHashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-
-        // Guardar datos del usuario
-        function saveUserData(userData) {
-            localStorage.setItem('token_acceso', userData.token_acceso);
-            localStorage.setItem('usuario_id', userData.usuario_id);
-            localStorage.setItem('tipo_usuario', userData.tipo_usuario);
-            localStorage.setItem('tipo_acceso', userData.tipo_acceso);
-            localStorage.setItem('nombre_usuario', userData.nombre);
-            localStorage.setItem('usuario_data', JSON.stringify(userData));
-            
-            if (userData.evento_id) {
-                localStorage.setItem('evento_id', userData.evento_id);
-                localStorage.setItem('evento_nombre', userData.evento_nombre);
-                localStorage.setItem('evento_fecha_fin', userData.evento_fecha_fin);
-            }
         }
 
         // Verificar si el registro está habilitado
