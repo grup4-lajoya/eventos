@@ -63,7 +63,8 @@ hardLogout() {
     if (fingerprint) {
         localStorage.setItem('device_fingerprint', fingerprint);
     }
-    window.location.href = location.href.replace('index.html', 'login.html');
+    // ✅ USAR LA RUTA DEFINIDA EN CONFIG
+    window.location.href = CONFIG.ROUTES.LOGIN;
 }
 
     // Validar token contra el servidor
