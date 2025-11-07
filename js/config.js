@@ -13,7 +13,7 @@ const CONFIG = {
     
     // Rutas de la app
     ROUTES: {
-        REGISTRO: '/registro.html',
+        REGISTRO: '/eventos/registro.html',
         LOGIN: '/eventos/login.html',
         HOME: '/eventos/index.html',
         RESERVAS: '/eventos/reservas.html'
