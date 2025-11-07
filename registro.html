@@ -224,27 +224,16 @@
         <!-- Formulario -->
         <form id="registroForm">
             <div class="form-group">
-                <label for="nsa">NSA (Número de Servicio Activo)</label>
+                <label for="documento">NSA, DNI o Pasaporte</label>
                 <input 
                     type="text" 
-                    id="nsa" 
-                    name="nsa" 
-                    placeholder="Ingrese su NSA"
+                    id="documento" 
+                    name="documento" 
+                    placeholder="Ingrese su NSA, DNI o Pasaporte"
                     autocomplete="off"
+                    required
                 >
-                <p class="help-text">Si no tiene NSA, ingrese su DNI abajo</p>
-            </div>
-
-            <div class="form-group">
-                <label for="dni">DNI (Documento Nacional de Identidad)</label>
-                <input 
-                    type="text" 
-                    id="dni" 
-                    name="dni" 
-                    placeholder="Ingrese su DNI"
-                    autocomplete="off"
-                >
-                <p class="help-text">Debe ingresar al menos NSA o DNI</p>
+                <p class="help-text">Ingrese su Número de Servicio Activo, DNI o Pasaporte</p>
             </div>
 
             <button type="submit" class="btn" id="submitBtn">
@@ -277,8 +266,7 @@
 
         // Elementos del DOM
         const form = document.getElementById('registroForm');
-        const nsaInput = document.getElementById('nsa');
-        const dniInput = document.getElementById('dni');
+        const documentoInput = document.getElementById('documento');
         const submitBtn = document.getElementById('submitBtn');
         const loader = document.getElementById('loader');
         const alertBox = document.getElementById('alert');
@@ -345,11 +333,17 @@
                     throw new Error('El evento no está activo');
                 }
 
-                // Validar vigencia
+                // Validar vigencia (sin problemas de zona horaria)
                 const hoy = new Date();
                 hoy.setHours(0, 0, 0, 0);
-                const fechaInicio = new Date(eventoData.fecha_inicio);
-                const fechaFin = new Date(eventoData.fecha_fin);
+                
+                // Parsear fechas del evento como fecha local (sin convertir a UTC)
+                const [yearInicio, monthInicio, dayInicio] = eventoData.fecha_inicio.split('T')[0].split('-');
+                const fechaInicio = new Date(yearInicio, monthInicio - 1, dayInicio);
+                fechaInicio.setHours(0, 0, 0, 0);
+                
+                const [yearFin, monthFin, dayFin] = eventoData.fecha_fin.split('T')[0].split('-');
+                const fechaFin = new Date(yearFin, monthFin - 1, dayFin);
                 fechaFin.setHours(23, 59, 59, 999);
 
                 if (hoy < fechaInicio) {
@@ -480,13 +474,21 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const nsa = nsaInput.value.trim();
-            const dni = dniInput.value.trim();
+            const documento = documentoInput.value.trim().toUpperCase();
 
-            if (!nsa && !dni) {
-                mostrarAlerta('Debe ingresar al menos NSA o DNI', 'error');
+            if (!documento) {
+                mostrarAlerta('Debe ingresar su NSA o DNI', 'error');
                 return;
             }
+
+            // Detectar si es NSA o DNI
+            // NSA: formato alfanumérico (ej: EP123456, 97727)
+            // DNI: solo números de 8 dígitos
+            const esDNI = /^\d{8}$/.test(documento);
+            const esNSA = !esDNI; // Si no es DNI, asumimos que es NSA
+
+            console.log('📄 Documento ingresado:', documento);
+            console.log('📋 Tipo detectado:', esDNI ? 'DNI' : 'NSA');
 
             // Solicitar PIN
             const pin = await solicitarPIN();
@@ -511,6 +513,7 @@
                 console.log('🔐 Fingerprint:', deviceFingerprint.substring(0, 16) + '...');
 
                 // Llamar a la edge function
+                // Enviamos el documento detectado en el campo correspondiente
                 const response = await fetch(CONFIG.getEndpointURL('REGISTRO'), {
                     method: 'POST',
                     headers: {
@@ -519,8 +522,8 @@
                         'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
                     },
                     body: JSON.stringify({
-                        nsa: nsa || null,
-                        dni: dni || null,
+                        nsa: esNSA ? documento : null,
+                        dni: esDNI ? documento : null,
                         id_evento: idEvento || null,
                         pin_hash: pinHash,
                         device_fingerprint: deviceFingerprint,
@@ -558,13 +561,9 @@
             }
         });
 
-        // Limpiar espacios al escribir
-        nsaInput.addEventListener('input', (e) => {
+        // Limpiar y formatear input al escribir
+        documentoInput.addEventListener('input', (e) => {
             e.target.value = e.target.value.trim().toUpperCase();
-        });
-
-        dniInput.addEventListener('input', (e) => {
-            e.target.value = e.target.value.trim();
         });
 
         // Inicializar
