@@ -266,62 +266,7 @@
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(nombre);
         }
-        // Generar device fingerprint (sin canvas para evitar errores)
-async function generarDeviceFingerprint() {
-    try {
-        const fingerprint = {
-            userAgent: navigator.userAgent,
-            language: navigator.language,
-            languages: navigator.languages ? navigator.languages.join(',') : '',
-            platform: navigator.platform,
-            screen: `${screen.width}x${screen.height}x${screen.colorDepth}`,
-            screenAvail: `${screen.availWidth}x${screen.availHeight}`,
-            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-            timezoneOffset: new Date().getTimezoneOffset(),
-            cores: navigator.hardwareConcurrency || 0,
-            memory: navigator.deviceMemory || 0,
-            touchPoints: navigator.maxTouchPoints || 0,
-            vendor: navigator.vendor || '',
-            cookieEnabled: navigator.cookieEnabled,
-            doNotTrack: navigator.doNotTrack || '',
-            plugins: Array.from(navigator.plugins || []).slice(0, 5).map(p => p.name).join(','),
-            timestamp: Date.now(),
-            random: Math.random().toString(36).substring(7)
-        };
-
-        const fingerprintString = JSON.stringify(fingerprint);
-        const encoder = new TextEncoder();
-        const data = encoder.encode(fingerprintString);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        
-        console.log('🔐 Fingerprint generado exitosamente');
-        return hash;
-        
-    } catch (error) {
-        console.error('❌ Error generando fingerprint:', error);
-        // Fingerprint de emergencia ultra simple
-        const fallback = `${navigator.userAgent}-${Date.now()}-${Math.random()}`;
-        const encoder = new TextEncoder();
-        const data = encoder.encode(fallback);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-}
-
-
-
-        // Hash del PIN
-        async function hashPIN(pin) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(pin);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-
+   
         // Solicitar PIN
         async function solicitarPIN() {
             return new Promise((resolve) => {
@@ -356,92 +301,104 @@ async function generarDeviceFingerprint() {
                 console.log('ℹ️ Registro sin evento (personal local GRUP4)');
             }
         }
-
         // Manejar envío del formulario
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-            const nsa = nsaInput.value.trim();
-            const dni = dniInput.value.trim();
+    const nsa = nsaInput.value.trim();
+    const dni = dniInput.value.trim();
 
-            if (!nsa && !dni) {
-                mostrarAlerta('Debe ingresar al menos NSA o DNI', 'error');
-                return;
-            }
+    if (!nsa && !dni) {
+        mostrarAlerta('Debe ingresar al menos NSA o DNI', 'error');
+        return;
+    }
 
-            // Solicitar PIN
-            const pin = await solicitarPIN();
-            if (!pin) return;
+    // Solicitar PIN
+    const pin = await solicitarPIN();
+    if (!pin) return;
 
-            // Confirmar PIN
-            const pinConfirm = prompt('Confirma tu PIN de 4 dígitos:');
-            if (pin !== pinConfirm) {
-                mostrarAlerta('Los PINs no coinciden', 'error');
-                return;
-            }
+    // Confirmar PIN
+    const pinConfirm = prompt('Confirma tu PIN de 4 dígitos:');
+    if (pin !== pinConfirm) {
+        mostrarAlerta('Los PINs no coinciden', 'error');
+        return;
+    }
 
-            submitBtn.disabled = true;
-            loader.classList.add('show');
-            alertBox.classList.remove('show');
+    submitBtn.disabled = true;
+    loader.classList.add('show');
+    alertBox.classList.remove('show');
 
-            try {
-                // Generar fingerprint y hash del PIN
-                const [deviceFingerprint, pinHash] = await Promise.all([
-                    generarDeviceFingerprint(),
-                    hashPIN(pin)
-                ]);
+    try {
+        // Generar fingerprint SIMPLIFICADO (sin canvas)
+        const deviceData = {
+            ua: navigator.userAgent,
+            lang: navigator.language,
+            tz: new Date().getTimezoneOffset(),
+            screen: `${screen.width}x${screen.height}`,
+            ts: Date.now()
+        };
+        
+        const deviceString = JSON.stringify(deviceData);
+        const encoder = new TextEncoder();
+        const data = encoder.encode(deviceString);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const deviceFingerprint = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
-                console.log('🔐 Device fingerprint:', deviceFingerprint.substring(0, 16) + '...');
+        // Hash del PIN
+        const pinData = encoder.encode(pin);
+        const pinHashBuffer = await crypto.subtle.digest('SHA-256', pinData);
+        const pinHashArray = Array.from(new Uint8Array(pinHashBuffer));
+        const pinHash = pinHashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
-                // Llamar a la edge function
-                const response = await fetch(CONFIG.getEndpointURL('REGISTRO'), {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'apikey': CONFIG.SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
-                    },
-                    body: JSON.stringify({
-                        nsa: nsa || null,
-                        dni: dni || null,
-                        id_evento: idEvento || null,
-                        pin_hash: pinHash,
-                        device_fingerprint: deviceFingerprint,
-                        user_agent: navigator.userAgent
-                    })
-                });
+        console.log('🔐 Fingerprint:', deviceFingerprint.substring(0, 16) + '...');
 
-                const result = await response.json();
-
-                if (!response.ok || !result.success) {
-                    throw new Error(result.error || 'Error en el registro');
-                }
-
-                console.log('✅ Registro exitoso:', result.data);
-
-                // Guardar datos
-                auth.saveUserData(result.data);
-
-                // Guardar device fingerprint en localStorage
-                localStorage.setItem('device_fingerprint', deviceFingerprint);
-
-                mostrarAlerta(
-                    `¡Registro exitoso! Bienvenido/a ${result.data.nombre}`,
-                    'success'
-                );
-
-                setTimeout(() => {
-                    window.location.href = CONFIG.ROUTES.HOME;
-                }, 2000);
-
-            } catch (error) {
-                console.error('❌ Error en registro:', error);
-                mostrarAlerta(error.message, 'error');
-                submitBtn.disabled = false;
-                loader.classList.remove('show');
-            }
+        // Llamar a la edge function
+        const response = await fetch(CONFIG.getEndpointURL('REGISTRO'), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': CONFIG.SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
+            },
+            body: JSON.stringify({
+                nsa: nsa || null,
+                dni: dni || null,
+                id_evento: idEvento || null,
+                pin_hash: pinHash,
+                device_fingerprint: deviceFingerprint,
+                user_agent: navigator.userAgent
+            })
         });
 
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.error || 'Error en el registro');
+        }
+
+        console.log('✅ Registro exitoso:', result.data);
+
+        // Guardar datos
+        auth.saveUserData(result.data);
+        localStorage.setItem('device_fingerprint', deviceFingerprint);
+
+        mostrarAlerta(
+            `¡Registro exitoso! Bienvenido/a ${result.data.nombre}`,
+            'success'
+        );
+
+        setTimeout(() => {
+            window.location.href = CONFIG.ROUTES.HOME;
+        }, 2000);
+
+    } catch (error) {
+        console.error('❌ Error en registro:', error);
+        mostrarAlerta(error.message, 'error');
+        submitBtn.disabled = false;
+        loader.classList.remove('show');
+    }
+});
         // Limpiar espacios al escribir
         nsaInput.addEventListener('input', (e) => {
             e.target.value = e.target.value.trim().toUpperCase();
