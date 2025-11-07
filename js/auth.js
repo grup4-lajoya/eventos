@@ -55,12 +55,16 @@ class AuthGuard {
         window.location.href = CONFIG.ROUTES.REGISTRO;
     }
 
-    // Cerrar sesión real (elimina token)
-    hardLogout() {
-        console.log('🔒 Sesión cerrada (real)');
-        this.clearSession();
-        window.location.href = CONFIG.ROUTES.REGISTRO;
+// Cerrar sesión real (elimina token pero mantiene fingerprint)
+hardLogout() {
+    console.log('🔒 Sesión cerrada (real)');
+    const fingerprint = localStorage.getItem('device_fingerprint');
+    this.clearSession();
+    if (fingerprint) {
+        localStorage.setItem('device_fingerprint', fingerprint);
     }
+    window.location.href = '/eventos/login.html';
+}
 
     // Validar token contra el servidor
     async validateToken() {
