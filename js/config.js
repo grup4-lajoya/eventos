@@ -11,11 +11,12 @@ const CONFIG = {
     },
     
     // Rutas de la app
-    ROUTES: {
-        REGISTRO: '/eventos/registro.html',
-        HOME: '/eventos/index.html',
-        RESERVAS: '/eventos/reservas.html'
-    },
+        ROUTES: {
+            REGISTRO: '/registro.html',
+            LOGIN: '/eventos/login.html',      // ← AGREGAR ESTA LÍNEA
+            HOME: '/eventos/index.html',
+            RESERVAS: '/eventos/reservas.html'
+        }
     
     // LocalStorage keys
     STORAGE_KEYS: {
