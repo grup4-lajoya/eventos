@@ -396,8 +396,19 @@ async function generarFingerprint() {
             alertBox.classList.remove('show');
 
             try {
-                // Generar fingerprint y hash del PIN
-                const deviceFingerprint = await generarFingerprint();
+                // 🔑 RECUPERAR fingerprint guardado O generar uno nuevo
+                let deviceFingerprint = localStorage.getItem('device_fingerprint');
+                
+                if (!deviceFingerprint) {
+                    console.log('🆕 No hay fingerprint guardado, generando nuevo...');
+                    deviceFingerprint = await generarFingerprint();
+                    localStorage.setItem('device_fingerprint', deviceFingerprint);
+                } else {
+                    console.log('♻️ Usando fingerprint guardado');
+                }
+                
+                console.log('🔐 Fingerprint a usar:', deviceFingerprint.substring(0, 32) + '...');
+                
                 const pinHash = await hashPIN(pin);
 
                 console.log('🔐 Fingerprint:', deviceFingerprint.substring(0, 16) + '...');
