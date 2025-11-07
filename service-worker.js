@@ -2,13 +2,13 @@
 
 const CACHE_NAME = 'reservas-v1.0.0';
 const ASSETS_TO_CACHE = [
-    './',
-    './index.html',
-    './registro.html',
-    './js/config.js',
-    './js/auth.js',
-    './js/app.js',
-    './manifest.json'
+    '/eventos/',
+    '/eventos/index.html',
+    '/eventos/registro.html',
+    '/eventos/js/config.js',
+    '/eventos/js/auth.js',
+    '/eventos/js/app.js',
+    '/eventos/manifest.json'
 ];
 
 // Instalación del Service Worker
