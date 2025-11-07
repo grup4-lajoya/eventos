@@ -1,7 +1,7 @@
 {
   "name": "Reservas GRUP4",
   "short_name": "Reservas GRUP4",
-  "description": "Sistema de Reservas y Control de Alimentos",
+  "description": "Aplicativo de Reservas de Alimentos",
   "start_url": "/eventos/index.html",
   "display": "standalone",
   "background_color": "#667eea",
@@ -9,9 +9,15 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.75em' font-size='70'>🍽️</text></svg>",
+      "src": "/eventos/assets/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/eventos/assets/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
