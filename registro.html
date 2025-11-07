@@ -604,11 +604,15 @@ async function inicializar() {
             alertBox.classList.remove('show');
 
             try {
-                // Generar fingerprint y hash del PIN
+                // Generar fingerprint UNA VEZ
                 const deviceFingerprint = await generarFingerprint();
+                
+                // 💾 GUARDAR inmediatamente en localStorage
+                localStorage.setItem('device_fingerprint', deviceFingerprint);
+                
+                console.log('🔐 Fingerprint generado y guardado:', deviceFingerprint.substring(0, 32) + '...');
+                
                 const pinHash = await hashPIN(pin);
-
-                console.log('🔐 Fingerprint:', deviceFingerprint.substring(0, 16) + '...');
 
                 // Llamar a la edge function
                 // Enviamos el documento detectado en el campo correspondiente
