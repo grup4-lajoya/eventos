@@ -63,7 +63,7 @@ hardLogout() {
     if (fingerprint) {
         localStorage.setItem('device_fingerprint', fingerprint);
     }
-    window.location.href = '/eventos/login.html';
+    window.location.href = 'login.html';
 }
 
     // Validar token contra el servidor
