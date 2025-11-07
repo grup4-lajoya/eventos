@@ -443,6 +443,57 @@
             }
         }
 
+        // Verificar si el registro está habilitado
+        async function verificarRegistroHabilitado() {
+            try {
+                const tipoRegistro = idEvento ? 'visitante' : 'personal_local';
+                
+                const response = await fetch(
+                    `${CONFIG.SUPABASE_URL}/rest/v1/rpc/verificar_registro_habilitado`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'apikey': CONFIG.SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
+                        },
+                        body: JSON.stringify({
+                            p_tipo_registro: tipoRegistro
+                        })
+                    }
+                );
+
+                const result = await response.json();
+                
+                if (!result || result.length === 0) {
+                    throw new Error('No se pudo verificar el estado del registro');
+                }
+
+                const { habilitado, mensaje } = result[0];
+
+                if (!habilitado) {
+                    // Deshabilitar formulario
+                    submitBtn.disabled = true;
+                    documentoInput.disabled = true;
+                    
+                    mostrarAlerta(mensaje, 'error');
+                    
+                    eventoInfo.style.display = 'block';
+                    eventoIcono.textContent = '🔒';
+                    eventoTitulo.textContent = 'Registro Deshabilitado';
+                    eventoDetalle.innerHTML = `<p style="color: #c33;">${mensaje}</p>`;
+                    
+                    return false;
+                }
+
+                return true;
+
+            } catch (error) {
+                console.error('❌ Error verificando estado de registro:', error);
+                return true; // En caso de error, permitir registro (fail-safe)
+            }
+        }
+
         // Inicializar página
         async function inicializar() {
             // Verificar si ya está autenticado
@@ -454,6 +505,12 @@
             }
 
             idEvento = obtenerParametroURL('evento');
+            
+            // Verificar si el registro está habilitado
+            const registroHabilitado = await verificarRegistroHabilitado();
+            if (!registroHabilitado) {
+                return; // Detener inicialización si está deshabilitado
+            }
             
             if (idEvento) {
                 console.log('📅 Detectado evento:', idEvento);
@@ -477,18 +534,43 @@
             const documento = documentoInput.value.trim().toUpperCase();
 
             if (!documento) {
-                mostrarAlerta('Debe ingresar su NSA o DNI', 'error');
+                mostrarAlerta('Debe ingresar su NSA, DNI o Pasaporte', 'error');
                 return;
             }
 
-            // Detectar si es NSA o DNI
-            // NSA: formato alfanumérico (ej: EP123456, 97727)
-            // DNI: solo números de 8 dígitos
-            const esDNI = /^\d{8}$/.test(documento);
-            const esNSA = !esDNI; // Si no es DNI, asumimos que es NSA
+            // Detectar tipo de documento
+            // DNI: exactamente 8 dígitos
+            // Pasaporte: alfanumérico (generalmente 9-12 caracteres, puede tener letras)
+            // NSA: puede ser numérico o alfanumérico
+            
+            let tipoDocumento = 'nsa'; // Por defecto asumimos NSA
+            let valorNSA = null;
+            let valorDNI = null;
+            let valorPasaporte = null;
+
+            if (/^\d{8}$/.test(documento)) {
+                // Es DNI peruano (exactamente 8 dígitos)
+                tipoDocumento = 'dni';
+                valorDNI = documento;
+            } else if (/^[A-Z0-9]{6,12}$/.test(documento) && documento.length >= 7) {
+                // Puede ser pasaporte (alfanumérico, 6-12 caracteres)
+                // O NSA alfanumérico
+                // Priorizamos pasaporte si tiene letras
+                if (/[A-Z]/.test(documento)) {
+                    tipoDocumento = 'pasaporte';
+                    valorPasaporte = documento;
+                } else {
+                    tipoDocumento = 'nsa';
+                    valorNSA = documento;
+                }
+            } else {
+                // Cualquier otro formato: NSA
+                tipoDocumento = 'nsa';
+                valorNSA = documento;
+            }
 
             console.log('📄 Documento ingresado:', documento);
-            console.log('📋 Tipo detectado:', esDNI ? 'DNI' : 'NSA');
+            console.log('📋 Tipo detectado:', tipoDocumento);
 
             // Solicitar PIN
             const pin = await solicitarPIN();
@@ -522,8 +604,9 @@
                         'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
                     },
                     body: JSON.stringify({
-                        nsa: esNSA ? documento : null,
-                        dni: esDNI ? documento : null,
+                        nsa: valorNSA,
+                        dni: valorDNI,
+                        pasaporte: valorPasaporte,
                         id_evento: idEvento || null,
                         pin_hash: pinHash,
                         device_fingerprint: deviceFingerprint,
