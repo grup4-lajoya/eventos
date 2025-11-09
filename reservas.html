@@ -573,7 +573,9 @@
                 console.log('🔍 Buscando programaciones para unidad:', unidad);
 
                 // Consultar programaciones publicadas
-                const url = `${CONFIG.SUPABASE_URL}/rest/v1/programacion?unidad=eq.${unidad}&estado=eq.PUBLICADO&select=*,detalle_programacion(*)&order=fecha.asc`;
+                const url = `${CONFIG.SUPABASE_URL}/rest/v1/programacion?unidad=eq.${unidad}&estado=eq.PUBLICADO&fecha=gte.${new Date().toISOString().split('T')[0]}&select=*,detalle_programacion(*)&order=fecha.asc`;
+                
+                console.log('🔍 URL de consulta:', url);
                 
                 const response = await fetch(url, {
                     headers: {
@@ -582,9 +584,16 @@
                     }
                 });
 
-                if (!response.ok) throw new Error('Error cargando programaciones');
+                console.log('📡 Response status:', response.status);
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('❌ Error response:', errorText);
+                    throw new Error('Error cargando programaciones');
+                }
 
                 programaciones = await response.json();
+                console.log('📋 Programaciones recibidas:', programaciones);
                 
                 console.log('📋 Programaciones encontradas:', programaciones.length);
 
@@ -630,6 +639,8 @@
                 month: 'long',
                 day: 'numeric'
             });
+            
+            console.log('📅 Fecha original:', prog.fecha, '→ Formateada:', fechaFormateada);
 
             // Agrupar detalles por tipo de ración
             const raciones = {
@@ -770,16 +781,84 @@
             try {
                 const userData = auth.getUserData();
                 
-                // Aquí implementaremos la lógica de reserva en el siguiente paso
-                console.log('📝 Reserva:', {
+                // Preparar array de raciones seleccionadas
+                const raciones = [];
+                
+                if (seleccion.desayuno) {
+                    raciones.push({
+                        tipo_racion: 'DESAYUNO',
+                        codigo: seleccion.desayuno
+                    });
+                }
+                
+                if (seleccion.almuerzo) {
+                    raciones.push({
+                        tipo_racion: 'ALMUERZO',
+                        codigo: seleccion.almuerzo
+                    });
+                }
+                
+                if (seleccion.cena) {
+                    raciones.push({
+                        tipo_racion: 'CENA',
+                        codigo: seleccion.cena
+                    });
+                }
+                
+                console.log('📝 Enviando reserva:', {
                     usuario: userData.usuario_id,
                     programacion: seleccion.id_programacion,
-                    desayuno: seleccion.desayuno,
-                    almuerzo: seleccion.almuerzo,
-                    cena: seleccion.cena
+                    raciones: raciones
                 });
 
-                mostrarAlerta('¡Reserva realizada con éxito!', 'success');
+                // Llamar al stored procedure
+                const response = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/rpc/sp_crear_reserva`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': CONFIG.SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
+                    },
+                    body: JSON.stringify({
+                        p_id_usuario: userData.usuario_id,
+                        p_id_programacion: seleccion.id_programacion,
+                        p_raciones: raciones
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('❌ Error HTTP:', errorText);
+                    throw new Error('Error en la comunicación con el servidor');
+                }
+
+                const resultado = await response.json();
+                console.log('✅ Resultado:', resultado);
+
+                if (!resultado.success) {
+                    // Manejar errores específicos
+                    if (resultado.codigo === 'HORARIO_DESAYUNO_EXPIRADO' ||
+                        resultado.codigo === 'HORARIO_ALMUERZO_EXPIRADO' ||
+                        resultado.codigo === 'HORARIO_CENA_EXPIRADO') {
+                        mostrarAlerta(resultado.error, 'warning');
+                    } else if (resultado.codigo === 'RESERVA_DUPLICADA') {
+                        mostrarAlerta(resultado.error, 'warning');
+                    } else {
+                        mostrarAlerta(resultado.error || 'Error al crear la reserva', 'error');
+                    }
+                    
+                    btnReservar.disabled = false;
+                    btnReservar.innerHTML = '<span>✓</span><span>Reservar</span>';
+                    return;
+                }
+
+                // Éxito
+                mostrarAlerta('¡Reserva realizada con éxito! Redirigiendo...', 'success');
+                
+                // Guardar QR codes en localStorage si es necesario
+                if (resultado.data && resultado.data.detalles) {
+                    console.log('📱 QR generados:', resultado.data.detalles);
+                }
                 
                 setTimeout(() => {
                     window.location.href = CONFIG.ROUTES.HOME;
