@@ -40,11 +40,11 @@ class MenuValidator {
 
             console.log('🔍 Verificando rol para NSA:', nsa);
 
-            // Consultar en tabla users
+            //consulta tabla usuarios_seguridad
             const { data: users, error: usersError } = await this.supabaseQuery(
-                'users',
-                'usuario, rol, activo',
-                'usuario',
+                'usuarios_seguridad',
+                'nsa, rol, activo',
+                'nsa',
                 nsa
             );
 
