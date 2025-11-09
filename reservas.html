@@ -474,87 +474,83 @@
 
         async function obtenerUnidadUsuario() {
             const userData = auth.getUserData();
-            if (!userData) return null;
+            console.log('👤 Datos del usuario:', userData);
+            
+            if (!userData) {
+                console.error('❌ No hay datos de usuario');
+                return null;
+            }
 
             try {
-                // Verificar si está en un evento activo
-                if (userData.tipo_usuario === 'personal' && userData.id_personal) {
-                    // Buscar participación en evento
-                    const urlParticipacion = `${CONFIG.SUPABASE_URL}/rest/v1/participacion_evento?id_personal=eq.${userData.id_personal}&activo=eq.true&select=id_evento,evento(unidad_anfitriona,fecha_inicio,fecha_fin,activo)`;
+                // Si ya tenemos la unidad en userData, verificar eventos
+                if (userData.unidad) {
+                    console.log('✅ Unidad del usuario:', userData.unidad);
                     
-                    const respParticipacion = await fetch(urlParticipacion, {
+                    // Verificar si está en un evento activo
+                    const urlUsuarioApp = `${CONFIG.SUPABASE_URL}/rest/v1/usuarios_app?id=eq.${userData.usuario_id}&select=id_evento,id_personal,id_foraneo`;
+                    
+                    const respUsuarioApp = await fetch(urlUsuarioApp, {
                         headers: {
                             'apikey': CONFIG.SUPABASE_ANON_KEY,
                             'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
                         }
                     });
 
-                    if (respParticipacion.ok) {
-                        const participaciones = await respParticipacion.json();
+                    if (respUsuarioApp.ok) {
+                        const usuariosApp = await respUsuarioApp.json();
                         
-                        // Verificar si hay evento activo y vigente
-                        const hoy = new Date().toISOString().split('T')[0];
-                        const eventoActivo = participaciones.find(p => 
-                            p.evento && 
-                            p.evento.activo === true &&
-                            p.evento.fecha_inicio <= hoy &&
-                            p.evento.fecha_fin >= hoy
-                        );
+                        if (usuariosApp && usuariosApp.length > 0) {
+                            const usuarioApp = usuariosApp[0];
+                            
+                            // Si tiene evento, buscar unidad anfitriona
+                            if (usuarioApp.id_evento) {
+                                console.log('🎫 Usuario en evento, buscando unidad anfitriona...');
+                                
+                                // Buscar en participacion_evento para obtener datos del evento
+                                let urlParticipacion = '';
+                                if (usuarioApp.id_personal) {
+                                    urlParticipacion = `${CONFIG.SUPABASE_URL}/rest/v1/participacion_evento?id_personal=eq.${usuarioApp.id_personal}&id_evento=eq.${usuarioApp.id_evento}&select=evento(unidad_anfitriona,activo,fecha_inicio,fecha_fin)`;
+                                } else if (usuarioApp.id_foraneo) {
+                                    urlParticipacion = `${CONFIG.SUPABASE_URL}/rest/v1/participacion_evento?id_foraneo=eq.${usuarioApp.id_foraneo}&id_evento=eq.${usuarioApp.id_evento}&select=evento(unidad_anfitriona,activo,fecha_inicio,fecha_fin)`;
+                                }
+                                
+                                if (urlParticipacion) {
+                                    const respParticipacion = await fetch(urlParticipacion, {
+                                        headers: {
+                                            'apikey': CONFIG.SUPABASE_ANON_KEY,
+                                            'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
+                                        }
+                                    });
 
-                        if (eventoActivo) {
-                            console.log('✅ Usuario en evento activo:', eventoActivo.evento.unidad_anfitriona);
-                            return eventoActivo.evento.unidad_anfitriona;
+                                    if (respParticipacion.ok) {
+                                        const participaciones = await respParticipacion.json();
+                                        
+                                        if (participaciones && participaciones.length > 0) {
+                                            const evento = participaciones[0].evento;
+                                            
+                                            // Verificar que evento esté activo y vigente
+                                            const hoy = new Date().toISOString().split('T')[0];
+                                            if (evento && evento.activo === true && 
+                                                evento.fecha_inicio <= hoy && 
+                                                evento.fecha_fin >= hoy) {
+                                                console.log('✅ Evento activo, unidad anfitriona:', evento.unidad_anfitriona);
+                                                return evento.unidad_anfitriona;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
-
-                    // Si no hay evento, obtener unidad del personal
-                    const urlPersonal = `${CONFIG.SUPABASE_URL}/rest/v1/personal?id=eq.${userData.id_personal}&select=unidad`;
                     
-                    const respPersonal = await fetch(urlPersonal, {
-                        headers: {
-                            'apikey': CONFIG.SUPABASE_ANON_KEY,
-                            'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
-                        }
-                    });
-
-                    if (respPersonal.ok) {
-                        const personal = await respPersonal.json();
-                        if (personal && personal.length > 0) {
-                            console.log('✅ Unidad del personal:', personal[0].unidad);
-                            return personal[0].unidad;
-                        }
-                    }
+                    // Si no hay evento activo, usar su unidad
+                    console.log('✅ Usando unidad del usuario:', userData.unidad);
+                    return userData.unidad;
                 }
 
-                // Si es foráneo, obtener unidad del evento
-                if (userData.tipo_usuario === 'foraneo' && userData.id_foraneo) {
-                    const urlParticipacion = `${CONFIG.SUPABASE_URL}/rest/v1/participacion_evento?id_foraneo=eq.${userData.id_foraneo}&activo=eq.true&select=evento(unidad_anfitriona,activo,fecha_inicio,fecha_fin)`;
-                    
-                    const respParticipacion = await fetch(urlParticipacion, {
-                        headers: {
-                            'apikey': CONFIG.SUPABASE_ANON_KEY,
-                            'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
-                        }
-                    });
-
-                    if (respParticipacion.ok) {
-                        const participaciones = await respParticipacion.json();
-                        const hoy = new Date().toISOString().split('T')[0];
-                        const eventoActivo = participaciones.find(p => 
-                            p.evento && 
-                            p.evento.activo === true &&
-                            p.evento.fecha_inicio <= hoy &&
-                            p.evento.fecha_fin >= hoy
-                        );
-
-                        if (eventoActivo) {
-                            console.log('✅ Usuario foráneo en evento:', eventoActivo.evento.unidad_anfitriona);
-                            return eventoActivo.evento.unidad_anfitriona;
-                        }
-                    }
-                }
-
+                console.error('❌ No se encontró unidad');
                 return null;
+
             } catch (error) {
                 console.error('❌ Error obteniendo unidad:', error);
                 return null;
