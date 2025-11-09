@@ -569,7 +569,8 @@
                 console.log('🔍 Buscando programaciones para unidad:', unidad);
 
                 // Consultar programaciones publicadas
-                const url = `${CONFIG.SUPABASE_URL}/rest/v1/programacion?unidad=eq.${unidad}&estado=eq.PUBLICADO&fecha=gte.${new Date().toISOString().split('T')[0]}&select=*,detalle_programacion(*)&order=fecha.asc`;
+                // Línea ~180
+                const url = `${CONFIG.SUPABASE_URL}/rest/v1/programacion?unidad=eq.${unidad}&estado=eq.PUBLICADO&fecha=gte.${new Date().toISOString().split('T')[0]}&select=*,detalle_programacion(id,tip_rac,sub_tipo,codigo,id_elemento,tipo_racion_elemento(descripcion))&order=fecha.asc`;
                 
                 console.log('🔍 URL de consulta:', url);
                 
@@ -699,27 +700,44 @@
             `;
         }
 
-        function crearOpcionMenu(tipo, codigo, detalles, idProgramacion, numero) {
-            const detallesHTML = detalles.map(det => {
-                const label = det.sub_tipo || 'Plato';
-                return `<div class="detalle-item"><span class="detalle-label">${label}:</span>${det.id_elemento}</div>`;
-            }).join('');
+function crearOpcionMenu(tipo, codigo, detalles, idProgramacion, numero) {
+    let detallesHTML;
+    
+    if (tipo === 'DESAYUNO') {
+        // Para desayunos: concatenar todas las descripciones
+        const platosDesayuno = detalles
+            .map(det => det.tipo_racion_elemento?.descripcion || 'Sin descripción')
+            .join(', ');
+        
+        detallesHTML = `<div class="detalle-item">
+            <span class="detalle-label">Menú:</span>${platosDesayuno}
+        </div>`;
+    } else {
+        // Para almuerzo y cena: mostrar con sub_tipo
+        detallesHTML = detalles.map(det => {
+            const label = det.sub_tipo || 'Plato';
+            const descripcion = det.tipo_racion_elemento?.descripcion || 'Sin descripción';
+            return `<div class="detalle-item">
+                <span class="detalle-label">${label}:</span>${descripcion}
+            </div>`;
+        }).join('');
+    }
 
-            return `
-                <div class="racion-option" data-tipo="${tipo}" data-codigo="${codigo}" data-programacion="${idProgramacion}" onclick="seleccionarRacion(this, '${tipo}', '${codigo}', '${idProgramacion}')">
-                    <div class="racion-option-header">
-                        <div class="radio-custom"></div>
-                        <div class="racion-option-title">
-                            <strong>Menú ${numero}</strong>
-                            <small>Código: ${codigo}</small>
-                        </div>
-                    </div>
-                    <div class="racion-details">
-                        ${detallesHTML}
-                    </div>
+    return `
+        <div class="racion-option" data-tipo="${tipo}" data-codigo="${codigo}" data-programacion="${idProgramacion}" onclick="seleccionarRacion(this, '${tipo}', '${codigo}', '${idProgramacion}')">
+            <div class="racion-option-header">
+                <div class="radio-custom"></div>
+                <div class="racion-option-title">
+                    <strong>Menú ${numero}</strong>
+                    <small>Código: ${codigo}</small>
                 </div>
-            `;
-        }
+            </div>
+            <div class="racion-details">
+                ${detallesHTML}
+            </div>
+        </div>
+    `;
+}
 
         function toggleProgramacion(header) {
             header.classList.toggle('active');
