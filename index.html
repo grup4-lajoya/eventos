@@ -339,14 +339,6 @@
                 <p>Escaneo de reservas</p>
             </div>
         </div>
-
-        <!-- QR Display -->
-        <div class="qr-container" id="qrDisplay">
-            <h3>📱 Tu Código QR</h3>
-            <img id="qrImage" src="" alt="Código QR">
-            <p class="qr-info">Presenta este código al momento de retirar tus alimentos</p>
-        </div>
-
         <div class="footer">
             <button class="btn-logout" onclick="auth.hardLogout()">Cerrar Sesión</button>
             <p style="color: #999; font-size: 12px; margin-top: 15px;">
@@ -366,17 +358,7 @@
         }
 
         function mostrarQR() {
-            const userData = auth.getUserData();
-            const qrDisplay = document.getElementById('qrDisplay');
-            const qrImage = document.getElementById('qrImage');
-
-            if (userData && userData.qr_code) {
-                qrImage.src = userData.qr_code;
-                qrDisplay.style.display = 'block';
-                qrDisplay.scrollIntoView({ behavior: 'smooth' });
-            } else {
-                alert('No se encontró el código QR. Intente cerrar sesión y registrarse nuevamente.');
-            }
+            window.location.href = 'mis-qr.html';
         }
 
         function irATerminal() {
