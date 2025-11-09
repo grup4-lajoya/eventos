@@ -226,6 +226,26 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .qr-code-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .qr-code-container::after {
+            content: '🔍 Click para ampliar';
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: #667eea;
+            opacity: 0.8;
+            white-space: nowrap;
         }
 
         .qr-code {
