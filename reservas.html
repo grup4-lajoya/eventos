@@ -746,18 +746,23 @@ function crearOpcionMenu(tipo, codigo, detalles, idProgramacion, numero) {
         }
 
         function seleccionarRacion(elemento, tipo, codigo, idProgramacion) {
-            // Deseleccionar otras opciones del mismo tipo
+            const yaSeleccionado = elemento.classList.contains('selected');
+            
+            // Deseleccionar todas las opciones del mismo tipo
             document.querySelectorAll(`.racion-option[data-tipo="${tipo}"]`).forEach(el => {
                 el.classList.remove('selected');
             });
-
-            // Seleccionar esta opción
-            elemento.classList.add('selected');
-
-            // Actualizar selección
-            seleccion.id_programacion = idProgramacion;
-            seleccion[tipo.toLowerCase()] = codigo;
-
+        
+            // ✅ Si ya estaba seleccionado, deseleccionar (toggle)
+            if (yaSeleccionado) {
+                seleccion[tipo.toLowerCase()] = null;
+            } else {
+                // Seleccionar esta opción
+                elemento.classList.add('selected');
+                seleccion.id_programacion = idProgramacion;
+                seleccion[tipo.toLowerCase()] = codigo;
+            }
+        
             actualizarResumen();
         }
 
