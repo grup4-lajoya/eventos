@@ -289,38 +289,71 @@
             color: #667eea;
             margin-right: 8px;
         }
-
-        .footer-fixed {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
+        .racion-option.sin-stock {
+        opacity: 0.6;
+        cursor: not-allowed;
+        border-color: #ccc;
+        }
+        
+        .racion-option.sin-stock:hover {
+            border-color: #ccc;
             background: white;
-            padding: 20px;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 90;
+            transform: none;
         }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
+        
+        .badge-stock {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #e7f5e8;
+            color: #2e7d32;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
         }
-
-        .selection-summary {
-            flex: 1;
-            color: #666;
-            font-size: 14px;
+        
+        .badge-agotado {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #ffebee;
+            color: #c62828;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
         }
-
-        .selection-summary strong {
-            color: #333;
-            display: block;
-            margin-bottom: 5px;
-        }
+    
+            .footer-fixed {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: white;
+                padding: 20px;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+                z-index: 90;
+            }
+    
+            .footer-content {
+                max-width: 1200px;
+                margin: 0 auto;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 20px;
+            }
+    
+            .selection-summary {
+                flex: 1;
+                color: #666;
+                font-size: 14px;
+            }
+    
+            .selection-summary strong {
+                color: #333;
+                display: block;
+                margin-bottom: 5px;
+            }
 
         .btn-reservar {
             background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
@@ -684,7 +717,7 @@
             return card;
         }
 
-        function crearSeccionRacion(tipo, detalles, idProgramacion) {
+        async function crearSeccionRacion(tipo, detalles, idProgramacion) {
             const iconos = {
                 DESAYUNO: '☀️',
                 ALMUERZO: '🍽️',
@@ -700,22 +733,26 @@
                 menus[det.codigo].push(det);
             });
 
-            return `
-                <div class="racion-section">
-                    <div class="racion-header">
-                        <span class="racion-icon">${iconos[tipo]}</span>
-                        <h4>${tipo}</h4>
-                    </div>
-                    <div class="racion-options">
-                        ${Object.keys(menus).map((codigo, index) => 
-                            crearOpcionMenu(tipo, codigo, menus[codigo], idProgramacion, index + 1)
-                        ).join('')}
-                    </div>
+        const opciones = await Promise.all(
+            Object.keys(menus).map((codigo, index) => 
+                crearOpcionMenu(tipo, codigo, menus[codigo], idProgramacion, index + 1)
+            )
+        );
+        
+        return `
+            <div class="racion-section">
+                <div class="racion-header">
+                    <span class="racion-icon">${iconos[tipo]}</span>
+                    <h4>${tipo}</h4>
                 </div>
-            `;
+                <div class="racion-options">
+                    ${opciones.join('')}
+                </div>
+            </div>
+        `;
         }
 
-function crearOpcionMenu(tipo, codigo, detalles, idProgramacion, numero) {
+async function crearOpcionMenu(tipo, codigo, detalles, idProgramacion, numero) {
     let detallesHTML;
     
     if (tipo === 'DESAYUNO') {
@@ -737,14 +774,22 @@ function crearOpcionMenu(tipo, codigo, detalles, idProgramacion, numero) {
             </div>`;
         }).join('');
     }
+        // ✅ OBTENER DISPONIBILIDAD
+        const disponibilidad = await obtenerDisponibilidad(idProgramacion, tipo, codigo);
+        const sinStock = disponibilidad.disponible <= 0;
+        const stockClass = sinStock ? 'sin-stock' : '';
+        const stockBadge = sinStock 
+            ? '<span class="badge-agotado">AGOTADO</span>' 
+            : `<span class="badge-stock">${disponibilidad.disponible} disponibles</span>`;
 
     return `
-        <div class="racion-option" data-tipo="${tipo}" data-codigo="${codigo}" data-programacion="${idProgramacion}" onclick="seleccionarRacion(this, '${tipo}', '${codigo}', '${idProgramacion}')">
+        <div class="racion-option ${stockClass}" data-tipo="${tipo}" data-codigo="${codigo}" data-programacion="${idProgramacion}" onclick="seleccionarRacion(this, '${tipo}', '${codigo}', '${idProgramacion}', ${sinStock})">
             <div class="racion-option-header">
                 <div class="radio-custom"></div>
                 <div class="racion-option-title">
                     <strong>Menú ${numero}</strong>
                     <small>Código: ${codigo}</small>
+                    ${stockBadge}
                 </div>
             </div>
             <div class="racion-details">
@@ -753,14 +798,39 @@ function crearOpcionMenu(tipo, codigo, detalles, idProgramacion, numero) {
         </div>
     `;
 }
+        async function obtenerDisponibilidad(idProgramacion, tipoRacion, codigo) {
+    try {
+        const url = `${CONFIG.SUPABASE_URL}/rest/v1/programacion_horario_cantidad?id_programacion=eq.${idProgramacion}&tip_rac=eq.${tipoRacion}&codigo=eq.${codigo}&select=cantidad,cantidad_reservada`;
+        
+        const response = await fetch(url, {
+            headers: {
+                'apikey': CONFIG.SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
+            }
+        });
 
+        const data = await response.json();
+        if (data && data.length > 0) {
+            const disponible = data[0].cantidad - data[0].cantidad_reservada;
+            return { disponible, total: data[0].cantidad };
+        }
+        return { disponible: 0, total: 0 };
+    } catch (error) {
+        console.error('Error obteniendo disponibilidad:', error);
+        return { disponible: 0, total: 0 };
+    }
+}
         function toggleProgramacion(header) {
             header.classList.toggle('active');
             const body = header.nextElementSibling;
             body.classList.toggle('active');
         }
 
-        function seleccionarRacion(elemento, tipo, codigo, idProgramacion) {
+        function seleccionarRacion(elemento, tipo, codigo, idProgramacion, sinStock) {
+            if (sinStock) {
+                mostrarAlerta('Este menú ya no tiene disponibilidad', 'warning');
+                return;
+            }
             const yaSeleccionado = elemento.classList.contains('selected');
             
             // Deseleccionar todas las opciones del mismo tipo
@@ -877,6 +947,9 @@ function crearOpcionMenu(tipo, codigo, detalles, idProgramacion, numero) {
                         mostrarAlerta(resultado.error, 'warning');
                     } else if (resultado.codigo === 'RESERVA_DUPLICADA') {
                         mostrarAlerta(resultado.error, 'warning');
+                    } else if (resultado.codigo === 'SIN_STOCK') {  // ✅ AGREGAR ESTE BLOQUE
+                        mostrarAlerta('⚠️ ' + resultado.error + '. Recargando...', 'error');
+                        setTimeout(() => location.reload(), 2000);
                     } else {
                         mostrarAlerta(resultado.error || 'Error al crear la reserva', 'error');
                     }
