@@ -930,10 +930,9 @@
             datosValidacion = null;
             menuSeleccionado = null;
         }
-
         // Inicializar
         window.addEventListener('load', async () => {
-            const acceso = await auth.protectPage();
+            const acceso = await auth.protectTerminalRancho();  // ← USAR MÉTODO ESPECÍFICO
             if (!acceso) return;
 
             const userData = auth.getUserData();
