@@ -707,7 +707,11 @@
             
             card.innerHTML = `
                 <div class="programacion-header" onclick="toggleProgramacion(this)">
-                    ...
+                    <div class="programacion-fecha">
+                        <span style="font-size: 24px;">📅</span>
+                        <h3>${fechaFormateada}</h3>
+                    </div>
+                    <div class="arrow">▼</div>
                 </div>
                 <div class="programacion-body">
                     ${seccionesHTML.join('')}
@@ -780,7 +784,7 @@ async function crearOpcionMenu(tipo, codigo, detalles, idProgramacion, numero) {
         const stockClass = sinStock ? 'sin-stock' : '';
         const stockBadge = sinStock 
             ? '<span class="badge-agotado">AGOTADO</span>' 
-            : `<span class="badge-stock">${disponibilidad.disponible} disponibles</span>`;
+            : '<span class="badge-stock">DISPONIBLE</span>';
 
     return `
         <div class="racion-option ${stockClass}" data-tipo="${tipo}" data-codigo="${codigo}" data-programacion="${idProgramacion}" onclick="seleccionarRacion(this, '${tipo}', '${codigo}', '${idProgramacion}', ${sinStock})">
