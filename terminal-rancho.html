@@ -90,45 +90,49 @@
             overflow: hidden;
             margin-bottom: 20px;
         }
-        /* Búsqueda Manual (corregido) */
-            .search-box {
-              display: flex;              /* Coloca input y botón en la misma línea */
-              align-items: center;        /* Centra verticalmente */
-              gap: 10px;                  /* Espacio entre el input y el botón */
-              margin-bottom: 20px;
-              width: 100%;
-              max-width: 500px;           /* opcional */
-            }
-            
-            .search-box input {
-              flex: 1;                    /* El input ocupa todo el ancho disponible */
-              padding: 12px 15px;
-              font-size: 16px;
-              border: 2px solid #e0e0e0;
-              border-radius: 12px;
-              transition: all 0.3s;
-            }
-            
-            .search-box input:focus {
-              outline: none;
-              border-color: #1e3c72;
-              box-shadow: 0 0 0 3px rgba(30,60,114,0.1);
-            }
-            
-            .search-box button {
-              padding: 12px 20px;
-              background: #1e3c72;
-              color: white;
-              border: none;
-              border-radius: 8px;
-              cursor: pointer;
-              font-weight: 600;
-              transition: all 0.3s;
-            }
-            
-            .search-box button:hover {
-              background: #2a5298;
-            }      
+        /* Búsqueda Manual (optimizada para PWA) */
+        .search-box {
+          display: flex;
+          justify-content: center;      /* Centra horizontalmente todo el bloque */
+          align-items: center;          /* Centra verticalmente */
+          gap: 8px;                     /* Espacio entre input y botón */
+          margin: 10px auto 20px auto;  /* Centrado con margen */
+          width: 95%;                   /* Ocupa casi todo el ancho disponible */
+          max-width: 400px;             /* Limita el tamaño máximo */
+        }
+        
+        .search-box input {
+          flex: 1;                      /* Se adapta al espacio restante */
+          min-width: 140px;             /* Asegura que no se achique demasiado */
+          max-width: 260px;             /* Limita ancho del input NSA */
+          padding: 10px 12px;
+          font-size: 15px;
+          border: 2px solid #e0e0e0;
+          border-radius: 10px;
+          transition: all 0.3s;
+        }
+        
+        .search-box input:focus {
+          outline: none;
+          border-color: #1e3c72;
+          box-shadow: 0 0 0 3px rgba(30,60,114,0.1);
+        }
+        
+        .search-box button {
+          padding: 10px 14px;
+          background: #1e3c72;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          font-weight: 600;
+          transition: all 0.3s;
+          flex-shrink: 0;               /* Evita que el botón se comprima */
+        }
+        
+        .search-box button:hover {
+          background: #2a5298;
+        }         
 
         /* Resultado de Validación */
         .validation-result {
