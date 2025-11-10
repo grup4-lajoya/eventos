@@ -9,7 +9,11 @@ const CONFIG = {
         REGISTRO: '/functions/v1/public-registro',
         LOGIN: '/functions/v1/public-login',
         VALIDAR_TOKEN: '/functions/v1/public-validar-token',
-        VALIDAR_ROL: '/functions/v1/validar-rol-intendencia'
+        VALIDAR_ROL: '/functions/v1/validar-rol-intendencia',
+        VALIDAR_QR_RANCHO: '/functions/v1/validar-qr-rancho',
+        BUSCAR_RESERVA_NSA: '/functions/v1/buscar-reserva-nsa',
+        VALIDAR_ELEGIBILIDAD: '/functions/v1/validar-elegibilidad-rancho',
+        RESERVA_EXPRESS: '/functions/v1/reserva-express-rancho'
     },
     
     // Rutas de la app
@@ -17,8 +21,9 @@ const CONFIG = {
         REGISTRO: '/eventos/registro.html',
         LOGIN: '/eventos/login.html',
         HOME: '/eventos/index.html',
-        RESERVAS: '/eventos/reservas.html'
-    },  // ← AGREGAR ESTA COMA
+        RESERVAS: '/eventos/reservas.html',
+        TERMINAL_RANCHO: '/eventos/terminal-rancho.html'
+    },
     
     // LocalStorage keys
     STORAGE_KEYS: {
@@ -44,12 +49,10 @@ const CONFIG = {
     APP_VERSION: '1.0.0'
 };
 
-// Helper para construir URLs
 CONFIG.getEndpointURL = function(endpoint) {
     return `${this.SUPABASE_URL}${this.ENDPOINTS[endpoint]}`;
 };
 
-// Exportar para uso global
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = CONFIG;
 }
