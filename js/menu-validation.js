@@ -7,69 +7,45 @@ class MenuValidator {
 
     // Verificar si el usuario tiene rol INTENDENCIA
     async verificarRolIntendencia() {
-        const userData = auth.getUserData();
-        
-        if (!userData) {
-            console.log('❌ No hay datos de usuario');
-            return false;
-        }
-
-        try {
-            // Obtener NSA según tipo de usuario
-            let nsa = null;
-
-            if (userData.tipo_usuario === 'personal' && userData.id_personal) {
-                // Consultar NSA del personal
-                const { data: personal, error } = await this.supabaseQuery(
-                    'personal',
-                    'nsa',
-                    'id',
-                    userData.id_personal
-                );
-
-                if (error) throw error;
-                if (personal && personal.length > 0) {
-                    nsa = personal[0].nsa;
-                }
-            }
-
-            if (!nsa) {
-                console.log('ℹ️ Usuario sin NSA (foráneo o sin datos)');
-                return false;
-            }
-
-            console.log('🔍 Verificando rol para NSA:', nsa);
-
-            //consulta tabla usuarios_seguridad
-            const { data: users, error: usersError } = await this.supabaseQuery(
-                'usuarios_seguridad',
-                'nsa, rol, activo',
-                'nsa',
-                nsa
-            );
-
-            if (usersError) throw usersError;
-
-            if (users && users.length > 0) {
-                const user = users[0];
-                console.log('👤 Usuario encontrado:', user);
-
-                // Validar activo y rol INTENDENCIA
-                if (user.activo === true && user.rol === 'INTENDENCIA') {
-                    console.log('✅ Usuario tiene rol INTENDENCIA');
-                    this.hasIntendenciaRole = true;
-                    return true;
-                }
-            }
-
-            console.log('ℹ️ Usuario no tiene rol INTENDENCIA');
-            return false;
-
-        } catch (error) {
-            console.error('❌ Error verificando rol:', error);
-            return false;
-        }
+    const userData = auth.getUserData();
+    
+    if (!userData || !userData.id_personal) {
+        console.log('❌ No hay id_personal');
+        return false;
     }
+
+    try {
+        console.log('🔍 Verificando rol para id_personal:', userData.id_personal);
+
+        const response = await fetch(CONFIG.getEndpointURL('VALIDAR_ROL'), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': CONFIG.SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
+            },
+            body: JSON.stringify({
+                id_personal: userData.id_personal
+            })
+        });
+
+        const result = await response.json();
+        
+        if (result.success && result.tiene_rol) {
+            console.log('✅ Usuario tiene rol INTENDENCIA');
+            this.hasIntendenciaRole = true;
+            return true;
+        }
+
+        console.log('ℹ️ Usuario no tiene rol INTENDENCIA');
+        return false;
+
+    } catch (error) {
+        console.error('❌ Error verificando rol:', error);
+        return false;
+    }
+}
+
 
     // Helper para consultas a Supabase
     async supabaseQuery(table, select, filterColumn, filterValue) {
