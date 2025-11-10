@@ -34,7 +34,7 @@
 
         .header h1 {
             color: #1e3c72;
-            font-size: 24px;
+            font-size: 20px;
             margin-bottom: 10px;
         }
 
@@ -90,46 +90,45 @@
             overflow: hidden;
             margin-bottom: 20px;
         }
-
-        /* Búsqueda Manual */
-        .search-box {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 15px 50px 15px 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: #1e3c72;
-            box-shadow: 0 0 0 3px rgba(30,60,114,0.1);
-        }
-
-        .search-box button {
-            position: absolute;
-            right: 5px;
-            top: 50%;
-            transform: translateY(-50%);
-            padding: 10px 20px;
-            background: #1e3c72;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .search-box button:hover {
-            background: #2a5298;
-        }
+        /* Búsqueda Manual (corregido) */
+            .search-box {
+              display: flex;              /* Coloca input y botón en la misma línea */
+              align-items: center;        /* Centra verticalmente */
+              gap: 10px;                  /* Espacio entre el input y el botón */
+              margin-bottom: 20px;
+              width: 100%;
+              max-width: 500px;           /* opcional */
+            }
+            
+            .search-box input {
+              flex: 1;                    /* El input ocupa todo el ancho disponible */
+              padding: 12px 15px;
+              font-size: 16px;
+              border: 2px solid #e0e0e0;
+              border-radius: 12px;
+              transition: all 0.3s;
+            }
+            
+            .search-box input:focus {
+              outline: none;
+              border-color: #1e3c72;
+              box-shadow: 0 0 0 3px rgba(30,60,114,0.1);
+            }
+            
+            .search-box button {
+              padding: 12px 20px;
+              background: #1e3c72;
+              color: white;
+              border: none;
+              border-radius: 8px;
+              cursor: pointer;
+              font-weight: 600;
+              transition: all 0.3s;
+            }
+            
+            .search-box button:hover {
+              background: #2a5298;
+            }      
 
         /* Resultado de Validación */
         .validation-result {
@@ -400,7 +399,7 @@
             <!-- TAB 2: Búsqueda Manual -->
             <div id="tab-manual" class="tab-content">
                 <div class="search-box">
-                    <input type="text" id="inputNSA" placeholder="Ingrese NSA (8 dígitos)" maxlength="8" pattern="[0-9]{8}">
+                    <input type="text" id="inputNSA" placeholder="Ingrese NSA">
                     <button onclick="buscarPorNSA()">🔍 Buscar</button>
                 </div>
 
@@ -646,10 +645,10 @@
         async function buscarPorNSA() {
             const nsa = document.getElementById('inputNSA').value.trim();
             
-            if (!nsa || nsa.length !== 8) {
-                mostrarAlerta('Debe ingresar un NSA válido de 8 dígitos', 'warning');
-                return;
-            }
+        if (!nsa || nsa.length < 6) {
+            mostrarAlerta('Debe ingresar un NSA válido', 'warning');
+            return;
+        }
 
             document.getElementById('loadingBusqueda').style.display = 'block';
             document.getElementById('resultadoValidacion').style.display = 'none';
