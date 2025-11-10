@@ -470,7 +470,15 @@
         }
 
         function mostrarAlerta(mensaje, tipo = 'error') {
-            const alert = document.getElementById('alert');
+            // Crear elemento si no existe
+            let alert = document.getElementById('alert');
+            if (!alert) {
+                alert = document.createElement('div');
+                alert.id = 'alert';
+                alert.className = 'alert';
+                document.body.appendChild(alert);
+            }
+            
             alert.textContent = mensaje;
             alert.className = `alert alert-${tipo} show`;
             
