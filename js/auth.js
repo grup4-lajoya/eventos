@@ -147,47 +147,6 @@ hardLogout() {
         console.log('✅ Acceso permitido');
         return true;
     }
-    // Proteger Terminal de Rancho (requiere rol de intendencia)
-    async protectTerminalRancho() {
-        console.log('🔍 Validando acceso al Terminal de Rancho...');
-        
-        // Primero validar autenticación básica
-        const accessGranted = await this.protectPage();
-        if (!accessGranted) return false;
-
-        try {
-            // Validar rol de intendencia
-            const response = await fetch(CONFIG.getEndpointURL('VALIDAR_ROL'), {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'apikey': CONFIG.SUPABASE_ANON_KEY,
-                    'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
-                },
-                body: JSON.stringify({
-                    token_acceso: this.getToken()
-                })
-            });
-
-            const result = await response.json();
-
-            if (!result.success || !result.tiene_acceso) {
-                console.log('❌ Sin permisos de intendencia');
-                alert('⛔ No tiene permisos para acceder al Terminal de Rancho.\nSolo personal de intendencia autorizado.');
-                window.location.href = CONFIG.ROUTES.HOME;
-                return false;
-            }
-
-            console.log('✅ Acceso autorizado al Terminal de Rancho');
-            return true;
-
-        } catch (error) {
-            console.error('❌ Error validando rol:', error);
-            alert('Error al validar permisos de acceso');
-            window.location.href = CONFIG.ROUTES.HOME;
-            return false;
-        }
-    }
 
     // Iniciar validación periódica
     startPeriodicValidation() {
