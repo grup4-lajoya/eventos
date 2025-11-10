@@ -435,101 +435,101 @@
             document.getElementById('loadingContainer').style.display = 'none';
             container.style.display = 'block';
         }
-
         function crearTarjetaReserva(reserva) {
-            const card = document.createElement('div');
-            card.className = 'reserva-card';
+    const card = document.createElement('div');
+    card.className = 'reserva-card';
 
-            const fecha = new Date(reserva.programacion.fecha + 'T00:00:00');
-            const fechaFormateada = fecha.toLocaleDateString('es-PE', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
+    const fecha = new Date(reserva.programacion.fecha + 'T00:00:00');
+    const fechaFormateada = fecha.toLocaleDateString('es-PE', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
 
-            const iconos = {
-                DESAYUNO: '☀️',
-                ALMUERZO: '🍽️',
-                CENA: '🌙'
-            };
+    const iconos = {
+        DESAYUNO: '☀️',
+        ALMUERZO: '🍽️',
+        CENA: '🌙'
+    };
 
-            const detallesHTML = reserva.detalle_reserva
-                .filter(det => det.qr_code) // Solo mostrar los que tienen QR
-                .map(detalle => {
-                    const estado = detalle.consumido ? 'consumido' : 'confirmado';
-                    const estadoTexto = detalle.consumido ? 'Consumido' : 'Activo';
-                    
-                    return `
-                        <div class="qr-section">
-                            <div class="qr-header">
-                                <span class="qr-icon">${iconos[detalle.tipo_racion]}</span>
-                                <div class="qr-title">
-                                    <h4>${detalle.tipo_racion}</h4>
-                                    <p>${fechaFormateada}</p>
-                                </div>
-                                <span class="estado-badge estado-${estado}">${estadoTexto}</span>
-                            </div>
-                            <div class="qr-content">
-                                <div class="qr-code-container">
-                                    <div class="qr-code" id="qr-${detalle.id}"></div>
-                                </div>
-                                <div class="qr-info">
-                                    <p><strong>Presenta este código para retirar tu ${detalle.tipo_racion.toLowerCase()}</strong></p>
-                                    ${!detalle.consumido ? `
-                                        <div class="qr-warning">
-                                            ⚠️ <span>Este código es de un solo uso. Una vez escaneado no podrá usarse nuevamente.</span>
-                                        </div>
-                                    ` : ''}
-                                </div>
-                            </div>
+    const detallesHTML = reserva.detalle_reserva
+        .filter(det => det.qr_code)
+        .map(detalle => {
+            const estado = detalle.consumido ? 'consumido' : 'confirmado';
+            const estadoTexto = detalle.consumido ? 'Consumido' : 'Activo';
+            
+            return `
+                <div class="qr-section">
+                    <div class="qr-header">
+                        <span class="qr-icon">${iconos[detalle.tipo_racion]}</span>
+                        <div class="qr-title">
+                            <h4>${detalle.tipo_racion}</h4>
+                            <p>${fechaFormateada}</p>
                         </div>
-                    `;
-                }).join('');
-
-            card.innerHTML = `
-                <div class="reserva-header">
-                    <div class="reserva-fecha">📅 ${fechaFormateada}</div>
-                    <div class="reserva-id">Reserva: ${reserva.id.substring(0, 8)}...</div>
-                </div>
-                <div class="reserva-body">
-                    ${detallesHTML}
+                        <span class="estado-badge estado-${estado}">${estadoTexto}</span>
+                    </div>
+                    <div class="qr-content">
+                        <div class="qr-code-container">
+                            <div class="qr-code" id="qr-${detalle.id}"></div>
+                        </div>
+                        <div class="qr-info">
+                            <p><strong>Presenta este código para retirar tu ${detalle.tipo_racion.toLowerCase()}</strong></p>
+                            ${!detalle.consumido ? `
+                                <div class="qr-warning">
+                                    ⚠️ <span>Este código es de un solo uso. Una vez escaneado no podrá usarse nuevamente.</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
                 </div>
             `;
+        }).join('');
 
-         // Generar códigos QR después de insertar en el DOM
-        setTimeout(() => {
-            reserva.detalle_reserva.forEach(detalle => {
-                if (detalle.qr_code) {
-                    const qrElement = document.getElementById(`qr-${detalle.id}`);
-                    if (qrElement) {
-                        // ✅ LIMPIAR ANTES DE GENERAR
-                        qrElement.innerHTML = '';
-                        
-                        new QRCode(qrElement, {
-                            text: detalle.qr_code,
-                            width: 200,
-                            height: 200,
-                            colorDark: "#333333",
-                            colorLight: "#ffffff",
-                            correctLevel: QRCode.CorrectLevel.H
-                        });
-                        
-                        // ✅ FORZAR SOLO CANVAS EN iOS
-                        setTimeout(() => {
-                            const canvas = qrElement.querySelector('canvas');
-                            const img = qrElement.querySelector('img');
-                            if (canvas && img) {
-                                img.style.display = 'none';
-                            }
-                        }, 50);
-                    }
+    card.innerHTML = `
+        <div class="reserva-header">
+            <div class="reserva-fecha">📅 ${fechaFormateada}</div>
+            <div class="reserva-id">Reserva: ${reserva.id.substring(0, 8)}...</div>
+        </div>
+        <div class="reserva-body">
+            ${detallesHTML}
+        </div>
+    `;
+
+    // ✅ Generar códigos QR después de insertar en el DOM
+    setTimeout(() => {
+        reserva.detalle_reserva.forEach(detalle => {
+            if (detalle.qr_code) {
+                const qrElement = document.getElementById(`qr-${detalle.id}`);
+                if (qrElement) {
+                    // Limpia el contenedor antes
+                    qrElement.innerHTML = '';
+
+                    // Generar el QR
+                    new QRCode(qrElement, {
+                        text: detalle.qr_code,
+                        width: 200,
+                        height: 200,
+                        colorDark: "#333333",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+
+                    // ✅ Eliminar imágenes duplicadas (Safari/iPhone)
+                    setTimeout(() => {
+                        const imgs = qrElement.querySelectorAll('img');
+                        imgs.forEach(img => img.remove());
+                    }, 100);
                 }
-            });
-        }, 100);
+            }
+        });
+    }, 100);
 
-            return card;
-        }
+    return card;
+}
+
+
+
 
         // Inicializar
         window.addEventListener('load', async () => {
