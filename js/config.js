@@ -8,7 +8,8 @@ const CONFIG = {
     ENDPOINTS: {
         REGISTRO: '/functions/v1/public-registro',
         LOGIN: '/functions/v1/public-login',
-        VALIDAR_TOKEN: '/functions/v1/public-validar-token'
+        VALIDAR_TOKEN: '/functions/v1/public-validar-token',
+        VALIDAR_ROL: '/functions/v1/validar-rol-intendencia'
     },
     
     // Rutas de la app
