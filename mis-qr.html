@@ -497,24 +497,36 @@
                 </div>
             `;
 
-            // Generar códigos QR después de insertar en el DOM
-            setTimeout(() => {
-                reserva.detalle_reserva.forEach(detalle => {
-                    if (detalle.qr_code) {
-                        const qrElement = document.getElementById(`qr-${detalle.id}`);
-                        if (qrElement) {
-                            new QRCode(qrElement, {
-                                text: detalle.qr_code,
-                                width: 200,
-                                height: 200,
-                                colorDark: "#333333",
-                                colorLight: "#ffffff",
-                                correctLevel: QRCode.CorrectLevel.H
-                            });
-                        }
+         // Generar códigos QR después de insertar en el DOM
+        setTimeout(() => {
+            reserva.detalle_reserva.forEach(detalle => {
+                if (detalle.qr_code) {
+                    const qrElement = document.getElementById(`qr-${detalle.id}`);
+                    if (qrElement) {
+                        // ✅ LIMPIAR ANTES DE GENERAR
+                        qrElement.innerHTML = '';
+                        
+                        new QRCode(qrElement, {
+                            text: detalle.qr_code,
+                            width: 200,
+                            height: 200,
+                            colorDark: "#333333",
+                            colorLight: "#ffffff",
+                            correctLevel: QRCode.CorrectLevel.H
+                        });
+                        
+                        // ✅ FORZAR SOLO CANVAS EN iOS
+                        setTimeout(() => {
+                            const canvas = qrElement.querySelector('canvas');
+                            const img = qrElement.querySelector('img');
+                            if (canvas && img) {
+                                img.style.display = 'none';
+                            }
+                        }, 50);
                     }
-                });
-            }, 100);
+                }
+            });
+        }, 100);
 
             return card;
         }
