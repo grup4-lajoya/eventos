@@ -660,20 +660,19 @@
             document.getElementById('emptyState').style.display = 'block';
         }
 
-        function renderizarProgramaciones() {
+       async function renderizarProgramaciones() {
             const container = document.getElementById('programacionList');
             container.innerHTML = '';
 
-            programaciones.forEach(prog => {
-                const card = crearTarjetaProgramacion(prog);
-                container.appendChild(card);
-            });
-
+        for (const prog of programaciones) {
+            const card = await crearTarjetaProgramacion(prog);
+            container.appendChild(card);
+        }
             document.getElementById('loadingContainer').style.display = 'none';
             container.style.display = 'block';
         }
 
-        function crearTarjetaProgramacion(prog) {
+        async function crearTarjetaProgramacion(prog) {
             const card = document.createElement('div');
             card.className = 'programacion-card';
 
@@ -699,18 +698,19 @@
                 raciones[det.tip_rac].push(det);
             });
 
+            // Generar secciones de forma asíncrona
+            const seccionesHTML = await Promise.all(
+                Object.keys(raciones).map(async tipo => 
+                    raciones[tipo].length > 0 ? await crearSeccionRacion(tipo, raciones[tipo], prog.id) : ''
+                )
+            );
+            
             card.innerHTML = `
                 <div class="programacion-header" onclick="toggleProgramacion(this)">
-                    <div class="programacion-fecha">
-                        <span style="font-size: 24px;">📅</span>
-                        <h3>${fechaFormateada}</h3>
-                    </div>
-                    <div class="arrow">▼</div>
+                    ...
                 </div>
                 <div class="programacion-body">
-                    ${Object.keys(raciones).map(tipo => 
-                        raciones[tipo].length > 0 ? crearSeccionRacion(tipo, raciones[tipo], prog.id) : ''
-                    ).join('')}
+                    ${seccionesHTML.join('')}
                 </div>
             `;
 
