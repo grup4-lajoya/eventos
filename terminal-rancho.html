@@ -932,7 +932,7 @@
         }
         // Inicializar
         window.addEventListener('load', async () => {
-            const acceso = await auth.protectTerminalRancho();  // ← USAR MÉTODO ESPECÍFICO
+            const acceso = await auth.protectPage();  
             if (!acceso) return;
 
             const userData = auth.getUserData();
