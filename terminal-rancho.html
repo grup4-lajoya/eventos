@@ -574,9 +574,20 @@
 
             html5QrCode = new Html5Qrcode("reader");
             
-            html5QrCode.start(
+             html5QrCode.start(
                 { facingMode: "environment" },
-                { fps: 10, qrbox: { width: 320, height: 320 } },
+                { 
+                    fps: 10, 
+                    qrbox: function(viewfinderWidth, viewfinderHeight) {
+                        // Hacer que el área de escaneo ocupe más del visor
+                        let minEdge = Math.min(viewfinderWidth, viewfinderHeight);
+                        let qrboxSize = Math.floor(minEdge * 0.8); // 80% del visor
+                        return {
+                            width: qrboxSize,
+                            height: qrboxSize
+                        };
+                    }
+                },
                 onScanSuccess,
                 onScanError
             ).catch(err => {
