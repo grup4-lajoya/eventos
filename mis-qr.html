@@ -401,7 +401,7 @@
                 console.log('🔍 Buscando reservas para usuario:', userData.usuario_id);
 
                 // Consultar reservas activas del usuario con sus detalles
-                const url = `${CONFIG.SUPABASE_URL}/rest/v1/reserva?id_usuario=eq.${userData.usuario_id}&activo=eq.true&select=*,programacion(fecha),detalle_reserva(id,tipo_racion,codigo,confirmado,consumido,qr_code)&order=fecha_reserva.desc`;
+                const url = `${CONFIG.SUPABASE_URL}/rest/v1/reserva?id_usuario=eq.${userData.usuario_id}&activo=eq.true&select=*,programacion(fecha),detalle_reserva(id,tipo_racion,confirmado,consumido,qr_code,codigo_menu)&order=fecha_reserva.desc`;
                 
                 const response = await fetch(url, {
                     headers: {
@@ -493,7 +493,7 @@
                 reserva.detalle_reserva
                     .filter(det => det.qr_code)
                     .map(async detalle => {
-                        const horario = await obtenerHorarioReserva(reserva.id_programacion, detalle.tipo_racion, detalle.codigo);
+                        const horario = await obtenerHorarioReserva(reserva.id_programacion, detalle.tipo_racion, detalle.codigo_menu);
                         return { ...detalle, horario };
                     })
             );
