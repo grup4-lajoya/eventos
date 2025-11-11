@@ -401,7 +401,7 @@
                 console.log('🔍 Buscando reservas para usuario:', userData.usuario_id);
 
                 // Consultar reservas activas del usuario con sus detalles
-                const url = `${CONFIG.SUPABASE_URL}/rest/v1/reserva?id_usuario=eq.${userData.usuario_id}&activo=eq.true&select=*,programacion(fecha),detalle_reserva(id,tipo_racion,confirmado,consumido,qr_code,codigo_menu)&order=fecha_reserva.desc`;
+               const url = `${CONFIG.SUPABASE_URL}/rest/v1/reserva?id_usuario=eq.${userData.usuario_id}&activo=eq.true&select=*,programacion(id,fecha),detalle_reserva(id,tipo_racion,confirmado,consumido,qr_code)&order=fecha_reserva.desc`;
                 
                 const response = await fetch(url, {
                     headers: {
@@ -471,108 +471,107 @@
             document.getElementById('loadingContainer').style.display = 'none';
             container.style.display = 'block';
         }
-        async function crearTarjetaReserva(reserva) {
-            const card = document.createElement('div');
-            card.className = 'reserva-card';
+async function crearTarjetaReserva(reserva) {
+    const card = document.createElement('div');
+    card.className = 'reserva-card';
+
+    const fecha = new Date(reserva.programacion.fecha + 'T00:00:00');
+    const fechaFormateada = fecha.toLocaleDateString('es-PE', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+
+    const iconos = {
+        DESAYUNO: '☀️',
+        ALMUERZO: '🍽️',
+        CENA: '🌙'
+    };
+
+    // ✅ OBTENER HORARIOS
+    const horariosPromises = reserva.detalle_reserva
+        .filter(det => det.qr_code)
+        .map(async detalle => {
+            const horario = await obtenerHorarioReserva(reserva.id_programacion, detalle.tipo_racion);
+            return { detalle, horario };
+        });
+    
+    const detallesConHorario = await Promise.all(horariosPromises);
+
+    const detallesHTML = detallesConHorario.map(({ detalle, horario }) => {
+        const estado = detalle.consumido ? 'consumido' : 'confirmado';
+        const estadoTexto = detalle.consumido ? 'Consumido' : 'Activo';
         
-            const fecha = new Date(reserva.programacion.fecha + 'T00:00:00');
-            const fechaFormateada = fecha.toLocaleDateString('es-PE', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
+        const horarioBadge = horario 
+            ? `<span class="estado-badge" style="background: #fff3cd; color: #856404;">🕐 ${formatearHora(horario.hora_inicio)} - ${formatearHora(horario.hora_fin)}</span>`
+            : '';
         
-            const iconos = {
-                DESAYUNO: '☀️',
-                ALMUERZO: '🍽️',
-                CENA: '🌙'
-            };
-        
-            // ✅ OBTENER HORARIOS PARA CADA DETALLE
-            const detallesConHorario = await Promise.all(
-                reserva.detalle_reserva
-                    .filter(det => det.qr_code)
-                    .map(async detalle => {
-                        const horario = await obtenerHorarioReserva(reserva.id_programacion, detalle.tipo_racion);
-                        return { ...detalle, horario };
-                    })
-            );
-        
-            const detallesHTML = detallesConHorario.map(detalle => {
-                const estado = detalle.consumido ? 'consumido' : 'confirmado';
-                const estadoTexto = detalle.consumido ? 'Consumido' : 'Activo';
-                
-                // ✅ CREAR BADGE DE HORARIO
-                const horarioBadge = detalle.horario 
-                    ? `<span class="estado-badge" style="background: #fff3cd; color: #856404;">🕐 ${formatearHora(detalle.horario.hora_inicio)} - ${formatearHora(detalle.horario.hora_fin)}</span>`
-                    : '';
-                
-                return `
-                    <div class="qr-section">
-                        <div class="qr-header">
-                            <span class="qr-icon">${iconos[detalle.tipo_racion]}</span>
-                            <div class="qr-title">
-                                <h4>${detalle.tipo_racion}</h4>
-                                <p>${fechaFormateada}</p>
-                            </div>
-                            <div style="display: flex; flex-direction: column; gap: 5px; align-items: flex-end;">
-                                <span class="estado-badge estado-${estado}">${estadoTexto}</span>
-                                ${horarioBadge}
-                            </div>
-                        </div>
-                        <div class="qr-content">
-                            <div class="qr-code-container">
-                                <div class="qr-code" id="qr-${detalle.id}"></div>
-                            </div>
-                            <div class="qr-info">
-                                <p><strong>Presenta este código para retirar tu ${detalle.tipo_racion.toLowerCase()}</strong></p>
-                                ${!detalle.consumido ? `
-                                    <div class="qr-warning">
-                                        ⚠️ <span>Este código es de un solo uso. Una vez escaneado no podrá usarse nuevamente.</span>
-                                    </div>
-                                ` : ''}
-                            </div>
-                        </div>
+        return `
+            <div class="qr-section">
+                <div class="qr-header">
+                    <span class="qr-icon">${iconos[detalle.tipo_racion]}</span>
+                    <div class="qr-title">
+                        <h4>${detalle.tipo_racion}</h4>
+                        <p>${fechaFormateada}</p>
                     </div>
-                `;
-            }).join('');
-        
-            card.innerHTML = `
-                <div class="reserva-header">
-                    <div class="reserva-fecha">📅 ${fechaFormateada}</div>
-                    <div class="reserva-id">Reserva: ${reserva.id.substring(0, 8)}...</div>
+                    <div style="display: flex; flex-direction: column; gap: 5px; align-items: flex-end;">
+                        <span class="estado-badge estado-${estado}">${estadoTexto}</span>
+                        ${horarioBadge}
+                    </div>
                 </div>
-                <div class="reserva-body">
-                    ${detallesHTML}
+                <div class="qr-content">
+                    <div class="qr-code-container">
+                        <div class="qr-code" id="qr-${detalle.id}"></div>
+                    </div>
+                    <div class="qr-info">
+                        <p><strong>Presenta este código para retirar tu ${detalle.tipo_racion.toLowerCase()}</strong></p>
+                        ${!detalle.consumido ? `
+                            <div class="qr-warning">
+                                ⚠️ <span>Este código es de un solo uso. Una vez escaneado no podrá usarse nuevamente.</span>
+                            </div>
+                        ` : ''}
+                    </div>
                 </div>
-            `;
-        
-            setTimeout(() => {
-                reserva.detalle_reserva.forEach(detalle => {
-                    if (detalle.qr_code) {
-                        const qrElement = document.getElementById(`qr-${detalle.id}`);
-                        if (qrElement) {
-                            qrElement.innerHTML = '';
-                            new QRCode(qrElement, {
-                                text: detalle.qr_code,
-                                width: 200,
-                                height: 200,
-                                colorDark: "#333333",
-                                colorLight: "#ffffff",
-                                correctLevel: QRCode.CorrectLevel.H
-                            });
-                            setTimeout(() => {
-                                const imgs = qrElement.querySelectorAll('img');
-                                imgs.forEach(img => img.remove());
-                            }, 100);
-                        }
-                    }
-                });
-            }, 100);
-        
-            return card;
-        }
+            </div>
+        `;
+    }).join('');
+
+    card.innerHTML = `
+        <div class="reserva-header">
+            <div class="reserva-fecha">📅 ${fechaFormateada}</div>
+            <div class="reserva-id">Reserva: ${reserva.id.substring(0, 8)}...</div>
+        </div>
+        <div class="reserva-body">
+            ${detallesHTML}
+        </div>
+    `;
+
+    setTimeout(() => {
+        reserva.detalle_reserva.forEach(detalle => {
+            if (detalle.qr_code) {
+                const qrElement = document.getElementById(`qr-${detalle.id}`);
+                if (qrElement) {
+                    qrElement.innerHTML = '';
+                    new QRCode(qrElement, {
+                        text: detalle.qr_code,
+                        width: 200,
+                        height: 200,
+                        colorDark: "#333333",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                    setTimeout(() => {
+                        const imgs = qrElement.querySelectorAll('img');
+                        imgs.forEach(img => img.remove());
+                    }, 100);
+                }
+            }
+        });
+    }, 100);
+
+    return card;
+}
         
         // Inicializar
         window.addEventListener('load', async () => {
