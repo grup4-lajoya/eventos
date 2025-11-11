@@ -332,7 +332,24 @@
                 <p>Ver reservas realizadas</p>
             </div>
             <div class="menu-card" id="terminalCard" style="display: none;" onclick="irATerminal()">
-                <div class="menu-card-icon">📡</div>
+                <div class="menu-card-icon">
+                    <svg width="48" height="48" viewBox="0 0 64 64" fill="none">
+                        <!-- Persona -->
+                        <circle cx="32" cy="18" r="8" fill="#2B4C7E"/>
+                        <path d="M32 28c-8 0-14 4-14 10v8h28v-8c0-6-6-10-14-10z" fill="#2B4C7E"/>
+                        
+                        <!-- Escáner/dispositivo en mano -->
+                        <rect x="36" y="32" width="12" height="18" rx="2" fill="#3D5A80" stroke="#2B4C7E" stroke-width="1"/>
+                        <rect x="38" y="35" width="8" height="6" fill="#4CAF50"/>
+                        <line x1="39" y1="43" x2="45" y2="43" stroke="white" stroke-width="0.5"/>
+                        <line x1="39" y1="45" x2="45" y2="45" stroke="white" stroke-width="0.5"/>
+                        <line x1="39" y1="47" x2="45" y2="47" stroke="white" stroke-width="0.5"/>
+                        
+                        <!-- Líneas de escaneo -->
+                        <line x1="48" y1="38" x2="56" y2="38" stroke="#4CAF50" stroke-width="1.5" opacity="0.6"/>
+                        <line x1="49" y1="40" x2="58" y2="40" stroke="#4CAF50" stroke-width="1" opacity="0.4"/>
+                    </svg>
+                </div>
                 <h3>Terminal Control Rancho</h3>
                 <p>Escaneo de reservas</p>
             </div>
