@@ -89,6 +89,17 @@
             border-radius: 12px;
             overflow: hidden;
             margin-bottom: 20px;
+            min-height: 500px !important;
+            height: 500px !important;
+        }
+        
+        #reader video {
+            height: 500px !important;
+            object-fit: cover;
+        }
+        
+        #reader__scan_region {
+            min-height: 450px !important;
         }
         /* Búsqueda Manual (optimizada para PWA) */
         .search-box {
@@ -574,26 +585,19 @@
 
             html5QrCode = new Html5Qrcode("reader");
             
-             html5QrCode.start(
-                { facingMode: "environment" },
-                { 
-                    fps: 10, 
-                    qrbox: function(viewfinderWidth, viewfinderHeight) {
-                        // Hacer que el área de escaneo ocupe más del visor
-                        let minEdge = Math.min(viewfinderWidth, viewfinderHeight);
-                        let qrboxSize = Math.floor(minEdge * 0.8); // 80% del visor
-                        return {
-                            width: qrboxSize,
-                            height: qrboxSize
-                        };
-                    }
-                },
-                onScanSuccess,
-                onScanError
-            ).catch(err => {
-                console.error('Error iniciando escáner:', err);
-                mostrarAlerta('Error al iniciar la cámara', 'error');
-            });
+         html5QrCode.start(
+            { facingMode: "environment" },
+            { 
+                fps: 10,
+                qrbox: 350,
+                aspectRatio: 1.0
+            },
+            onScanSuccess,
+            onScanError
+        ).catch(err => {
+            console.error('Error iniciando escáner:', err);
+            mostrarAlerta('Error al iniciar la cámara', 'error');
+        });
         }
 
         function detenerEscaner() {
