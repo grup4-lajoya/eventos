@@ -1019,13 +1019,14 @@
                         'apikey': CONFIG.SUPABASE_ANON_KEY,
                         'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
                     },
-                    body: JSON.stringify({
-                        id_usuario: datosValidacion.id_usuario,
-                        id_programacion: menuSeleccionado.id_programacion,
-                        tipo_racion: menuSeleccionado.tipo_racion,
-                        codigo: menuSeleccionado.codigo,
-                        usuario_controlador: userData.usuario_id
-                    })
+                body: JSON.stringify({
+                    id_personal: datosValidacion.id_personal,
+                    id_programacion: menuSeleccionado.id_programacion,
+                    tipo_racion: menuSeleccionado.tipo_racion,
+                    codigo: menuSeleccionado.codigo,
+                    usuario_controlador: userData.usuario_id,
+                    unidad: userData.unidad
+                })
                 });
 
                 const result = await response.json();
