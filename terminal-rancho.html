@@ -54,17 +54,17 @@
         .tabs {
             display: flex;
             gap: 10px;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             border-bottom: 2px solid #e0e0e0;
         }
 
         .tab {
-            padding: 12px 24px;
+            padding: 10px 20px;
             background: none;
             border: none;
             border-bottom: 3px solid transparent;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             color: #666;
             transition: all 0.3s;
@@ -339,14 +339,34 @@
         }
 
         .alert {
-            padding: 15px;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            padding: 15px 20px;
             border-radius: 12px;
-            margin-bottom: 20px;
             display: none;
+            animation: slideDown 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            min-width: 300px;
+            max-width: 90%;
+            text-align: center;
         }
-
+        
         .alert.show {
             display: block;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
         }
 
         .alert-success {
@@ -379,17 +399,96 @@
         gap: 10px;
         font-weight: 600; /* ✅ Más bold */
     }
+    
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .btn-back {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
 
         @media (max-width: 768px) {
             .action-buttons {
                 flex-direction: column;
             }
         }
+        @media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .header {
+        padding: 15px;
+    }
+
+    .header h1 {
+        font-size: 18px;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .tabs {
+        gap: 5px;
+    }
+
+    .tab {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    #reader {
+        max-height: 250px;
+    }
+
+    .result-details {
+        gap: 10px;
+    }
+
+    .detail-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+    }
+
+    .detail-label {
+        min-width: auto;
+        margin-bottom: 5px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
+            <button class="btn-back" onclick="volverInicio()">
+            ← Volver
+            </button>
             <h1>🍽️ Terminal Control Rancho</h1>
             <div class="info">
                 <span id="controladorNombre"></span> | 
@@ -548,55 +647,46 @@
                 mostrarResultadoError('Error de conexión con el servidor');
             }
         }
-            function mostrarResultadoExito(data) {
-        // ✅ AGREGAR: Advertencia si fuera de horario
-        const advertenciaHorario = !data.dentro_horario 
-            ? `<div class="qr-warning">
-                 ⚠️ <span><strong>ATENCIÓN:</strong> Fuera del horario programado (${data.hora_inicio} - ${data.hora_fin}). 
-                 Consulte con su supervisor antes de entregar.</span>
-               </div>`
-            : '';
-    
-        const html = `
-            <div class="result-header">
-                <div class="result-icon">✅</div>
-                <div class="result-title">
-                    <h3>Reserva Válida</h3>
-                    <p>Código: ${data.id_detalle_reserva.substring(0, 8)}...</p>
-                </div>
+       
+    function mostrarResultadoExito(data) {
+    const advertenciaHorario = !data.dentro_horario 
+        ? `<div class="qr-warning">
+             ⚠️ <span><strong>ATENCIÓN:</strong> Fuera del horario programado (${data.hora_inicio} - ${data.hora_fin}). 
+             Consulte con su supervisor antes de entregar.</span>
+           </div>`
+        : '';
+
+    const html = `
+        <div class="result-header">
+            <div class="result-icon">✅</div>
+            <div class="result-title">
+                <h3>Reserva Válida</h3>
             </div>
-            ${advertenciaHorario}
-            <div class="result-details">
-                <div class="detail-item">
-                    <span class="detail-label">Nombre:</span>
-                    <span class="detail-value">${data.nombre_usuario}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">NSA:</span>
-                    <span class="detail-value">${data.nsa || 'N/A'}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Tipo Ración:</span>
-                    <span class="detail-value">${data.tipo_racion}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Menú:</span>
-                    <span class="detail-value">${data.menu_descripcion}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Horario:</span>
-                    <span class="detail-value">${data.hora_inicio} - ${data.hora_fin}</span>
-                </div>
+        </div>
+        ${advertenciaHorario}
+        <div class="result-details">
+            <div class="detail-item">
+                <span class="detail-label">Nombre:</span>
+                <span class="detail-value">${data.nombre_usuario}</span>
             </div>
-            <div class="action-buttons">
-                <button class="btn btn-danger" onclick="cancelarValidacion()">✗ Cancelar</button>
-                <button class="btn btn-success" onclick="confirmarEntrega()">✓ Conforme - Entregar</button>
+            <div class="detail-item">
+                <span class="detail-label">Tipo Ración:</span>
+                <span class="detail-value">${data.tipo_racion}</span>
             </div>
-        `;
-    
-        document.getElementById('resultadoValidacion').innerHTML = html;
-        document.getElementById('resultadoValidacion').className = 'validation-result success';
-    }
+            <div class="detail-item">
+                <span class="detail-label">Menú:</span>
+                <span class="detail-value">${data.menu_descripcion}</span>
+            </div>
+        </div>
+        <div class="action-buttons">
+            <button class="btn btn-danger" onclick="cancelarValidacion()">✗ Cancelar</button>
+            <button class="btn btn-success" onclick="confirmarEntrega()">✓ Conforme - Entregar</button>
+        </div>
+    `;
+
+    document.getElementById('resultadoValidacion').innerHTML = html;
+    document.getElementById('resultadoValidacion').className = 'validation-result success';
+}
 
         function mostrarResultadoError(mensaje) {
             const html = `
@@ -672,7 +762,7 @@
         async function buscarPorNSA() {
         const nsa = document.getElementById('inputNSA').value.trim();
         
-        if (!nsa || nsa.length < 6) {
+        if (!nsa || nsa.length < 5) {
             mostrarAlerta('Debe ingresar un NSA válido', 'warning');
             return;
         }
@@ -926,6 +1016,9 @@
             document.getElementById('menuSelection').classList.remove('show');
             datosValidacion = null;
             menuSeleccionado = null;
+        }
+        function volverInicio() {
+        window.location.href = CONFIG.ROUTES.HOME;
         }
         // Inicializar
         window.addEventListener('load', async () => {
