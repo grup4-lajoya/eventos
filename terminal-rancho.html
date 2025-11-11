@@ -784,57 +784,69 @@
             iniciarEscaner();
         }
         async function buscarPorNSA() {
-        const nsa = document.getElementById('inputNSA').value.trim();
+    const nsa = document.getElementById('inputNSA').value.trim();
+    
+    console.log('🔍 Iniciando búsqueda NSA:', nsa); // ← LOG 1
+    
+    if (!nsa || nsa.length < 5) {
+        mostrarAlerta('Debe ingresar un NSA válido', 'warning');
+        return;
+    }
+
+    document.getElementById('loadingBusqueda').style.display = 'block';
+    document.getElementById('resultadoValidacion').style.display = 'none';
+
+    try {
+        const userData = auth.getUserData();
+        console.log('👤 Datos usuario:', userData); // ← LOG 2
+        console.log('🏢 Unidad:', userData.unidad); // ← LOG 3
         
-        if (!nsa || nsa.length < 5) {
-            mostrarAlerta('Debe ingresar un NSA válido', 'warning');
+        const response = await fetch(CONFIG.getEndpointURL('BUSCAR_RESERVA_NSA'), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': CONFIG.SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
+            },
+            body: JSON.stringify({
+                nsa: nsa,
+                unidad: userData.unidad
+            })
+        });
+
+        console.log('📡 Response status:', response.status); // ← LOG 4
+        
+        const result = await response.json();
+        console.log('📦 Resultado completo:', result); // ← LOG 5
+        
+        document.getElementById('loadingBusqueda').style.display = 'none';
+
+        if (!result.success) {
+            console.error('❌ Error del servidor:', result.error); // ← LOG 6
+            mostrarResultadoError(result.error);
             return;
         }
-    
-        document.getElementById('loadingBusqueda').style.display = 'block';
-        document.getElementById('resultadoValidacion').style.display = 'none';
-    
-        try {
-            const userData = auth.getUserData();
-            
-            // ✅ UNA SOLA LLAMADA
-            const response = await fetch(CONFIG.getEndpointURL('BUSCAR_RESERVA_NSA'), {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'apikey': CONFIG.SUPABASE_ANON_KEY,
-                    'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
-                },
-                body: JSON.stringify({
-                    nsa: nsa,
-                    unidad: userData.unidad
-                })
-            });
-    
-            const result = await response.json();
-            document.getElementById('loadingBusqueda').style.display = 'none';
-    
-            if (!result.success) {
-                mostrarResultadoError(result.error);
-                return;
-            }
-    
-            if (result.tiene_reserva) {
-                // Tiene reserva → Mostrar como escaneo QR
-                datosValidacion = result.data;
-                mostrarResultadoExito(result.data);
-            } else {
-                // No tiene reserva → Mostrar selección de menú
-                datosValidacion = result.data;
-                await mostrarSeleccionMenu(result.data);
-            }
-    
-        } catch (error) {
-            console.error('Error:', error);
-            document.getElementById('loadingBusqueda').style.display = 'none';
-            mostrarAlerta('Error al buscar información', 'error');
+
+        console.log('✅ Tiene reserva:', result.tiene_reserva); // ← LOG 7
+
+        if (result.tiene_reserva) {
+            console.log('→ Mostrando resultado con reserva'); // ← LOG 8
+            datosValidacion = result.data;
+            mostrarResultadoExito(result.data);
+        } else {
+            console.log('→ Mostrando selección de menú'); // ← LOG 9
+            console.log('→ Datos persona:', result.data); // ← LOG 10
+            datosValidacion = result.data;
+            await mostrarSeleccionMenu(result.data);
         }
+
+    } catch (error) {
+        console.error('❌ Error catch:', error); // ← LOG 11
+        document.getElementById('loadingBusqueda').style.display = 'none';
+        mostrarAlerta('Error al buscar información', 'error');
     }
+}
+
         async function mostrarSeleccionMenu(persona) {
             const html = `
                 <div class="result-header">
