@@ -755,6 +755,18 @@
             </div>
         `;
         }
+        function formatearHora(hora24) {
+    if (!hora24) return '';
+    
+    const [horas, minutos] = hora24.split(':');
+    let h = parseInt(horas);
+    const periodo = h >= 12 ? 'PM' : 'AM';
+    
+    h = h % 12;
+    h = h === 0 ? 12 : h;
+    
+    return `${h}:${minutos} ${periodo}`;
+}
 
 async function crearOpcionMenu(tipo, codigo, detalles, idProgramacion, numero) {
     let detallesHTML;
@@ -785,6 +797,9 @@ async function crearOpcionMenu(tipo, codigo, detalles, idProgramacion, numero) {
         const stockBadge = sinStock 
             ? '<span class="badge-agotado">AGOTADO</span>' 
             : '<span class="badge-stock">DISPONIBLE</span>';
+        const horario = disponibilidad.hora_inicio && disponibilidad.hora_fin 
+            ? `<span class="badge-stock" style="background: #fff3cd; color: #856404;">🕐 ${formatearHora(disponibilidad.hora_inicio)} - ${formatearHora(disponibilidad.hora_fin)}</span>`
+            : '';
 
     return `
         <div class="racion-option ${stockClass}" data-tipo="${tipo}" data-codigo="${codigo}" data-programacion="${idProgramacion}" onclick="seleccionarRacion(this, '${tipo}', '${codigo}', '${idProgramacion}', ${sinStock})">
@@ -794,6 +809,7 @@ async function crearOpcionMenu(tipo, codigo, detalles, idProgramacion, numero) {
                     <strong>Menú ${numero}</strong>
                     <small>Código: ${codigo}</small>
                     ${stockBadge}
+                    ${horario}
                 </div>
             </div>
             <div class="racion-details">
@@ -804,7 +820,7 @@ async function crearOpcionMenu(tipo, codigo, detalles, idProgramacion, numero) {
 }
         async function obtenerDisponibilidad(idProgramacion, tipoRacion, codigo) {
     try {
-        const url = `${CONFIG.SUPABASE_URL}/rest/v1/programacion_horario_cantidad?id_programacion=eq.${idProgramacion}&tip_rac=eq.${tipoRacion}&codigo=eq.${codigo}&select=cantidad,cantidad_reservada`;
+        const url = `${CONFIG.SUPABASE_URL}/rest/v1/programacion_horario_cantidad?id_programacion=eq.${idProgramacion}&tip_rac=eq.${tipoRacion}&codigo=eq.${codigo}&select=cantidad,cantidad_reservada,hora_inicio,hora_fin`;
         
         const response = await fetch(url, {
             headers: {
@@ -816,14 +832,20 @@ async function crearOpcionMenu(tipo, codigo, detalles, idProgramacion, numero) {
         const data = await response.json();
         if (data && data.length > 0) {
             const disponible = data[0].cantidad - data[0].cantidad_reservada;
-            return { disponible, total: data[0].cantidad };
+            return { 
+                disponible, 
+                total: data[0].cantidad,
+                hora_inicio: data[0].hora_inicio,
+                hora_fin: data[0].hora_fin
+            };
         }
-        return { disponible: 0, total: 0 };
+        return { disponible: 0, total: 0, hora_inicio: null, hora_fin: null };
     } catch (error) {
         console.error('Error obteniendo disponibilidad:', error);
-        return { disponible: 0, total: 0 };
+        return { disponible: 0, total: 0, hora_inicio: null, hora_fin: null };
     }
 }
+
         function toggleProgramacion(header) {
             header.classList.toggle('active');
             const body = header.nextElementSibling;
