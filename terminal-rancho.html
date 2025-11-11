@@ -89,17 +89,19 @@
             border-radius: 12px;
             overflow: hidden;
             margin-bottom: 20px;
-            min-height: 500px !important;
-            height: 500px !important;
+            min-height: 400px !important;
+            height: auto !important;
         }
         
         #reader video {
-            height: 500px !important;
-            object-fit: cover;
+            width: 100% !important;
+            height: auto !important;
+            max-height: 450px !important;
+            object-fit: contain;
         }
         
         #reader__scan_region {
-            min-height: 450px !important;
+            min-height: 350px !important;
         }
         /* Búsqueda Manual (optimizada para PWA) */
         .search-box {
@@ -585,19 +587,27 @@
 
             html5QrCode = new Html5Qrcode("reader");
             
-         html5QrCode.start(
-            { facingMode: "environment" },
-            { 
-                fps: 10,
-                qrbox: 350,
-                aspectRatio: 1.0
-            },
-            onScanSuccess,
-            onScanError
-        ).catch(err => {
-            console.error('Error iniciando escáner:', err);
-            mostrarAlerta('Error al iniciar la cámara', 'error');
-        });
+            html5QrCode.start(
+                { facingMode: "environment" },
+                { 
+                    fps: 10,
+                    qrbox: function(viewfinderWidth, viewfinderHeight) {
+                        // Usar el 70% del ancho o alto (el menor)
+                        let minEdge = Math.min(viewfinderWidth, viewfinderHeight);
+                        let qrboxSize = Math.floor(minEdge * 0.7);
+                        return {
+                            width: qrboxSize,
+                            height: qrboxSize
+                        };
+                    },
+                    aspectRatio: 1.0
+                },
+                onScanSuccess,
+                onScanError
+            ).catch(err => {
+                console.error('Error iniciando escáner:', err);
+                mostrarAlerta('Error al iniciar la cámara', 'error');
+            });
         }
 
         function detenerEscaner() {
