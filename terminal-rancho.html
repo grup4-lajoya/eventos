@@ -366,6 +366,19 @@
             color: #856404;
             border: 1px solid #ffeaa7;
         }
+        .qr-warning {
+        background: #fff3cd;
+        border: 2px solid #ff9800; /* ✅ Más visible */
+        color: #856404;
+        padding: 15px; /* ✅ Más padding */
+        border-radius: 10px;
+        font-size: 14px; /* ✅ Texto más grande */
+        margin-top: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600; /* ✅ Más bold */
+    }
 
         @media (max-width: 768px) {
             .action-buttons {
@@ -535,47 +548,55 @@
                 mostrarResultadoError('Error de conexión con el servidor');
             }
         }
-
-        function mostrarResultadoExito(data) {
-            const html = `
-                <div class="result-header">
-                    <div class="result-icon">✅</div>
-                    <div class="result-title">
-                        <h3>Reserva Válida</h3>
-                        <p>Código: ${data.id_detalle_reserva.substring(0, 8)}...</p>
-                    </div>
+            function mostrarResultadoExito(data) {
+        // ✅ AGREGAR: Advertencia si fuera de horario
+        const advertenciaHorario = !data.dentro_horario 
+            ? `<div class="qr-warning">
+                 ⚠️ <span><strong>ATENCIÓN:</strong> Fuera del horario programado (${data.hora_inicio} - ${data.hora_fin}). 
+                 Consulte con su supervisor antes de entregar.</span>
+               </div>`
+            : '';
+    
+        const html = `
+            <div class="result-header">
+                <div class="result-icon">✅</div>
+                <div class="result-title">
+                    <h3>Reserva Válida</h3>
+                    <p>Código: ${data.id_detalle_reserva.substring(0, 8)}...</p>
                 </div>
-                <div class="result-details">
-                    <div class="detail-item">
-                        <span class="detail-label">Nombre:</span>
-                        <span class="detail-value">${data.nombre_usuario}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">NSA:</span>
-                        <span class="detail-value">${data.nsa || 'N/A'}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Tipo Ración:</span>
-                        <span class="detail-value">${data.tipo_racion}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Menú:</span>
-                        <span class="detail-value">${data.menu_descripcion}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Horario:</span>
-                        <span class="detail-value">${data.hora_inicio} - ${data.hora_fin}</span>
-                    </div>
+            </div>
+            ${advertenciaHorario}
+            <div class="result-details">
+                <div class="detail-item">
+                    <span class="detail-label">Nombre:</span>
+                    <span class="detail-value">${data.nombre_usuario}</span>
                 </div>
-                <div class="action-buttons">
-                    <button class="btn btn-danger" onclick="cancelarValidacion()">✗ Cancelar</button>
-                    <button class="btn btn-success" onclick="confirmarEntrega()">✓ Conforme - Entregar</button>
+                <div class="detail-item">
+                    <span class="detail-label">NSA:</span>
+                    <span class="detail-value">${data.nsa || 'N/A'}</span>
                 </div>
-            `;
-
-            document.getElementById('resultadoValidacion').innerHTML = html;
-            document.getElementById('resultadoValidacion').className = 'validation-result success';
-        }
+                <div class="detail-item">
+                    <span class="detail-label">Tipo Ración:</span>
+                    <span class="detail-value">${data.tipo_racion}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Menú:</span>
+                    <span class="detail-value">${data.menu_descripcion}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Horario:</span>
+                    <span class="detail-value">${data.hora_inicio} - ${data.hora_fin}</span>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-danger" onclick="cancelarValidacion()">✗ Cancelar</button>
+                <button class="btn btn-success" onclick="confirmarEntrega()">✓ Conforme - Entregar</button>
+            </div>
+        `;
+    
+        document.getElementById('resultadoValidacion').innerHTML = html;
+        document.getElementById('resultadoValidacion').className = 'validation-result success';
+    }
 
         function mostrarResultadoError(mensaje) {
             const html = `
@@ -594,47 +615,50 @@
             document.getElementById('resultadoValidacion').innerHTML = html;
             document.getElementById('resultadoValidacion').className = 'validation-result error';
         }
-
-        async function confirmarEntrega() {
-            if (!datosValidacion) return;
-
-            const btn = event.target;
-            btn.disabled = true;
-            btn.innerHTML = '⏳ Procesando...';
-
-            try {
-                const userData = auth.getUserData();
-                
-                const response = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/detalle_reserva?id=eq.${datosValidacion.id_detalle_reserva}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'apikey': CONFIG.SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`,
-                        'Prefer': 'return=representation'
-                    },
-                    body: JSON.stringify({
-                        consumido: true,
-                        id_usuario_autorizado_escaneo: userData.usuario_id
-                    })
-                });
-
-                if (!response.ok) throw new Error('Error al confirmar entrega');
-
-                mostrarAlerta('✓ Entrega confirmada exitosamente', 'success');
-                
-                setTimeout(() => {
-                    reiniciarEscaner();
-                }, 2000);
-
-            } catch (error) {
-                console.error('Error:', error);
-                mostrarAlerta('Error al confirmar la entrega', 'error');
-                btn.disabled = false;
-                btn.innerHTML = '✓ Conforme - Entregar';
-            }
+            async function confirmarEntrega() {
+        if (!datosValidacion) return;
+    
+        // ✅ AGREGAR: Confirmación de seguridad
+        if (!confirm('¿Confirmar entrega del plato? Esta acción no se puede deshacer.')) {
+            return;
         }
-
+    
+        const btn = event.target;
+        btn.disabled = true;
+        btn.innerHTML = '⏳ Procesando...';
+    
+        try {
+            const userData = auth.getUserData();
+            
+            const response = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/detalle_reserva?id=eq.${datosValidacion.id_detalle_reserva}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'apikey': CONFIG.SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`,
+                    'Prefer': 'return=representation'
+                },
+                body: JSON.stringify({
+                    consumido: true,
+                    id_usuario_autorizado_escaneo: userData.usuario_id
+                })
+            });
+    
+            if (!response.ok) throw new Error('Error al confirmar entrega');
+    
+            mostrarAlerta('✓ Entrega confirmada exitosamente', 'success');
+            
+            setTimeout(() => {
+                reiniciarEscaner();
+            }, 2000);
+    
+        } catch (error) {
+            console.error('Error:', error);
+            mostrarAlerta('Error al confirmar la entrega', 'error');
+            btn.disabled = false;
+            btn.innerHTML = '✓ Conforme - Entregar';
+        }
+    }
         function cancelarValidacion() {
             reiniciarEscaner();
         }
@@ -645,88 +669,58 @@
             document.getElementById('resultadoValidacion').innerHTML = '';
             iniciarEscaner();
         }
-
         async function buscarPorNSA() {
-            const nsa = document.getElementById('inputNSA').value.trim();
-            
+        const nsa = document.getElementById('inputNSA').value.trim();
+        
         if (!nsa || nsa.length < 6) {
             mostrarAlerta('Debe ingresar un NSA válido', 'warning');
             return;
         }
-
-            document.getElementById('loadingBusqueda').style.display = 'block';
-            document.getElementById('resultadoValidacion').style.display = 'none';
-
-            try {
-                const userData = auth.getUserData();
-                
-                // Primero buscar si tiene reserva
-                const response = await fetch(CONFIG.getEndpointURL('BUSCAR_RESERVA_NSA'), {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'apikey': CONFIG.SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
-                    },
-                    body: JSON.stringify({
-                        nsa: nsa,
-                        unidad: userData.unidad
-                    })
-                });
-
-                const result = await response.json();
-                document.getElementById('loadingBusqueda').style.display = 'none';
-
-                if (result.success && result.data) {
-                    // Tiene reserva
-                    datosValidacion = result.data;
-                    mostrarResultadoExito(result.data);
-                } else {
-                    // No tiene reserva, validar elegibilidad
-                    await validarElegibilidad(nsa);
-                }
-
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('loadingBusqueda').style.display = 'none';
-                mostrarAlerta('Error al buscar información', 'error');
+    
+        document.getElementById('loadingBusqueda').style.display = 'block';
+        document.getElementById('resultadoValidacion').style.display = 'none';
+    
+        try {
+            const userData = auth.getUserData();
+            
+            // ✅ UNA SOLA LLAMADA
+            const response = await fetch(CONFIG.getEndpointURL('BUSCAR_RESERVA_NSA'), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'apikey': CONFIG.SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
+                },
+                body: JSON.stringify({
+                    nsa: nsa,
+                    unidad: userData.unidad
+                })
+            });
+    
+            const result = await response.json();
+            document.getElementById('loadingBusqueda').style.display = 'none';
+    
+            if (!result.success) {
+                mostrarResultadoError(result.error);
+                return;
             }
-        }
-
-        async function validarElegibilidad(nsa) {
-            try {
-                const userData = auth.getUserData();
-                
-                const response = await fetch(CONFIG.getEndpointURL('VALIDAR_ELEGIBILIDAD'), {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'apikey': CONFIG.SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
-                    },
-                    body: JSON.stringify({
-                        nsa: nsa,
-                        unidad: userData.unidad
-                    })
-                });
-
-                const result = await response.json();
-
-                if (!result.success) {
-                    mostrarResultadoError(result.error);
-                    return;
-                }
-
-                // Es elegible, mostrar selección de menú
+    
+            if (result.tiene_reserva) {
+                // Tiene reserva → Mostrar como escaneo QR
+                datosValidacion = result.data;
+                mostrarResultadoExito(result.data);
+            } else {
+                // No tiene reserva → Mostrar selección de menú
                 datosValidacion = result.data;
                 await mostrarSeleccionMenu(result.data);
-
-            } catch (error) {
-                console.error('Error:', error);
-                mostrarAlerta('Error al validar elegibilidad', 'error');
             }
+    
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('loadingBusqueda').style.display = 'none';
+            mostrarAlerta('Error al buscar información', 'error');
         }
-
+    }
         async function mostrarSeleccionMenu(persona) {
             const html = `
                 <div class="result-header">
