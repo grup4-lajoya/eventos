@@ -153,20 +153,19 @@
             background: #ffebee;
             border: 2px solid #f44336;
         }
-
         .result-header {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
+            gap: 10px; /* ← Reducir */
+            margin-bottom: 12px; /* ← Reducir */
+            padding-bottom: 10px; /* ← Reducir */
             border-bottom: 2px solid rgba(0,0,0,0.1);
         }
-
         .result-icon {
-            font-size: 48px;
+            font-size: 28px;
+            width: 60px;
+            height: 60px;
         }
-
         .result-title h3 {
             font-size: 20px;
             margin-bottom: 5px;
@@ -406,9 +405,9 @@
             gap: 15px;
             margin-bottom: 10px;
         }
-        
         .btn-back {
-            background: rgba(255, 255, 255, 0.2);
+            display: flex !important; /* ← Agregar esta línea */
+            background: #3D5A80;
             color: white;
             border: none;
             padding: 8px 16px;
@@ -419,8 +418,8 @@
         }
         
         .btn-back:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
+            background: #2B4C7E;
+        }       
 
         @media (max-width: 768px) {
             .action-buttons {
@@ -577,7 +576,7 @@
             
             html5QrCode.start(
                 { facingMode: "environment" },
-                { fps: 10, qrbox: { width: 250, height: 250 } },
+                { fps: 10, qrbox: { width: 320, height: 320 } },
                 onScanSuccess,
                 onScanError
             ).catch(err => {
@@ -899,48 +898,53 @@
                         };
                     });
 
-                renderizarMenus(menusDisponibles, tipoRacion);
+               await renderizarMenus(menusDisponibles, tipoRacion);
 
             } catch (error) {
                 console.error('Error:', error);
                 mostrarAlerta('Error al cargar menús', 'error');
             }
         }
-
-        function renderizarMenus(menus, tipoRacion) {
-            const container = document.getElementById('menuOptions');
-            container.innerHTML = '';
-
-            menus.forEach(menu => {
-                const sinStock = menu.disponible <= 0;
-                const stockClass = sinStock ? 'sin-stock' : '';
-                const stockBadge = sinStock 
-                    ? '<span class="stock-badge stock-agotado">AGOTADO</span>'
-                    : `<span class="stock-badge stock-disponible">Disponible: ${menu.disponible}</span>`;
-
-                const menuItem = document.createElement('div');
-                menuItem.className = `menu-item ${stockClass}`;
-                menuItem.dataset.codigo = menu.codigo;
-                menuItem.dataset.programacion = menu.id_programacion;
-                menuItem.dataset.tipoRacion = tipoRacion;
-
-                if (!sinStock) {
-                    menuItem.onclick = () => seleccionarMenu(menuItem);
-                }
-
-                menuItem.innerHTML = `
-                    <div class="menu-header">
-                        <div class="menu-title">${menu.codigo}</div>
-                        ${stockBadge}
-                    </div>
-                    <div class="menu-details">${menu.detalles}</div>
-                `;
-
-                container.appendChild(menuItem);
-            });
-
+        async function renderizarMenus(menus, tipoRacion) {
+        const container = document.getElementById('menuOptions');
+        container.innerHTML = '';
+    
+        if (!menus || menus.length === 0) {
+            container.innerHTML = '<p style="text-align:center;color:#666;">No hay menús disponibles</p>';
             document.getElementById('menuSelection').classList.add('show');
+            return;
         }
+    
+        for (const menu of menus) { // ← Cambiar forEach por for...of
+            const sinStock = menu.disponible <= 0;
+            const stockClass = sinStock ? 'sin-stock' : '';
+            const stockBadge = sinStock 
+                ? '<span class="stock-badge stock-agotado">AGOTADO</span>'
+                : `<span class="stock-badge stock-disponible">Disponible: ${menu.disponible}</span>`;
+    
+            const menuItem = document.createElement('div');
+            menuItem.className = `menu-item ${stockClass}`;
+            menuItem.dataset.codigo = menu.codigo;
+            menuItem.dataset.programacion = menu.id_programacion;
+            menuItem.dataset.tipoRacion = tipoRacion;
+    
+            if (!sinStock) {
+                menuItem.onclick = () => seleccionarMenu(menuItem);
+            }
+    
+            menuItem.innerHTML = `
+                <div class="menu-header">
+                    <div class="menu-title">${menu.codigo}</div>
+                    ${stockBadge}
+                </div>
+                <div class="menu-details">${menu.detalles}</div>
+            `;
+    
+            container.appendChild(menuItem);
+        }
+    
+        document.getElementById('menuSelection').classList.add('show');
+    }
 
         function seleccionarMenu(elemento) {
             document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('selected'));
