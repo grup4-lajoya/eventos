@@ -204,6 +204,7 @@
         .estado-confirmado {
             background: #e7f5ff;
             color: #0066cc;
+            display: none;
         }
 
         .estado-consumido {
@@ -234,18 +235,6 @@
         .qr-code-container:hover {
             transform: scale(1.05);
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .qr-code-container::after {
-            content: '🔍 Click para ampliar';
-            position: absolute;
-            bottom: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 12px;
-            color: #667eea;
-            opacity: 0.8;
-            white-space: nowrap;
         }
 
         .qr-code {
@@ -509,17 +498,14 @@ async function crearTarjetaReserva(reserva) {
         
         return `
             <div class="qr-section">
-                <div class="qr-header">
-                    <span class="qr-icon">${iconos[detalle.tipo_racion]}</span>
-                    <div class="qr-title">
-                        <h4>${detalle.tipo_racion}</h4>
-                        <p>${fechaFormateada}</p>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 5px; align-items: flex-end;">
-                        <span class="estado-badge estado-${estado}">${estadoTexto}</span>
-                        ${horarioBadge}
-                    </div>
+            <div class="qr-header">
+                <span class="qr-icon">${iconos[detalle.tipo_racion]}</span>
+                <div class="qr-title" style="flex: 1;">
+                    <h4>${detalle.tipo_racion}</h4>
+                    <p style="margin-bottom: 8px;">${fechaFormateada}</p>
+                    ${horarioBadge}
                 </div>
+            </div>          
                 <div class="qr-content">
                     <div class="qr-code-container">
                         <div class="qr-code" id="qr-${detalle.id}"></div>
@@ -528,8 +514,28 @@ async function crearTarjetaReserva(reserva) {
                         <p><strong>Presenta este código para retirar tu ${detalle.tipo_racion.toLowerCase()}</strong></p>
                         ${!detalle.consumido ? `
                             <div class="qr-warning">
-                                ⚠️ <span>Este código es de un solo uso. Una vez escaneado no podrá usarse nuevamente.</span>
+                                ⚠️ <span>Este código es de un solo uso. Una vez escaneado, no podrá usarse nuevamente.</span>
                             </div>
+                            <button 
+                                class="btn-cancelar-detalle" 
+                                data-detalle-id="${detalle.id}"
+                                data-tipo-racion="${detalle.tipo_racion}"
+                                onclick="cancelarDetalleReserva('${detalle.id}', '${detalle.tipo_racion}')"
+                                style="
+                                    margin-top: 15px;
+                                    width: 100%;
+                                    padding: 12px;
+                                    background: #f44336;
+                                    color: white;
+                                    border: none;
+                                    border-radius: 8px;
+                                    font-weight: 600;
+                                    cursor: pointer;
+                                    transition: all 0.3s;
+                                "
+                            >
+                                ✗ Cancelar ${detalle.tipo_racion}
+                            </button>
                         ` : ''}
                     </div>
                 </div>
@@ -539,8 +545,7 @@ async function crearTarjetaReserva(reserva) {
 
     card.innerHTML = `
         <div class="reserva-header">
-            <div class="reserva-fecha">📅 ${fechaFormateada}</div>
-            <div class="reserva-id">Reserva: ${reserva.id.substring(0, 8)}...</div>
+            <div class="reserva-fecha">📅 ${fechaFormateada}</div>            
         </div>
         <div class="reserva-body">
             ${detallesHTML}
@@ -571,7 +576,55 @@ async function crearTarjetaReserva(reserva) {
     }, 100);
 
     return card;
-}
+}  
+            async function cancelarDetalleReserva(idDetalle, tipoRacion) {
+                if (!confirm(`¿Confirma cancelar la reserva de ${tipoRacion}?`)) {
+                    return;
+                }
+            
+                const btn = event.target;
+                const textoOriginal = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = '⏳ Cancelando...';
+            
+                try {
+                    const userData = auth.getUserData();
+            
+                    const response = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/rpc/sp_cancelar_detalle_reserva`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'apikey': CONFIG.SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
+                        },
+                        body: JSON.stringify({
+                            p_id_detalle_reserva: idDetalle,
+                            p_id_usuario: userData.usuario_id
+                        })
+                    });
+            
+                    const result = await response.json();
+            
+                    if (!result.success) {
+                        mostrarAlerta(result.error, 'error');
+                        btn.disabled = false;
+                        btn.innerHTML = textoOriginal;
+                        return;
+                    }
+            
+                    mostrarAlerta('✓ Reserva cancelada exitosamente', 'success');
+                    
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+            
+                } catch (error) {
+                    console.error('Error:', error);
+                    mostrarAlerta('Error al cancelar la reserva', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = textoOriginal;
+                }
+            }
         
         // Inicializar
         window.addEventListener('load', async () => {
@@ -579,7 +632,7 @@ async function crearTarjetaReserva(reserva) {
             if (!acceso) return;
 
             await cargarReservas();
-        });
+        });        
     </script>
 </body>
 </html>
