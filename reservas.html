@@ -604,7 +604,57 @@
                 return null;
             }
         }
+        async function usuarioEnEvento() {
+    try {
+        const userData = auth.getUserData();
+        
+        const urlUsuarioApp = `${CONFIG.SUPABASE_URL}/rest/v1/usuarios_app?id=eq.${userData.usuario_id}&select=id_personal,id_foraneo,id_evento`;
+        
+        const respUsuarioApp = await fetch(urlUsuarioApp, {
+            headers: {
+                'apikey': CONFIG.SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
+            }
+        });
 
+        if (!respUsuarioApp.ok) return false;
+
+        const usuariosApp = await respUsuarioApp.json();
+        
+        if (usuariosApp && usuariosApp.length > 0) {
+            const usuarioApp = usuariosApp[0];
+            
+            if (usuarioApp.id_evento) {
+                let urlParticipacion = '';
+                if (usuarioApp.id_personal) {
+                    urlParticipacion = `${CONFIG.SUPABASE_URL}/rest/v1/participacion_evento?id_personal=eq.${usuarioApp.id_personal}&id_evento=eq.${usuarioApp.id_evento}&select=id`;
+                } else if (usuarioApp.id_foraneo) {
+                    urlParticipacion = `${CONFIG.SUPABASE_URL}/rest/v1/participacion_evento?id_foraneo=eq.${usuarioApp.id_foraneo}&id_evento=eq.${usuarioApp.id_evento}&select=id`;
+                }
+                
+                if (urlParticipacion) {
+                    const respParticipacion = await fetch(urlParticipacion, {
+                        headers: {
+                            'apikey': CONFIG.SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
+                        }
+                    });
+
+                    if (respParticipacion.ok) {
+                        const participaciones = await respParticipacion.json();
+                        return participaciones && participaciones.length > 0;
+                    }
+                }
+            }
+        }
+        
+        return false;
+
+    } catch (error) {
+        console.error('Error verificando evento:', error);
+        return false;
+    }
+}
         async function cargarProgramaciones() {
             try {
                 const unidad = await obtenerUnidadUsuario();
@@ -722,6 +772,13 @@
         }
 
         async function crearSeccionRacion(tipo, detalles, idProgramacion) {
+            // ✅ FILTRAR SEGÚN USUARIO
+            const enEvento = await usuarioEnEvento();
+            
+            // Si NO está en evento y NO es ALMUERZO, no mostrar
+            if (!enEvento && tipo !== 'ALMUERZO') {
+                return '';
+            }
             const iconos = {
                 DESAYUNO: '☀️',
                 ALMUERZO: '🍽️',
