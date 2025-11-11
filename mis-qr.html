@@ -434,30 +434,31 @@
             document.getElementById('loadingContainer').style.display = 'none';
             document.getElementById('emptyState').style.display = 'block';
         }
-        async function obtenerHorarioReserva(idProgramacion, tipoRacion, codigo) {
-            try {
-                const url = `${CONFIG.SUPABASE_URL}/rest/v1/programacion_horario_cantidad?id_programacion=eq.${idProgramacion}&tip_rac=eq.${tipoRacion}&codigo=eq.${codigo}&select=hora_inicio,hora_fin`;
-                
-                const response = await fetch(url, {
-                    headers: {
-                        'apikey': CONFIG.SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
-                    }
-                });
+        async function obtenerHorarioReserva(idProgramacion, tipoRacion) {
+    try {
+        const url = `${CONFIG.SUPABASE_URL}/rest/v1/programacion_horario_cantidad?id_programacion=eq.${idProgramacion}&tip_rac=eq.${tipoRacion}&cantidad_reservada=gt.0&select=hora_inicio,hora_fin&limit=1`;
         
-                const data = await response.json();
-                if (data && data.length > 0) {
-                    return {
-                        hora_inicio: data[0].hora_inicio,
-                        hora_fin: data[0].hora_fin
-                    };
-                }
-                return null;
-            } catch (error) {
-                console.error('Error obteniendo horario:', error);
-                return null;
+        const response = await fetch(url, {
+            headers: {
+                'apikey': CONFIG.SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
             }
+        });
+
+        const data = await response.json();
+        if (data && data.length > 0) {
+            return {
+                hora_inicio: data[0].hora_inicio,
+                hora_fin: data[0].hora_fin
+            };
         }
+        return null;
+    } catch (error) {
+        console.error('Error obteniendo horario:', error);
+        return null;
+    }
+}
+
         async function renderizarReservas(reservas) {
             const container = document.getElementById('reservasList');
             container.innerHTML = '';
@@ -493,7 +494,7 @@
                 reserva.detalle_reserva
                     .filter(det => det.qr_code)
                     .map(async detalle => {
-                        const horario = await obtenerHorarioReserva(reserva.id_programacion, detalle.tipo_racion, detalle.codigo_menu);
+                        const horario = await obtenerHorarioReserva(reserva.id_programacion, detalle.tipo_racion);
                         return { ...detalle, horario };
                     })
             );
