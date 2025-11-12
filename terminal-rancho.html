@@ -993,25 +993,37 @@
             };
         }
 
-        async function confirmarReservaExpress() {
-            if (!menuSeleccionado) {
-                mostrarAlerta('Debe seleccionar un menú', 'warning');
-                return;
-            }
-
-            if (!datosValidacion) {
-                mostrarAlerta('Error: no hay datos de persona', 'error');
-                return;
-            }
-
-            const btn = event.target;
-            btn.disabled = true;
-            btn.innerHTML = '⏳ Procesando...';
-
-            try {
-                const userData = auth.getUserData();
-                
-                const response = await fetch(CONFIG.getEndpointURL('RESERVA_EXPRESS'), {
+            async function confirmarReservaExpress() {
+                if (!menuSeleccionado) {
+                    mostrarAlerta('Debe seleccionar un menú', 'warning');
+                    return;
+                }
+            
+                if (!datosValidacion) {
+                    mostrarAlerta('Error: no hay datos de persona', 'error');
+                    return;
+                }
+            
+                // Confirmación de seguridad
+                if (!confirm('¿Confirmar entrega del plato? Esta acción no se puede deshacer.')) {
+                    return;
+                }
+            
+                const btn = event.target;
+                btn.disabled = true;
+                btn.innerHTML = '⏳ Procesando...';
+            
+                try {
+                    const userData = auth.getUserData();
+                    
+                    // Obtener fecha Perú
+                    const ahoraUTC = new Date();
+                    const ahoraPeru = new Date(ahoraUTC.getTime() - (5 * 60 * 60 * 1000));
+                    const hoy = ahoraPeru.toISOString().split('T')[0];
+            
+                    console.log('📅 Confirmando para fecha:', hoy); // ← LOG DEBUG
+                    
+                    const response = await fetch(CONFIG.getEndpointURL('RESERVA_EXPRESS'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
