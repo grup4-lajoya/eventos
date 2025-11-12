@@ -1,5 +1,6 @@
 // service-worker.js - VERSIÓN CORREGIDA
-const CACHE_NAME = 'reservas-v2.0.6';
+const CACHE_VERSION = '2.0.6';
+const CACHE_NAME = `reservas-v${CACHE_VERSION}-${Date.now()}`;
 const ASSETS_TO_CACHE = [
     '/eventos/',
     '/eventos/index.html',
@@ -56,6 +57,7 @@ self.addEventListener('fetch', (event) => {
     // 2. Métodos POST, PUT, DELETE
     // 3. Requests con credenciales
     if (url.includes('supabase.co') ||
+        url.includes('pwa-update.js') ||
         event.request.method !== 'GET') {
         return; // ← Dejar pasar SIN interceptar
     }
