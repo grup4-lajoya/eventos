@@ -1,6 +1,6 @@
 // service-worker.js
 
-const CACHE_NAME = 'reservas-v1.0.0';
+const CACHE_NAME = 'reservas-v1.0.1';
 const ASSETS_TO_CACHE = [
     '/eventos/',
     '/eventos/index.html',
