@@ -1,4 +1,4 @@
-const APP_VERSION = '1.0.2'; // ← Incrementar esto
+const APP_VERSION = '1.0.1'; // ← Incrementar esto
 const VERSION_KEY = 'app-version';
 
 function verificarActualizacion() {
