@@ -1,6 +1,28 @@
-// service-worker.js
+// DESREGISTRAR SERVICE WORKER ANTIGUO
+self.addEventListener('install', (event) => {
+    console.log('🔧 Service Worker: Forzando instalación limpia');
+    self.skipWaiting(); // ← Forzar activación inmediata
+});
 
-const CACHE_NAME = 'reservas-v1.0.3';
+self.addEventListener('activate', (event) => {
+    console.log('✅ Service Worker: Limpieza total');
+    
+    event.waitUntil(
+        // BORRAR TODOS LOS CACHES SIN EXCEPCIÓN
+        caches.keys().then((cacheNames) => {
+            return Promise.all(
+                cacheNames.map((cacheName) => {
+                    console.log('🗑️ Eliminando cache:', cacheName);
+                    return caches.delete(cacheName);
+                })
+            );
+        }).then(() => {
+            console.log('🔄 Tomando control de todos los clientes');
+            return self.clients.claim(); // ← Tomar control inmediato
+        })
+    );
+});
+const CACHE_NAME = 'reservas-v2.0.0';
 const ASSETS_TO_CACHE = [
     '/eventos/',
     '/eventos/index.html',
@@ -43,43 +65,37 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-// Estrategia de fetch: Network First, fallback to Cache
+// ✅ USAR ESTA ESTRATEGIA (Network First):
 self.addEventListener('fetch', (event) => {
     // Solo cachear requests GET
     if (event.request.method !== 'GET') {
         return;
     }
-
-    // No cachear llamadas a API/Edge Functions
-    if (event.request.url.includes('/functions/')) {
-        return;
+    
+    // NO cachear llamadas a API/Edge Functions
+    if (event.request.url.includes('/functions/') || 
+        event.request.url.includes('supabase.co/rest/')) {
+        return; // ← Dejar pasar sin cachear
     }
 
     event.respondWith(
+        // SIEMPRE intentar red primero
         fetch(event.request)
             .then((response) => {
-                // Clonar la respuesta
-                const responseClone = response.clone();
-                
-                // Guardar en cache
-                caches.open(CACHE_NAME).then((cache) => {
-                    cache.put(event.request, responseClone);
-                });
+                // Solo cachear respuestas exitosas
+                if (response && response.status === 200 && response.type === 'basic') {
+                    const responseToCache = response.clone();
+                    
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, responseToCache);
+                    });
+                }
                 
                 return response;
             })
             .catch(() => {
-                // Si falla el network, buscar en cache
-                return caches.match(event.request).then((response) => {
-                    if (response) {
-                        return response;
-                    }
-                    
-                    // Si no está en cache, mostrar página offline
-                    if (event.request.destination === 'document') {
-                        return caches.match('/index.html');
-                    }
-                });
+                // Si falla la red, buscar en cache
+                return caches.match(event.request);
             })
     );
 });
