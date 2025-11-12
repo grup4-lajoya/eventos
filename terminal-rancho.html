@@ -878,14 +878,18 @@
         async function cargarMenusDisponibles() {
             try {
                 const userData = auth.getUserData();
-                const hoy = new Date().toISOString().split('T')[0];
-
-                // Determinar tipo de ración según hora actual
-                const hora = new Date().getHours();
+                
+                // Obtener fecha y hora en Perú (UTC-5)
+                const ahoraUTC = new Date();
+                const ahoraPeru = new Date(ahoraUTC.getTime() - (5 * 60 * 60 * 1000));
+                const hoy = ahoraPeru.toISOString().split('T')[0];
+                const horaPeru = ahoraPeru.getHours();
+        
+                // Determinar tipo de ración según hora Perú
                 let tipoRacion;
-                if (hora >= 6 && hora < 10) tipoRacion = 'DESAYUNO';
-                else if (hora >= 10 && hora < 16) tipoRacion = 'ALMUERZO';
-                else if (hora >= 16 && hora < 21) tipoRacion = 'CENA';
+                if (horaPeru >= 6 && horaPeru < 10) tipoRacion = 'DESAYUNO';
+                else if (horaPeru >= 10 && horaPeru < 16) tipoRacion = 'ALMUERZO';
+                else if (horaPeru >= 16 && horaPeru < 21) tipoRacion = 'CENA';
                 else {
                     mostrarAlerta('Fuera del horario de atención', 'warning');
                     return;
