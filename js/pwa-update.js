@@ -1,4 +1,4 @@
-const APP_VERSION = '1.0.3'; // ← Incrementar esto
+const APP_VERSION = '2.0.0';
 const VERSION_KEY = 'app-version';
 
 function verificarActualizacion() {
@@ -174,3 +174,13 @@ function actualizarAhora() {
 }
 
 window.addEventListener('load', verificarActualizacion);
+
+// Limpiar service workers antiguos al cargar
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+        registrations.forEach(registration => {
+            console.log('🔄 Actualizando service worker...');
+            registration.update();
+        });
+    });
+}
