@@ -1,5 +1,5 @@
 // pwa-update.js - VERSIÓN MEJORADA
-const APP_VERSION = '2.0.6'; // ← Cambiar en cada actualización
+const APP_VERSION = '2.0.7'; // ← Cambiar en cada actualización
 const VERSION_KEY = 'app-version';
 
 const PROTECTED_KEYS = [
@@ -45,7 +45,6 @@ function verificarActualizacion() {
         mostrarNotificacionActualizacion();
     }
 }
-
 function registrarServiceWorker() {
     if (!('serviceWorker' in navigator)) {
         console.log('⚠️ Service Worker no soportado');
@@ -57,11 +56,16 @@ function registrarServiceWorker() {
             swRegistration = registration;
             console.log('✅ Service Worker registrado');
 
-            // Verificar actualizaciones cada 60 segundos
+            // ✅ FORZAR actualización inmediata al cargar
+            registration.update().then(() => {
+                console.log('🔍 Update forzado al cargar');
+            });
+
+            // Verificar actualizaciones cada 30 segundos (reducir de 60)
             setInterval(() => {
                 console.log('🔍 Verificando actualizaciones...');
                 registration.update();
-            }, 60000);
+            }, 30000); // ← Cambiar a 30 segundos
 
             // Detectar cuando hay una nueva versión instalándose
             registration.addEventListener('updatefound', () => {
@@ -74,7 +78,9 @@ function registrarServiceWorker() {
                     if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                         console.log('🎉 Nueva versión instalada y lista');
                         updatePending = true;
-                        mostrarNotificacionActualizacion();
+                        
+                        // ✅ Verificar versión de localStorage también
+                        verificarActualizacion();
                     }
                 });
             });
