@@ -1,5 +1,5 @@
 // service-worker.js - VERSIÓN CORREGIDA
-const CACHE_NAME = 'reservas-v2.0.2';
+const CACHE_NAME = 'reservas-v2.0.4';
 const ASSETS_TO_CACHE = [
     '/eventos/',
     '/eventos/index.html',
@@ -85,4 +85,11 @@ self.addEventListener('fetch', (event) => {
                 })
         );
     }
+    self.addEventListener('message', (event) => {
+        console.log('📩 SW recibió mensaje:', event.data);
+        
+        if (event.data && event.data.type === 'SKIP_WAITING') {
+            console.log('⚡ Ejecutando skipWaiting()');
+            self.skipWaiting();
+        }
 });
