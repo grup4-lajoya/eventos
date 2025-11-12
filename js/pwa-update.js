@@ -1,21 +1,107 @@
-const APP_VERSION = '2.0.2';
+// pwa-update.js - VERSIÓN MEJORADA
+const APP_VERSION = '2.0.4'; // ← Cambiar en cada actualización
 const VERSION_KEY = 'app-version';
+
+const PROTECTED_KEYS = [
+    'device_fingerprint',
+    'fingerprint_date',
+    'token_acceso',
+    'usuario_id',
+    'tipo_usuario',
+    'tipo_acceso',
+    'nombre_usuario',
+    'evento_id',
+    'evento_nombre',
+    'evento_fecha_fin',
+    'usuario_data',
+    'unidad',
+    'pwa-install-rejected'
+];
+
+// Variables globales
+let swRegistration = null;
+let updatePending = false;
+
+// Inicializar al cargar
+window.addEventListener('load', () => {
+    verificarActualizacion();
+    registrarServiceWorker();
+});
 
 function verificarActualizacion() {
     const versionGuardada = localStorage.getItem(VERSION_KEY);
     
+    console.log('📱 Versión actual:', APP_VERSION);
+    console.log('💾 Versión guardada:', versionGuardada);
+    
     if (!versionGuardada) {
+        console.log('✅ Primera instalación');
         localStorage.setItem(VERSION_KEY, APP_VERSION);
         return;
     }
     
     if (versionGuardada !== APP_VERSION) {
-        // Nueva versión detectada
+        console.log('🔄 Nueva versión detectada:', versionGuardada, '→', APP_VERSION);
         mostrarNotificacionActualizacion();
     }
 }
+
+function registrarServiceWorker() {
+    if (!('serviceWorker' in navigator)) {
+        console.log('⚠️ Service Worker no soportado');
+        return;
+    }
+
+    navigator.serviceWorker.register('/eventos/service-worker.js')
+        .then(registration => {
+            swRegistration = registration;
+            console.log('✅ Service Worker registrado');
+
+            // Verificar actualizaciones cada 60 segundos
+            setInterval(() => {
+                console.log('🔍 Verificando actualizaciones...');
+                registration.update();
+            }, 60000);
+
+            // Detectar cuando hay una nueva versión instalándose
+            registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                console.log('📦 Nueva versión del SW encontrada');
+
+                newWorker.addEventListener('statechange', () => {
+                    console.log('🔄 SW State:', newWorker.state);
+                    
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        console.log('🎉 Nueva versión instalada y lista');
+                        updatePending = true;
+                        mostrarNotificacionActualizacion();
+                    }
+                });
+            });
+        })
+        .catch(err => {
+            console.error('❌ Error registrando Service Worker:', err);
+        });
+
+    // Detectar cuando el SW toma control (después de actualización)
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!refreshing) {
+            console.log('🔄 Service Worker tomó control, recargando...');
+            refreshing = true;
+            window.location.reload();
+        }
+    });
+}
+
 function mostrarNotificacionActualizacion() {
+    // Evitar duplicados
+    if (document.getElementById('update-notification')) {
+        return;
+    }
+
     const notificacion = document.createElement('div');
+    notificacion.id = 'update-notification';
     notificacion.innerHTML = `
         <div style="
             position: fixed;
@@ -73,7 +159,7 @@ function mostrarNotificacionActualizacion() {
                             color: #666;
                             line-height: 1.5;
                         ">
-                            Hay una nueva versión del sistema con mejoras y correcciones
+                            Hay una nueva versión del sistema
                         </div>
                     </div>
                 </div>
@@ -105,7 +191,7 @@ function mostrarNotificacionActualizacion() {
                     </ul>
                 </div>
                 
-                <button onclick="actualizarAhora()" style="
+                <button id="btnActualizarAhora" style="
                     width: 100%;
                     background: linear-gradient(135deg, #2B4C7E 0%, #3D5A80 100%);
                     color: white;
@@ -149,38 +235,68 @@ function mostrarNotificacionActualizacion() {
     `;
     
     document.body.appendChild(notificacion);
+    
+    // Evento click en botón
+    document.getElementById('btnActualizarAhora').addEventListener('click', actualizarAhora);
 }
 
 function actualizarAhora() {
+    console.log('🔄 Iniciando actualización...');
+    
+    const btn = document.getElementById('btnActualizarAhora');
+    btn.disabled = true;
+    btn.textContent = '⏳ Actualizando...';
+    
+    // Guardar datos protegidos
+    const datosProtegidos = {};
+    PROTECTED_KEYS.forEach(key => {
+        const value = localStorage.getItem(key);
+        if (value !== null) {
+            datosProtegidos[key] = value;
+        }
+    });
+    
+    console.log('💾 Datos protegidos:', Object.keys(datosProtegidos));
+    
+    // Actualizar versión
     localStorage.setItem(VERSION_KEY, APP_VERSION);
     
-    // Limpiar todos los caches
+    // Si hay SW pendiente, activarlo
+    if (updatePending && swRegistration && swRegistration.waiting) {
+        console.log('📤 Enviando mensaje SKIP_WAITING al SW');
+        swRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
+    }
+    
+    // Limpiar caches antiguos
     if ('caches' in window) {
-        caches.keys().then(names => {
-            names.forEach(name => caches.delete(name));
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames
+                    .filter(name => name !== 'reservas-v2.0.1') // No borrar cache actual
+                    .map(name => {
+                        console.log('🗑️ Eliminando cache antiguo:', name);
+                        return caches.delete(name);
+                    })
+            );
+        }).then(() => {
+            console.log('✅ Caches antiguos limpiados');
+            
+            // Restaurar datos protegidos
+            Object.keys(datosProtegidos).forEach(key => {
+                localStorage.setItem(key, datosProtegidos[key]);
+            });
+            
+            console.log('✅ Datos restaurados');
+            console.log('🔄 Recargando aplicación...');
+            
+            setTimeout(() => {
+                window.location.reload(true);
+            }, 500);
         });
+    } else {
+        // Si no hay caches API, solo recargar
+        setTimeout(() => {
+            window.location.reload(true);
+        }, 500);
     }
-    
-    // Actualizar service worker
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(registrations => {
-            registrations.forEach(reg => reg.update());
-        });
-    }
-    
-    setTimeout(() => {
-        window.location.reload(true);
-    }, 500);
-}
-
-window.addEventListener('load', verificarActualizacion);
-
-// Limpiar service workers antiguos al cargar
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then(registrations => {
-        registrations.forEach(registration => {
-            console.log('🔄 Actualizando service worker...');
-            registration.update();
-        });
-    });
 }
