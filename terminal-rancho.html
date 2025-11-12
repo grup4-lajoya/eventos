@@ -26,21 +26,21 @@
 
         .header {
             background: white;
-            padding: 20px;
+            padding: 15px 20px;
             border-radius: 15px;
             margin-bottom: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
         }
-
+        
         .header h1 {
             color: #2B4C7E;
             font-size: 20px;
-            margin-bottom: 10px;
-        }
-
-        .header .info {
-            color: #666;
-            font-size: 14px;
+            margin: 0;
+            flex: 1;
         }
 
         .card {
@@ -499,15 +499,10 @@
     <div class="container">
         <div class="header">
             <button class="btn-back" onclick="volverInicio()">
-            ← Volver
+                ← Volver
             </button>
             <h1>🍽️ Terminal Control Rancho</h1>
-            <div class="info">
-                <span id="controladorNombre"></span> | 
-                <span id="unidadInfo"></span>
-            </div>
         </div>
-
         <div id="alert" class="alert"></div>
 
         <div class="card">
@@ -1066,10 +1061,6 @@
         window.addEventListener('load', async () => {
             const acceso = await auth.protectPage();  
             if (!acceso) return;
-
-            const userData = auth.getUserData();
-            document.getElementById('controladorNombre').textContent = userData.nombre;
-            document.getElementById('unidadInfo').textContent = userData.unidad || 'Sin unidad';
 
             iniciarEscaner();
         });
