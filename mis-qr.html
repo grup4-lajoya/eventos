@@ -306,6 +306,84 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+        .notificacion-flotante {
+        position: fixed;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: white;
+        padding: 20px 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        transition: top 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        min-width: 320px;
+        max-width: 90%;
+    }
+    
+    .notificacion-flotante.show {
+        top: 30px;
+    }
+    
+    .notificacion-contenido {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .notificacion-icono {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        flex-shrink: 0;
+    }
+    
+    .notificacion-flotante.success .notificacion-icono {
+        background: #4CAF50;
+        color: white;
+    }
+    
+    .notificacion-flotante.error .notificacion-icono {
+        background: #f44336;
+        color: white;
+    }
+    
+    .notificacion-flotante.warning .notificacion-icono {
+        background: #ff9800;
+        color: white;
+    }
+    
+    .notificacion-mensaje {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        line-height: 1.4;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .notificacion-flotante {
+            min-width: 280px;
+            padding: 15px 20px;
+        }
+        
+        .notificacion-icono {
+            width: 40px;
+            height: 40px;
+            font-size: 24px;
+        }
+        
+        .notificacion-mensaje {
+            font-size: 14px;
+        }
+    }
 
         @media (max-width: 768px) {
             .header-content {
@@ -350,6 +428,12 @@
         <div id="reservasList" style="display: none;">
             <!-- Aquí se cargarán las reservas con sus QR -->
         </div>
+            <div id="notificacionFlotante" class="notificacion-flotante">
+        <div class="notificacion-contenido">
+            <div class="notificacion-icono">✓</div>
+            <div class="notificacion-mensaje"></div>
+        </div>
+    </div>
     </div>
 
     <script src="js/config.js"></script>
@@ -372,6 +456,38 @@
                 alert.classList.remove('show');
             }, 5000);
         }
+        // ✅ AGREGAR DESPUÉS DE LA FUNCIÓN mostrarAlerta:
+
+function mostrarNotificacionFlotante(mensaje, tipo = 'success') {
+    const notificacion = document.getElementById('notificacionFlotante');
+    const mensajeDiv = notificacion.querySelector('.notificacion-mensaje');
+    const iconoDiv = notificacion.querySelector('.notificacion-icono');
+    
+    // Configurar mensaje
+    mensajeDiv.textContent = mensaje;
+    
+    // Configurar ícono según tipo
+    if (tipo === 'success') {
+        iconoDiv.textContent = '✓';
+    } else if (tipo === 'error') {
+        iconoDiv.textContent = '✗';
+    } else if (tipo === 'warning') {
+        iconoDiv.textContent = '⚠';
+    }
+    
+    // Aplicar clases
+    notificacion.className = `notificacion-flotante ${tipo}`;
+    
+    // Mostrar
+    setTimeout(() => {
+        notificacion.classList.add('show');
+    }, 100);
+    
+    // Ocultar después de 4 segundos
+    setTimeout(() => {
+        notificacion.classList.remove('show');
+    }, 4000);
+}
         function formatearHora(hora24) {
             if (!hora24) return '';
             
@@ -612,21 +728,21 @@ async function crearTarjetaReserva(reserva) {
                     const result = await response.json();
             
                     if (!result.success) {
-                        mostrarAlerta(result.error, 'error');
+                        mostrarNotificacionFlotante(result.error, 'error');
                         btn.disabled = false;
                         btn.innerHTML = textoOriginal;
                         return;
                     }
-            
-                    mostrarAlerta('✓ Reserva cancelada exitosamente', 'success');
+                
+                    mostrarNotificacionFlotante('✓ Reserva cancelada exitosamente', 'success');
                     
                     setTimeout(() => {
                         location.reload();
-                    }, 1500);
-            
+                    }, 2000);
+                
                 } catch (error) {
                     console.error('Error:', error);
-                    mostrarAlerta('Error al cancelar la reserva', 'error');
+                    mostrarNotificacionFlotante('Error al cancelar la reserva', 'error');
                     btn.disabled = false;
                     btn.innerHTML = textoOriginal;
                 }
