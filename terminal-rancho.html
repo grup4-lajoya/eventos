@@ -578,7 +578,7 @@
         }
 
         function iniciarEscaner() {
-            if (html5QrCode) return;
+            if (html5QrCode && html5QrCode.isScanning) return;
 
             html5QrCode = new Html5Qrcode("reader");
             
@@ -1087,6 +1087,12 @@
             document.getElementById('menuSelection').classList.remove('show');
             datosValidacion = null;
             menuSeleccionado = null;
+            
+            const btnConfirmar = document.querySelector('#menuSelection .btn-success');
+            if (btnConfirmar) {
+                btnConfirmar.disabled = false;
+                btnConfirmar.innerHTML = '✓ Confirmar y Entregar';
+            }
         }
         function volverInicio() {
         window.location.href = CONFIG.ROUTES.HOME;
@@ -1104,7 +1110,7 @@
             detenerEscaner();
         });
     </script>
-    <script src="js/pwa-install.js?v=2.1.7"></script>
-    <script src="js/pwa-update.js?v=2.1.7"></script>
+    <script src="js/pwa-install.js?v=2.1.8"></script>
+    <script src="js/pwa-update.js?v=2.1.8"></script>
 </body>
 </html>
