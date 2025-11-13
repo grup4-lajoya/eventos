@@ -887,9 +887,9 @@
         
                 // Determinar tipo de ración según hora Perú
                 let tipoRacion;
-                if (horaPeru >= 6 && horaPeru < 10) tipoRacion = 'DESAYUNO';
-                else if (horaPeru >= 10 && horaPeru < 16) tipoRacion = 'ALMUERZO';
-                else if (horaPeru >= 16 && horaPeru < 21) tipoRacion = 'CENA';
+                if (horaPeru >= 5 && horaPeru < 10) tipoRacion = 'DESAYUNO';
+                else if (horaPeru >= 11 && horaPeru < 15) tipoRacion = 'ALMUERZO';
+                else if (horaPeru >= 16 && horaPeru < 20) tipoRacion = 'CENA';
                 else {
                     mostrarAlerta('Fuera del horario de atención', 'warning');
                     return;
@@ -1086,7 +1086,7 @@
             detenerEscaner();
         });
     </script>
-    <script src="js/pwa-install.js?v=2.1.3"></script>
-    <script src="js/pwa-update.js?v=2.1.3"></script>
+    <script src="js/pwa-install.js?v=2.1.4"></script>
+    <script src="js/pwa-update.js?v=2.1.4"></script>
 </body>
 </html>
