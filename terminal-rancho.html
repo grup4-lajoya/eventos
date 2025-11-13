@@ -880,10 +880,9 @@
                 const userData = auth.getUserData();
                 
                 // Obtener fecha y hora en Perú (UTC-5)
-                const ahoraUTC = new Date();
-                const ahoraPeru = new Date(ahoraUTC.getTime() - (5 * 60 * 60 * 1000));
-                const hoy = ahoraPeru.toISOString().split('T')[0];
-                const horaPeru = ahoraPeru.getHours();
+                const ahora = new Date();
+                const hoy = ahora.toISOString().split('T')[0];
+                const horaPeru = ahora.getHours();
         
                 // Determinar tipo de ración según hora Perú
                 let tipoRacion;
@@ -1091,7 +1090,7 @@
             detenerEscaner();
         });
     </script>
-    <script src="js/pwa-install.js?v=2.1.5"></script>
-    <script src="js/pwa-update.js?v=2.1.5"></script>
+    <script src="js/pwa-install.js?v=2.1.6"></script>
+    <script src="js/pwa-update.js?v=2.1.6"></script>
 </body>
 </html>
