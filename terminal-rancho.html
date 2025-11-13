@@ -634,6 +634,7 @@
             document.getElementById('resultadoValidacion').innerHTML = loadingHTML;
             document.getElementById('resultadoValidacion').className = 'validation-result';
             document.getElementById('resultadoValidacion').style.display = 'block';
+            document.getElementById('reader').style.display = 'none';
 
             try {
                 const userData = auth.getUserData();
@@ -654,6 +655,7 @@
                 const result = await response.json();
 
                 if (!result.success) {
+                    mostrarAlerta(result.error, 'error');
                     mostrarResultadoError(result.error);
                     return;
                 }
@@ -773,6 +775,8 @@
         }
 
         function reiniciarEscaner() {
+                // Mostrar escáner nuevamente
+            document.getElementById('reader').style.display = 'block';
             datosValidacion = null;
             document.getElementById('resultadoValidacion').style.display = 'none';
             document.getElementById('resultadoValidacion').innerHTML = '';
@@ -817,8 +821,18 @@
         document.getElementById('loadingBusqueda').style.display = 'none';
 
         if (!result.success) {
-            console.error('❌ Error del servidor:', result.error); // ← LOG 6
+            console.error('❌ Error del servidor:', result.error);
+            
+            // Mostrar alerta flotante
+            mostrarAlerta(result.error, 'error');
+            
+            // Mostrar error en card
             mostrarResultadoError(result.error);
+            
+            // Limpiar menús
+            document.getElementById('menuSelection').classList.remove('show');
+            menuSeleccionado = null;
+            
             return;
         }
 
@@ -1090,7 +1104,7 @@
             detenerEscaner();
         });
     </script>
-    <script src="js/pwa-install.js?v=2.1.6"></script>
-    <script src="js/pwa-update.js?v=2.1.6"></script>
+    <script src="js/pwa-install.js?v=2.1.7"></script>
+    <script src="js/pwa-update.js?v=2.1.7"></script>
 </body>
 </html>
