@@ -898,7 +898,7 @@
                 document.getElementById('tipoRacionSeleccion').textContent = tipoRacion;
 
                 // Obtener programación del día
-                const url = `${CONFIG.SUPABASE_URL}/rest/v1/programacion?unidad=eq.${userData.unidad}&fecha=eq.${hoy}&estado=eq.PUBLICADO&select=id,detalle_programacion(codigo,tipo_racion_elemento(descripcion)),programacion_horario_cantidad(codigo,cantidad,cantidad_reservada,tip_rac)`;
+                const url = `${CONFIG.SUPABASE_URL}/rest/v1/programacion?unidad=eq.${userData.unidad}&fecha=eq.${hoy}&select=id,detalle_programacion(codigo,tipo_racion_elemento(descripcion)),programacion_horario_cantidad(codigo,cantidad,cantidad_reservada,tip_rac)`;
 
                 const response = await fetch(url, {
                     headers: {
