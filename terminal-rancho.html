@@ -934,6 +934,9 @@
                         };
                     });
 
+                console.log('🕐 Hora Perú:', horaPeru);  // ← AGREGAR
+                console.log('🍽️ Tipo ración calculada:', tipoRacion);  // ← AGREGAR
+
                await renderizarMenus(menusDisponibles, tipoRacion);
 
             } catch (error) {
@@ -942,6 +945,8 @@
             }
         }
         async function renderizarMenus(menus, tipoRacion) {
+        console.log('🍽️ Renderizando menús para:', tipoRacion);  // ← AGREGAR ESTO
+        console.log('📋 Menús recibidos:', menus);  // ← AGREGAR ESTO
         const container = document.getElementById('menuOptions');
         container.innerHTML = '';
     
@@ -1086,7 +1091,7 @@
             detenerEscaner();
         });
     </script>
-    <script src="js/pwa-install.js?v=2.1.4"></script>
-    <script src="js/pwa-update.js?v=2.1.4"></script>
+    <script src="js/pwa-install.js?v=2.1.5"></script>
+    <script src="js/pwa-update.js?v=2.1.5"></script>
 </body>
 </html>
