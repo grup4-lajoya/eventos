@@ -570,16 +570,24 @@
             event.target.classList.add('active');
             document.getElementById(`tab-${tab}`).classList.add('active');
 
-            if (tab === 'escaner') {
-                iniciarEscaner();
-            } else {
-                detenerEscaner();
-            }
+        if (tab === 'escaner') {
+            document.getElementById('reader').style.display = 'block'; 
+            iniciarEscaner();
+        } else {
+            detenerEscaner();
+        }
         }
 
         function iniciarEscaner() {
+            // Si ya existe y está escaneando, no hacer nada
             if (html5QrCode && html5QrCode.isScanning) return;
-
+            
+            // Si existe pero NO está escaneando, destruirlo primero
+            if (html5QrCode) {
+                html5QrCode.clear().catch(() => {});
+                html5QrCode = null;
+            }
+        
             html5QrCode = new Html5Qrcode("reader");
             
             html5QrCode.start(
@@ -1110,7 +1118,7 @@
             detenerEscaner();
         });
     </script>
-    <script src="js/pwa-install.js?v=2.1.8"></script>
-    <script src="js/pwa-update.js?v=2.1.8"></script>
+    <script src="js/pwa-install.js?v=2.1.9"></script>
+    <script src="js/pwa-update.js?v=2.1.9"></script>
 </body>
 </html>
