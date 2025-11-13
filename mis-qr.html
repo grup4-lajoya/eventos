@@ -511,9 +511,13 @@ function mostrarNotificacionFlotante(mensaje, tipo = 'success') {
 
                 console.log('🔍 Buscando reservas para usuario:', userData.usuario_id);
 
-                // Consultar reservas activas del usuario con sus detalles
-               const url = `${CONFIG.SUPABASE_URL}/rest/v1/reserva?id_usuario=eq.${userData.usuario_id}&activo=eq.true&select=*,programacion(id,fecha),detalle_reserva(id,tipo_racion,confirmado,consumido,qr_code)&order=fecha_reserva.desc`;
+              // Obtener fecha actual en Perú
+                const ahora = new Date();
+                const hoy = ahora.toISOString().split('T')[0];
                 
+                // Consultar SOLO reservas del día actual
+                const url = `${CONFIG.SUPABASE_URL}/rest/v1/reserva?id_usuario=eq.${userData.usuario_id}&activo=eq.true&select=*,programacion!inner(id,fecha),detalle_reserva(id,tipo_racion,confirmado,consumido,qr_code)&programacion.fecha=eq.${hoy}&order=fecha_reserva.desc`;
+                                
                 const response = await fetch(url, {
                     headers: {
                         'apikey': CONFIG.SUPABASE_ANON_KEY,
