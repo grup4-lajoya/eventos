@@ -500,50 +500,69 @@ function mostrarNotificacionFlotante(mensaje, tipo = 'success') {
             
             return `${h}:${minutos} ${periodo}`;
         }
-
-        async function cargarReservas() {
-            try {
-                const userData = auth.getUserData();
-                if (!userData) {
-                    mostrarEstadoVacio();
-                    return;
-                }
-
-                console.log('🔍 Buscando reservas para usuario:', userData.usuario_id);
-
-              // Obtener fecha actual en Perú
-                const ahora = new Date();
-                const hoy = ahora.toISOString().split('T')[0];
-                
-                // Consultar SOLO reservas del día actual
-                const url = `${CONFIG.SUPABASE_URL}/rest/v1/reserva?id_usuario=eq.${userData.usuario_id}&activo=eq.true&select=*,programacion!inner(id,fecha),detalle_reserva(id,tipo_racion,confirmado,consumido,qr_code)&programacion.fecha=eq.${hoy}&order=fecha_reserva.desc`;
-                                
-                const response = await fetch(url, {
-                    headers: {
-                        'apikey': CONFIG.SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Error cargando reservas');
-                }
-
-                const reservas = await response.json();
-                console.log('📋 Reservas encontradas:', reservas);
-
-                if (reservas.length === 0) {
-                    mostrarEstadoVacio();
-                } else {
-                    renderizarReservas(reservas);
-                }
-
-            } catch (error) {
-                console.error('❌ Error:', error);
-                mostrarAlerta('Error al cargar las reservas', 'error');
-                mostrarEstadoVacio();
-            }
+async function cargarReservas() {
+    try {
+        const userData = auth.getUserData();
+        if (!userData) {
+            mostrarEstadoVacio();
+            return;
         }
+        console.log('🔍 Buscando reservas para usuario:', userData.usuario_id);
+        
+        // Obtener fecha y hora actual en Perú (UTC-5)
+        const ahoraUTC = new Date();
+        const ahoraPeru = new Date(ahoraUTC.getTime() - (5 * 60 * 60 * 1000));
+        const hoy = ahoraPeru.toISOString().split('T')[0];
+        
+        // Consultar todas las reservas activas
+        const url = `${CONFIG.SUPABASE_URL}/rest/v1/reserva?id_usuario=eq.${userData.usuario_id}&activo=eq.true&select=*,programacion!inner(id,fecha),detalle_reserva(id,tipo_racion,confirmado,consumido,qr_code)&order=fecha_reserva.desc`;
+                        
+        const response = await fetch(url, {
+            headers: {
+                'apikey': CONFIG.SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Error cargando reservas');
+        }
+        
+        const reservas = await response.json();
+        console.log('📋 Reservas encontradas:', reservas);
+        
+        // Filtrar reservas válidas
+        const reservasValidas = reservas.filter(reserva => {
+            const fechaReserva = reserva.programacion.fecha;
+            
+            // Si es fecha futura, mostrar
+            if (fechaReserva > hoy) return true;
+            
+            // Si es hoy, verificar que no haya pasado las 20:00
+            if (fechaReserva === hoy) {
+                const horaPeru = ahoraPeru.getHours();
+                return horaPeru < 20;
+            }
+            
+            // Si es fecha pasada, no mostrar
+            return false;
+        });
+        
+        console.log('✅ Reservas válidas:', reservasValidas);
+        
+        if (reservasValidas.length === 0) {
+            mostrarEstadoVacio();
+        } else {
+            renderizarReservas(reservasValidas);
+        }
+        
+    } catch (error) {
+        console.error('❌ Error:', error);
+        mostrarAlerta('Error al cargar las reservas', 'error');
+        mostrarEstadoVacio();
+    }
+}
+
 
         function mostrarEstadoVacio() {
             document.getElementById('loadingContainer').style.display = 'none';
