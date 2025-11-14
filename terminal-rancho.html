@@ -846,11 +846,16 @@
 
         console.log('✅ Tiene reserva:', result.tiene_reserva); // ← LOG 7
 
-        if (result.tiene_reserva) {
-            console.log('→ Mostrando resultado con reserva'); // ← LOG 8
-            datosValidacion = result.data;
-            mostrarResultadoExito(result.data);
-        } else {
+            if (result.tiene_reserva) {
+                console.log('→ Mostrando resultado con reserva');
+                datosValidacion = result.data;
+                
+                // Ocultar menús y mostrar resultado
+                document.getElementById('menuSelection').classList.remove('show');
+                document.getElementById('resultadoValidacion').style.display = 'block';
+                
+                mostrarResultadoExito(result.data);
+            } else {
             console.log('→ Mostrando selección de menú'); // ← LOG 9
             console.log('→ Datos persona:', result.data); // ← LOG 10
             datosValidacion = result.data;
@@ -1125,7 +1130,7 @@ async function cargarMenusDisponibles() {
             detenerEscaner();
         });
     </script>
-    <script src="js/pwa-install.js?v=2.2.2"></script>
-    <script src="js/pwa-update.js?v=2.2.2"></script>
+    <script src="js/pwa-install.js?v=2.2.3"></script>
+    <script src="js/pwa-update.js?v=2.2.3"></script>
 </body>
 </html>
