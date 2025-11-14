@@ -735,13 +735,7 @@
             document.getElementById('resultadoValidacion').className = 'validation-result error';
         }
             async function confirmarEntrega() {
-        if (!datosValidacion) return;
-    
-        // ✅ AGREGAR: Confirmación de seguridad
-        if (!confirm('¿Confirmar entrega del plato? Esta acción no se puede deshacer.')) {
-            return;
-        }
-    
+        if (!datosValidacion) return;      
         const btn = event.target;
         btn.disabled = true;
         btn.innerHTML = '⏳ Procesando...';
@@ -1042,11 +1036,6 @@ async function cargarMenusDisponibles() {
                     return;
                 }
             
-                // Confirmación de seguridad
-                if (!confirm('¿Confirmar entrega del plato? Esta acción no se puede deshacer.')) {
-                    return;
-                }
-            
                 const btn = event.target;
                 btn.disabled = true;
                 btn.innerHTML = '⏳ Procesando...';
@@ -1130,7 +1119,7 @@ async function cargarMenusDisponibles() {
             detenerEscaner();
         });
     </script>
-    <script src="js/pwa-install.js?v=2.2.3"></script>
-    <script src="js/pwa-update.js?v=2.2.3"></script>
+    <script src="js/pwa-install.js?v=2.2.4"></script>
+    <script src="js/pwa-update.js?v=2.2.4"></script>
 </body>
 </html>
