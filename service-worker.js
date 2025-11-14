@@ -1,5 +1,5 @@
 // service-worker.js - VERSIÓN CORREGIDA
-const CACHE_VERSION = '2.1.10';
+const CACHE_VERSION = '2.2.1';
 const CACHE_NAME = `reservas-v${CACHE_VERSION}-${Date.now()}`;
 const ASSETS_TO_CACHE = [
     '/eventos/',
