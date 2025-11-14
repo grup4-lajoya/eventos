@@ -896,76 +896,82 @@
             // Cargar menús disponibles
             await cargarMenusDisponibles();
         }
-
-        async function cargarMenusDisponibles() {
-            try {
-                const userData = auth.getUserData();
-                
-                // Obtener fecha y hora en Perú (UTC-5)
-                const ahoraUTC = new Date();
-                const ahoraPeru = new Date(ahoraUTC.getTime() - (5 * 60 * 60 * 1000));
-                const hoy = ahoraPeru.toISOString().split('T')[0];
-                const horaPeru = ahoraPeru.getHours();
+async function cargarMenusDisponibles() {
+    try {
+        const userData = auth.getUserData();
         
-                // Determinar tipo de ración según hora Perú
-                let tipoRacion;
-                if (horaPeru >= 5 && horaPeru < 10) tipoRacion = 'DESAYUNO';
-                else if (horaPeru >= 11 && horaPeru < 15) tipoRacion = 'ALMUERZO';
-                else if (horaPeru >= 16 && horaPeru < 20) tipoRacion = 'CENA';
-                else {
-                    mostrarAlerta('Fuera del horario de atención', 'warning');
-                    return;
-                }
+        // Usar UTC y calcular Perú (UTC-5)
+        const ahora = new Date();
+        const utcHora = ahora.getUTCHours();
+        let horaPeru = utcHora - 5;
+        if (horaPeru < 0) horaPeru += 24;
+        
+        // Fecha en UTC (tu BD está en UTC)
+        const hoy = ahora.toISOString().split('T')[0];
+        
+        console.log('🕐 UTC Hora:', utcHora);
+        console.log('🕐 Hora Perú calculada:', horaPeru);
+        console.log('📅 Fecha:', hoy);
 
-                document.getElementById('tipoRacionSeleccion').textContent = tipoRacion;
-
-                // Obtener programación del día
-                const url = `${CONFIG.SUPABASE_URL}/rest/v1/programacion?unidad=eq.${userData.unidad}&fecha=eq.${hoy}&select=id,detalle_programacion(codigo,tipo_racion_elemento(descripcion)),programacion_horario_cantidad(codigo,cantidad,cantidad_reservada,tip_rac)`;
-
-                const response = await fetch(url, {
-                    headers: {
-                        'apikey': CONFIG.SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
-                    }
-                });
-
-                const programaciones = await response.json();
-
-                if (!programaciones || programaciones.length === 0) {
-                    mostrarAlerta('No hay menú publicado para hoy', 'warning');
-                    return;
-                }
-
-                const prog = programaciones[0];
-                
-                // Filtrar por tipo de ración
-                const menusDisponibles = prog.programacion_horario_cantidad
-                    .filter(h => h.tip_rac === tipoRacion)
-                    .map(h => {
-                        const disponible = h.cantidad - h.cantidad_reservada;
-                        const detalles = prog.detalle_programacion
-                            .filter(d => d.codigo === h.codigo)
-                            .map(d => d.tipo_racion_elemento.descripcion)
-                            .join(', ');
-                        
-                        return {
-                            codigo: h.codigo,
-                            detalles,
-                            disponible,
-                            id_programacion: prog.id
-                        };
-                    });
-
-                console.log('🕐 Hora Perú:', horaPeru);  // ← AGREGAR
-                console.log('🍽️ Tipo ración calculada:', tipoRacion);  // ← AGREGAR
-
-               await renderizarMenus(menusDisponibles, tipoRacion);
-
-            } catch (error) {
-                console.error('Error:', error);
-                mostrarAlerta('Error al cargar menús', 'error');
-            }
+        // Determinar tipo de ración según hora Perú
+        let tipoRacion;
+        if (horaPeru >= 5 && horaPeru < 10) tipoRacion = 'DESAYUNO';
+        else if (horaPeru >= 11 && horaPeru < 15) tipoRacion = 'ALMUERZO';
+        else if (horaPeru >= 16 && horaPeru < 20) tipoRacion = 'CENA';
+        else {
+            mostrarAlerta('Fuera del horario de atención', 'warning');
+            return;
         }
+        
+        document.getElementById('tipoRacionSeleccion').textContent = tipoRacion;
+        
+        // Obtener programación del día
+        const url = `${CONFIG.SUPABASE_URL}/rest/v1/programacion?unidad=eq.${userData.unidad}&fecha=eq.${hoy}&select=id,detalle_programacion(codigo,tipo_racion_elemento(descripcion)),programacion_horario_cantidad(codigo,cantidad,cantidad_reservada,tip_rac)`;
+        
+        const response = await fetch(url, {
+            headers: {
+                'apikey': CONFIG.SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
+            }
+        });
+        
+        const programaciones = await response.json();
+        
+        if (!programaciones || programaciones.length === 0) {
+            mostrarAlerta('No hay menú publicado para hoy', 'warning');
+            return;
+        }
+        
+        const prog = programaciones[0];
+        
+        // Filtrar por tipo de ración
+        const menusDisponibles = prog.programacion_horario_cantidad
+            .filter(h => h.tip_rac === tipoRacion)
+            .map(h => {
+                const disponible = h.cantidad - h.cantidad_reservada;
+                const detalles = prog.detalle_programacion
+                    .filter(d => d.codigo === h.codigo)
+                    .map(d => d.tipo_racion_elemento.descripcion)
+                    .join(', ');
+                
+                return {
+                    codigo: h.codigo,
+                    detalles,
+                    disponible,
+                    id_programacion: prog.id
+                };
+            });
+        
+        console.log('🍽️ Tipo ración calculada:', tipoRacion);
+        
+        await renderizarMenus(menusDisponibles, tipoRacion);
+        
+    } catch (error) {
+        console.error('Error:', error);
+        mostrarAlerta('Error al cargar menús', 'error');
+    }
+}
+
         async function renderizarMenus(menus, tipoRacion) {
         console.log('🍽️ Renderizando menús para:', tipoRacion);  // ← AGREGAR ESTO
         console.log('📋 Menús recibidos:', menus);  // ← AGREGAR ESTO
@@ -1119,7 +1125,7 @@
             detenerEscaner();
         });
     </script>
-    <script src="js/pwa-install.js?v=2.2.1"></script>
-    <script src="js/pwa-update.js?v=2.2.1"></script>
+    <script src="js/pwa-install.js?v=2.2.2"></script>
+    <script src="js/pwa-update.js?v=2.2.2"></script>
 </body>
 </html>
