@@ -168,26 +168,40 @@
             padding: 30px 40px;
         }
 
-        /* Banner 1 - Safety Guidelines */
-        .banner-safety {
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-            border-radius: 30px;
-            padding: 60px;
-            margin-bottom: 30px;
-            box-shadow: 
-                0 25px 50px rgba(0,0,0,0.3),
-                0 10px 20px rgba(0,0,0,0.2);
-            position: relative;
-            overflow: hidden;
+        /* Buttons Grid */
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
         }
 
-        .banner-safety::before {
+        .info-button {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 50px 30px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0277BD;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 15px 35px rgba(0,0,0,0.3),
+                0 5px 15px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .info-button::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 8px;
+            height: 6px;
             background: linear-gradient(90deg, #0091EA, #00B0FF, #40C4FF, #00B0FF, #0091EA);
             background-size: 200% 100%;
             animation: gradientMove 3s linear infinite;
@@ -198,29 +212,181 @@
             100% { background-position: 200% 50%; }
         }
 
-        .banner-title {
+        .info-button:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 
+                0 25px 50px rgba(0,145,234,0.4),
+                0 10px 20px rgba(0,0,0,0.3);
+            color: #01579B;
+        }
+
+        .info-button-icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal.active {
+            display: block;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            margin: 3% auto;
+            padding: 0;
+            border-radius: 30px;
+            width: 90%;
+            max-width: 1400px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            animation: slideDown 0.4s ease;
+            position: relative;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%);
+            padding: 30px 40px;
+            border-radius: 30px 30px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700);
+            background-size: 200% 100%;
+            animation: gradientMove 3s linear infinite;
+        }
+
+        .modal-title {
             font-family: 'Montserrat', sans-serif;
             font-size: 2rem;
             font-weight: 800;
-            color: #0277BD;
+            color: #ffd700;
             text-align: center;
-            margin-bottom: 40px;
-            position: relative;
-            padding-bottom: 15px;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(255,215,0,0.5);
         }
 
-        .banner-title::after {
-            content: '';
+        .close-button {
             position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 4px;
-            background: linear-gradient(90deg, transparent, #0091EA, transparent);
-            border-radius: 2px;
+            right: 25px;
+            top: 25px;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ffd700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,215,0,0.1);
         }
 
+        .close-button:hover {
+            color: #ffffff;
+            background: rgba(255,215,0,0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 40px;
+        }
+
+        /* Información General Styles */
+        .info-general-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .info-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 6px solid #0091EA;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,145,234,0.2);
+        }
+
+        .info-card-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0277BD;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .info-card-icon {
+            font-size: 2rem;
+        }
+
+        .info-card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .info-card-text {
+            font-size: 1.1rem;
+            color: #1565C0;
+            line-height: 1.8;
+            font-weight: 500;
+        }
+
+        /* Safety Grid (para modal de prevención) */
         .safety-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -295,19 +461,16 @@
             color: #0277BD;
         }
 
-        /* Banner 2 - Military Recommendations */
-        .banner-military {
+        /* Military Modal Styles */
+        .military-content {
             background: linear-gradient(135deg, #2c3e16 0%, #3d5018 50%, #2c3e16 100%);
-            border-radius: 30px;
-            padding: 60px;
-            box-shadow: 
-                0 25px 50px rgba(0,0,0,0.5),
-                0 10px 20px rgba(0,0,0,0.3);
+            padding: 40px;
+            border-radius: 20px;
             position: relative;
             overflow: hidden;
         }
 
-        .banner-military::before {
+        .military-content::before {
             content: '';
             position: absolute;
             top: 0;
@@ -320,37 +483,13 @@
             pointer-events: none;
         }
 
-        .banner-military-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 2rem;
-            font-weight: 800;
-            color: #D4C5A0;
-            text-align: center;
-            margin-bottom: 40px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            position: relative;
-            padding-bottom: 15px;
-        }
-
-        .banner-military-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 150px;
-            height: 4px;
-            background: linear-gradient(90deg, transparent, #ffd700, transparent);
-            border-radius: 2px;
-        }
-
         .prohibitions-list {
             display: flex;
             flex-direction: column;
             gap: 25px;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
         }
 
         .prohibition-card {
@@ -425,6 +564,8 @@
             border-radius: 20px;
             padding: 40px;
             border: 2px solid rgba(212,197,160,0.3);
+            position: relative;
+            z-index: 1;
         }
 
         .note-card {
@@ -478,6 +619,22 @@
             word-spacing: normal;
         }
 
+        /* Emergency Numbers Modal */
+        .emergency-image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .emergency-image {
+            width: 100%;
+            max-width: 1000px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
         /* Responsive Design */
         @media (max-width: 1400px) {
             .main-title {
@@ -519,18 +676,26 @@
                 letter-spacing: 2px;
             }
 
-            .banner-safety,
-            .banner-military {
-                padding: 35px;
-            }
-
-            .banner-title,
-            .banner-military-title {
-                font-size: 1.7rem;
-            }
-
-            .safety-grid {
+            .buttons-grid {
                 grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+            }
+
+            .info-button {
+                padding: 40px 25px;
+                font-size: 1.2rem;
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+
+            .modal-body {
+                padding: 30px;
+            }
+
+            .info-general-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -578,39 +743,62 @@
                 padding: 20px 15px;
             }
 
-            .banner-safety,
-            .banner-military {
-                padding: 25px 15px;
-                margin-bottom: 20px;
-                border-radius: 20px;
+            .buttons-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
             }
 
-            .banner-title,
-            .banner-military-title {
-                font-size: 1.4rem;
-                margin-bottom: 25px;
-                letter-spacing: 1px;
+            .info-button {
+                padding: 35px 20px;
+                font-size: 1.1rem;
+            }
+
+            .info-button-icon {
+                font-size: 2.5rem;
+            }
+
+            .modal-content {
+                margin: 5% auto;
+                width: 98%;
+                max-height: 85vh;
+            }
+
+            .modal-header {
+                padding: 25px 20px;
+            }
+
+            .modal-title {
+                font-size: 1.5rem;
+                padding-right: 40px;
+            }
+
+            .close-button {
+                right: 15px;
+                top: 20px;
+                font-size: 2rem;
+                width: 40px;
+                height: 40px;
+            }
+
+            .modal-body {
+                padding: 20px;
+            }
+
+            .info-general-grid {
+                gap: 20px;
+            }
+
+            .info-card {
+                padding: 25px 20px;
+            }
+
+            .info-card-title {
+                font-size: 1.3rem;
             }
 
             .safety-grid {
                 grid-template-columns: 1fr;
                 gap: 15px;
-            }
-
-            .safety-card {
-                padding: 25px 20px;
-                min-height: auto;
-            }
-
-            .safety-icon {
-                width: 65px;
-                height: 65px;
-                font-size: 2rem;
-                margin-bottom: 15px;
-            }
-
-            .safety-text {
-                font-size: 0.95rem;
             }
 
             .prohibition-card {
@@ -688,30 +876,17 @@
                 padding: 20px 10px;
             }
 
-            .banner-safety,
-            .banner-military {
-                padding: 20px 12px;
-                border-radius: 15px;
+            .info-button {
+                padding: 30px 20px;
+                font-size: 1rem;
             }
 
-            .banner-title,
-            .banner-military-title {
+            .info-button-icon {
+                font-size: 2rem;
+            }
+
+            .modal-title {
                 font-size: 1.2rem;
-                margin-bottom: 20px;
-            }
-
-            .safety-card {
-                padding: 20px 15px;
-            }
-
-            .safety-icon {
-                width: 60px;
-                height: 60px;
-                font-size: 1.8rem;
-            }
-
-            .safety-text {
-                font-size: 0.9rem;
             }
 
             .prohibition-card {
@@ -743,29 +918,6 @@
                 text-align: justify;
             }
         }
-
-        @media (max-width: 360px) {
-            .main-title {
-                font-size: 1.1rem;
-            }
-
-            .subtitle {
-                font-size: 0.65rem;
-            }
-
-            .banner-title,
-            .banner-military-title {
-                font-size: 1.1rem;
-            }
-
-            .safety-text {
-                font-size: 0.85rem;
-            }
-
-            .prohibition-text {
-                font-size: 0.95rem;
-            }
-        }
     </style>
 </head>
 <body>
@@ -793,101 +945,267 @@
 
     <!-- Content Section -->
     <main class="content-section">
-        <!-- Banner 1: Safety Guidelines -->
-        <section class="banner-safety">
-            <h2 class="banner-title">CUIDA TU SEGURIDAD EN EL GRUPO AÉREO N°4</h2>
-            
-            <div class="safety-grid">
-                <div class="safety-card">
-                    <div class="safety-icon">👨‍💼</div>
-                    <p class="safety-text">Participa en la charla de inducción de seguridad</p>
-                </div>
+        <div class="buttons-grid">
+            <!-- Botón 1: Información General -->
+            <button class="info-button" onclick="openModal('modal1')">
+                <img src="assets/icons/ecodex.png" alt="Información General" style="width: 80px; height: 80px; margin: 0 auto 15px; display: block; object-fit: contain;">
+                Información General
+            </button>
 
-                <div class="safety-card">
-                    <div class="safety-icon">🦺</div>
-                    <p class="safety-text">Usa siempre tus Equipos de Protección Personal</p>
-                </div>
+            <!-- Botón 2: Prevención de Accidentes -->
+            <button class="info-button" onclick="openModal('modal2')">
+                <span class="info-button-icon">🛡️</span>
+                Consideraciones de Prevención de Accidentes
+            </button>
 
-                <div class="safety-card">
-                    <div class="safety-icon">⚠️</div>
-                    <p class="safety-text">Respeta las señales y delimitaciones</p>
-                </div>
+            <!-- Botón 3: Seguridad Militar -->
+            <button class="info-button" onclick="openModal('modal3')">
+                <span class="info-button-icon">🔒</span>
+                Consideraciones de Seguridad Militar
+            </button>
 
-                <div class="safety-card">
-                    <div class="safety-icon">🚫</div>
-                    <p class="safety-text">Evita distracciones</p>
-                </div>
-
-                <div class="safety-card">
-                    <div class="safety-icon">👁️</div>
-                    <p class="safety-text">Si ves algo peligroso, repórtalo</p>
-                </div>
-
-                <div class="safety-card">
-                    <div class="safety-icon">🔒</div>
-                    <p class="safety-text">No manipules equipos o aeronaves sin permiso</p>
-                </div>
-
-                <div class="safety-card">
-                    <div class="safety-icon">🧹</div>
-                    <p class="safety-text">Mantén el orden y limpieza</p>
-                </div>
-
-                <div class="safety-card">
-                    <div class="safety-icon">📋</div>
-                    <p class="safety-text">Cumple las normas de seguridad en mantenimiento</p>
-                </div>
-
-                <div class="safety-card">
-                    <div class="safety-icon">🛫</div>
-                    <p class="safety-text">No ingreses a zonas de vuelo sin autorización</p>
-                </div>
-
-                <div class="safety-card">
-                    <div class="safety-icon">🚨</div>
-                    <p class="safety-text">Conoce qué hacer en caso de emergencia</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Banner 2: Military Recommendations -->
-        <section class="banner-military">
-            <h2 class="banner-military-title">Recomendaciones de Seguridad Militar</h2>
-            
-            <div class="prohibitions-list">
-                <div class="prohibition-card">
-                    <div class="prohibition-icon">📷</div>
-                    <p class="prohibition-text">PROHIBIDO TOMAR FOTOGRAFÍAS</p>
-                </div>
-
-                <div class="prohibition-card">
-                    <div class="prohibition-icon">🎥</div>
-                    <p class="prohibition-text">PROHIBIDO REALIZAR FILMACIONES</p>
-                </div>
-
-                <div class="prohibition-card">
-                    <div class="prohibition-icon">📡</div>
-                    <p class="prohibition-text">PROHIBIDO EFECTUAR TRANSMISIONES EN VIVO</p>
-                </div>
-
-                <div class="prohibition-card">
-                    <div class="prohibition-icon">📹</div>
-                    <p class="prohibition-text">PROHIBIDO HACER VIDEOLLAMADAS EN LAS ÁREAS DE OPERACIONES</p>
-                </div>
-            </div>
-
-            <div class="additional-notes">
-                <div class="note-card">
-                    <div class="note-icon">⭕</div>
-                    <p class="note-text">Se prohíbe al personal tomarse fotografías con aeronaves, equipos o instalaciones militares, así como publicarlas o compartirlas en redes sociales.</p>
-                </div>
-
-                <div class="note-card">
-                    <div class="note-icon">⛔</div>
-                    <p class="note-text">Concluidas las operaciones aéreas, el personal comisionado no deberá permanecer cerca de los cobertizos, hangares, rampas o aeronaves.</p>
-                </div>
-            </div>
-        </section>
+            <!-- Botón 4: Números de Emergencia -->
+            <button class="info-button" onclick="openModal('modal4')">
+                <span class="info-button-icon">🚨</span>
+                Números de Emergencia
+            </button>
+        </div>
     </main>
+
+    <!-- Modal 1: Información General -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Información General</h2>
+                <span class="close-button" onclick="closeModal('modal1')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="info-general-grid">
+                    <!-- Salubridad -->
+                    <div class="info-card">
+                        <h3 class="info-card-title">
+                            <span class="info-card-icon">💧</span>
+                            Salubridad
+                        </h3>
+                        <img src="assets/icons/salubridad.jpeg" alt="Salubridad" class="info-card-image">
+                        <p class="info-card-text">
+                            Tener precaución de no consumir el agua directamente de los lavaderos y/o duchas.
+                        </p>
+                    </div>
+
+                    <!-- Seguridad -->
+                    <div class="info-card">
+                        <h3 class="info-card-title">
+                            <span class="info-card-icon">🐕</span>
+                            Seguridad
+                        </h3>
+                        <img src="assets/icons/seguridad.jpg" alt="Seguridad con Canes" class="info-card-image">
+                        <p class="info-card-text">
+                            Se cuenta con canes para la seguridad.
+                        </p>
+                    </div>
+
+                    <!-- Rutinas -->
+                    <div class="info-card">
+                        <h3 class="info-card-title">
+                            <span class="info-card-icon">🚌</span>
+                            Rutinas
+                        </h3>
+                        <img src="assets/icons/rutinas.jpg" alt="Transporte del Personal" class="info-card-image">
+                        <p class="info-card-text">
+                            Para traslado del personal.
+                        </p>
+                    </div>
+
+                    <!-- Racionamiento -->
+                    <div class="info-card">
+                        <h3 class="info-card-title">
+                            <span class="info-card-icon">🍽️</span>
+                            Racionamiento
+                        </h3>
+                        <img src="assets/icons/app racionamiento.jpg" alt="QR Racionamiento" class="info-card-image">
+                        <p class="info-card-text">
+                            Reservas para racionamiento a través de la app, escaneando el QR ubicado al reverso del Pase de seguridad del evento.
+                        </p>
+                        <div class="info-card-text" style="margin-top: 20px;">
+                            <strong style="display: block; margin-bottom: 12px; font-size: 1.15rem;">Sobre las reservas:</strong>
+                            <div style="margin-bottom: 10px; padding: 10px; background: rgba(2, 119, 189, 0.1); border-radius: 8px; border-left: 3px solid #0277BD;">
+                                <strong>Desayuno - Almuerzo:</strong> Un día antes hasta las 21:00 horas.
+                            </div>
+                            <div style="padding: 10px; background: rgba(2, 119, 189, 0.1); border-radius: 8px; border-left: 3px solid #0277BD;">
+                                <strong>Cena:</strong> Hasta las 12:00 horas del mismo día.
+                            </div>
+                        </div>
+                        <div class="info-card-text" style="margin-top: 20px; padding: 15px; background: rgba(255, 215, 0, 0.1); border-radius: 10px; border: 2px solid rgba(255, 215, 0, 0.3);">
+                            <strong style="color: #0277BD;">📞 Consultas del App:</strong><br>
+                            Comunicarse al <strong>951038753 / 975403086</strong><br>
+                            o acercarse al <strong>Dpto. de Informática</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Prevención de Accidentes -->
+    <div id="modal2" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Consideraciones de Prevención de Accidentes</h2>
+                <span class="close-button" onclick="closeModal('modal2')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="safety-grid">
+                    <div class="safety-card">
+                        <div class="safety-icon">👨‍💼</div>
+                        <p class="safety-text">Participa en la charla de inducción de seguridad</p>
+                    </div>
+
+                    <div class="safety-card">
+                        <div class="safety-icon">🦺</div>
+                        <p class="safety-text">Usa siempre tus Equipos de Protección Personal</p>
+                    </div>
+
+                    <div class="safety-card">
+                        <div class="safety-icon">⚠️</div>
+                        <p class="safety-text">Respeta las señales y delimitaciones</p>
+                    </div>
+
+                    <div class="safety-card">
+                        <div class="safety-icon">🚫</div>
+                        <p class="safety-text">Evita distracciones</p>
+                    </div>
+
+                    <div class="safety-card">
+                        <div class="safety-icon">👁️</div>
+                        <p class="safety-text">Si ves algo peligroso, repórtalo</p>
+                    </div>
+
+                    <div class="safety-card">
+                        <div class="safety-icon">🔒</div>
+                        <p class="safety-text">No manipules equipos o aeronaves sin permiso</p>
+                    </div>
+
+                    <div class="safety-card">
+                        <div class="safety-icon">🧹</div>
+                        <p class="safety-text">Mantén el orden y limpieza</p>
+                    </div>
+
+                    <div class="safety-card">
+                        <div class="safety-icon">📋</div>
+                        <p class="safety-text">Cumple las normas de seguridad en mantenimiento</p>
+                    </div>
+
+                    <div class="safety-card">
+                        <div class="safety-icon">🛫</div>
+                        <p class="safety-text">No ingreses a zonas de vuelo sin autorización</p>
+                    </div>
+
+                    <div class="safety-card">
+                        <div class="safety-icon">🚨</div>
+                        <p class="safety-text">Conoce qué hacer en caso de emergencia</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Seguridad Militar -->
+    <div id="modal3" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Consideraciones de Seguridad Militar</h2>
+                <span class="close-button" onclick="closeModal('modal3')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="military-content">
+                    <div class="prohibitions-list">
+                        <div class="prohibition-card">
+                            <div class="prohibition-icon">📷</div>
+                            <p class="prohibition-text">PROHIBIDO TOMAR FOTOGRAFÍAS</p>
+                        </div>
+
+                        <div class="prohibition-card">
+                            <div class="prohibition-icon">🎥</div>
+                            <p class="prohibition-text">PROHIBIDO REALIZAR FILMACIONES</p>
+                        </div>
+
+                        <div class="prohibition-card">
+                            <div class="prohibition-icon">📡</div>
+                            <p class="prohibition-text">PROHIBIDO EFECTUAR TRANSMISIONES EN VIVO</p>
+                        </div>
+
+                        <div class="prohibition-card">
+                            <div class="prohibition-icon">📹</div>
+                            <p class="prohibition-text">PROHIBIDO HACER VIDEOLLAMADAS EN LAS ÁREAS DE OPERACIONES</p>
+                        </div>
+                    </div>
+
+                    <div class="additional-notes">
+                        <div class="note-card">
+                            <div class="note-icon">⭕</div>
+                            <p class="note-text">Se prohíbe al personal tomarse fotografías con aeronaves, equipos o instalaciones militares, así como publicarlas o compartirlas en redes sociales.</p>
+                        </div>
+
+                        <div class="note-card">
+                            <div class="note-icon">⛔</div>
+                            <p class="note-text">Concluidas las operaciones aéreas, el personal comisionado no deberá permanecer cerca de los cobertizos, hangares, rampas o aeronaves.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: Números de Emergencia -->
+    <div id="modal4" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Números de Emergencia</h2>
+                <span class="close-button" onclick="closeModal('modal4')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="emergency-image-container">
+                    <img src="assets/icons/numeros_emergencia.png" alt="Números de Emergencia" class="emergency-image">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Cerrar modal al hacer clic fuera del contenido
+        window.onclick = function(event) {
+            const modals = document.getElementsByClassName('modal');
+            for (let modal of modals) {
+                if (event.target == modal) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            }
+        }
+
+        // Cerrar modal con tecla ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const modals = document.getElementsByClassName('modal');
+                for (let modal of modals) {
+                    if (modal.classList.contains('active')) {
+                        modal.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
