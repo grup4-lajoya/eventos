@@ -562,16 +562,15 @@ async function cargarReservas() {
         mostrarEstadoVacio();
     }
 }
-
-
         function mostrarEstadoVacio() {
             document.getElementById('loadingContainer').style.display = 'none';
             document.getElementById('emptyState').style.display = 'block';
         }
-        async function obtenerHorarioReserva(idProgramacion, tipoRacion) {
-    try {
-        const url = `${CONFIG.SUPABASE_URL}/rest/v1/programacion_horario_cantidad?id_programacion=eq.${idProgramacion}&tip_rac=eq.${tipoRacion}&cantidad_reservada=gt.0&select=hora_inicio,hora_fin&limit=1`;
-        
+        async function obtenerHorarioReserva(idProgramacion, tipoRacion, codigoMenu) {
+        try {
+        // ✅ Agregado filtro por código específico
+        const url = `${CONFIG.SUPABASE_URL}/rest/v1/programacion_horario_cantidad?id_programacion=eq.${idProgramacion}&tip_rac=eq.${tipoRacion}&codigo=eq.${codigoMenu}&select=hora_inicio,hora_fin&limit=1`;
+
         const response = await fetch(url, {
             headers: {
                 'apikey': CONFIG.SUPABASE_ANON_KEY,
@@ -623,13 +622,17 @@ async function crearTarjetaReserva(reserva) {
         CENA: '🌙'
     };
 
-    // ✅ OBTENER HORARIOS
-    const horariosPromises = reserva.detalle_reserva
-        .filter(det => det.qr_code)
-        .map(async detalle => {
-            const horario = await obtenerHorarioReserva(reserva.id_programacion, detalle.tipo_racion);
-            return { detalle, horario };
-        });
+// ✅ OBTENER HORARIOS CON CÓDIGO ESPECÍFICO
+const horariosPromises = reserva.detalle_reserva
+    .filter(det => det.qr_code)
+    .map(async detalle => {
+        const horario = await obtenerHorarioReserva(
+            reserva.id_programacion, 
+            detalle.tipo_racion,
+            detalle.codigo_menu  // ✅ Agregar código del menú reservado
+        );
+        return { detalle, horario };
+    });
     
     const detallesConHorario = await Promise.all(horariosPromises);
 
@@ -779,7 +782,7 @@ async function crearTarjetaReserva(reserva) {
             await cargarReservas();
         });        
     </script>
-    <script src="js/pwa-install.js?v=2.2.6"></script>
-    <script src="js/pwa-update.js?v=2.2.6"></script>
+    <script src="js/pwa-install.js?v=2.2.7"></script>
+    <script src="js/pwa-update.js?v=2.2.7"></script>
 </body>
 </html>
