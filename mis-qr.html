@@ -654,20 +654,24 @@ async function crearTarjetaReserva(reserva) {
             const estado = detalle.consumido ? 'consumido' : 'confirmado';
             const estadoTexto = detalle.consumido ? 'Consumido' : 'Activo';
             
-            // ✅ VALIDACIÓN ESTRICTA DEL HORARIO
-            let horarioBadge = '';
-            if (horario && horario.hora_inicio && horario.hora_fin) {
-                try {
-                    const horaInicioFormateada = formatearHora(horario.hora_inicio);
-                    const horaFinFormateada = formatearHora(horario.hora_fin);
-                    
-                    if (horaInicioFormateada && horaFinFormateada) {
-                        horarioBadge = `<span class="estado-badge" style="background: #fff3cd; color: #856404; display: inline-block; margin-top: 5px;">🕐 ${horaInicioFormateada} - ${horaFinFormateada}</span>`;
-                    }
-                } catch (e) {
-                    horarioBadge = '';
+        // ✅ VERSIÓN DE DIAGNÓSTICO
+        let horarioBadge = '';
+        if (horario && horario.hora_inicio && horario.hora_fin) {
+            try {
+                const horaInicioFormateada = formatearHora(horario.hora_inicio);
+                const horaFinFormateada = formatearHora(horario.hora_fin);
+                
+                if (horaInicioFormateada && horaFinFormateada) {
+                    horarioBadge = `<span class="estado-badge" style="background: #fff3cd; color: #856404; display: inline-block; margin-top: 5px;">🕐 ${horaInicioFormateada} - ${horaFinFormateada}</span>`;
+                } else {
+                    horarioBadge = `<span class="estado-badge" style="background: #ffebee; color: #c62828;">⚠️ Error formato</span>`;
                 }
+            } catch (e) {
+                horarioBadge = `<span class="estado-badge" style="background: #ffebee; color: #c62828;">⚠️ Error: ${e.message}</span>`;
             }
+        } else {
+            horarioBadge = `<span class="estado-badge" style="background: #ffebee; color: #c62828;">⚠️ Sin horario [${detalle.codigo_menu || 'SIN CÓDIGO'}]</span>`;
+        }
             
             return `
                 <div class="qr-section">
@@ -807,7 +811,7 @@ async function crearTarjetaReserva(reserva) {
             await cargarReservas();
         });        
     </script>
-    <script src="js/pwa-install.js?v=3.0.1"></script>
-    <script src="js/pwa-update.js?v=3.0.1"></script>
+    <script src="js/pwa-install.js?v=3.0.2"></script>
+    <script src="js/pwa-update.js?v=3.0.2"></script>
 </body>
 </html>
