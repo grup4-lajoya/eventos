@@ -567,8 +567,12 @@ async function cargarReservas() {
             document.getElementById('emptyState').style.display = 'block';
         }
         async function obtenerHorarioReserva(idProgramacion, tipoRacion, codigoMenu) {
-        try {
-        // ✅ Agregado filtro por código específico
+    try {
+        // Validar que tenemos todos los parámetros
+        if (!idProgramacion || !tipoRacion || !codigoMenu) {
+            return null;
+        }
+
         const url = `${CONFIG.SUPABASE_URL}/rest/v1/programacion_horario_cantidad?id_programacion=eq.${idProgramacion}&tip_rac=eq.${tipoRacion}&codigo=eq.${codigoMenu}&select=hora_inicio,hora_fin&limit=1`;
 
         const response = await fetch(url, {
@@ -578,20 +582,24 @@ async function cargarReservas() {
             }
         });
 
+        if (!response.ok) {
+            return null;
+        }
+
         const data = await response.json();
-        if (data && data.length > 0) {
+        
+        if (data && data.length > 0 && data[0].hora_inicio && data[0].hora_fin) {
             return {
                 hora_inicio: data[0].hora_inicio,
                 hora_fin: data[0].hora_fin
             };
         }
+        
         return null;
     } catch (error) {
-        console.error('Error obteniendo horario:', error);
         return null;
     }
 }
-
         async function renderizarReservas(reservas) {
             const container = document.getElementById('reservasList');
             container.innerHTML = '';
@@ -622,74 +630,91 @@ async function crearTarjetaReserva(reserva) {
         CENA: '🌙'
     };
 
-// ✅ OBTENER HORARIOS CON CÓDIGO ESPECÍFICO
-const horariosPromises = reserva.detalle_reserva
-    .filter(det => det.qr_code)
-    .map(async detalle => {
-        const horario = await obtenerHorarioReserva(
-            reserva.id_programacion, 
-            detalle.tipo_racion,
-            detalle.codigo_menu  // ✅ Agregar código del menú reservado
+        // ✅ OBTENER HORARIOS CON CÓDIGO ESPECÍFICO - VERSIÓN MEJORADA
+        const detallesConHorario = await Promise.all(
+            reserva.detalle_reserva
+                .filter(det => det.qr_code)
+                .map(async detalle => {
+                    // Validar que existe codigo_menu
+                    if (!detalle.codigo_menu) {
+                        return { detalle, horario: null };
+                    }
+                    
+                    const horario = await obtenerHorarioReserva(
+                        reserva.id_programacion, 
+                        detalle.tipo_racion,
+                        detalle.codigo_menu
+                    );
+                    
+                    return { detalle, horario };
+                })
         );
-        return { detalle, horario };
-    });
-    
-    const detallesConHorario = await Promise.all(horariosPromises);
 
-    const detallesHTML = detallesConHorario.map(({ detalle, horario }) => {
-        const estado = detalle.consumido ? 'consumido' : 'confirmado';
-        const estadoTexto = detalle.consumido ? 'Consumido' : 'Activo';
-        
-        const horarioBadge = horario 
-            ? `<span class="estado-badge" style="background: #fff3cd; color: #856404;">🕐 ${formatearHora(horario.hora_inicio)} - ${formatearHora(horario.hora_fin)}</span>`
-            : '';
-        
-        return `
-            <div class="qr-section">
-            <div class="qr-header">
-                <span class="qr-icon">${iconos[detalle.tipo_racion]}</span>
-                <div class="qr-title" style="flex: 1;">
-                    <h4>${detalle.tipo_racion}</h4>
-                    <p style="margin-bottom: 8px;">${fechaFormateada}</p>
-                    ${horarioBadge}
-                </div>
-            </div>          
-                <div class="qr-content">
-                    <div class="qr-code-container">
-                        <div class="qr-code" id="qr-${detalle.id}"></div>
+        const detallesHTML = detallesConHorario.map(({ detalle, horario }) => {
+            const estado = detalle.consumido ? 'consumido' : 'confirmado';
+            const estadoTexto = detalle.consumido ? 'Consumido' : 'Activo';
+            
+            // ✅ VALIDACIÓN ESTRICTA DEL HORARIO
+            let horarioBadge = '';
+            if (horario && horario.hora_inicio && horario.hora_fin) {
+                try {
+                    const horaInicioFormateada = formatearHora(horario.hora_inicio);
+                    const horaFinFormateada = formatearHora(horario.hora_fin);
+                    
+                    if (horaInicioFormateada && horaFinFormateada) {
+                        horarioBadge = `<span class="estado-badge" style="background: #fff3cd; color: #856404; display: inline-block; margin-top: 5px;">🕐 ${horaInicioFormateada} - ${horaFinFormateada}</span>`;
+                    }
+                } catch (e) {
+                    horarioBadge = '';
+                }
+            }
+            
+            return `
+                <div class="qr-section">
+                    <div class="qr-header">
+                        <span class="qr-icon">${iconos[detalle.tipo_racion]}</span>
+                        <div class="qr-title" style="flex: 1;">
+                            <h4>${detalle.tipo_racion}</h4>
+                            <p style="margin-bottom: 8px;">${fechaFormateada}</p>
+                            ${horarioBadge}
+                        </div>
+                    </div>          
+                    <div class="qr-content">
+                        <div class="qr-code-container">
+                            <div class="qr-code" id="qr-${detalle.id}"></div>
+                        </div>
+                        <div class="qr-info">
+                            <p><strong>Presenta este código para retirar tu ${detalle.tipo_racion.toLowerCase()}</strong></p>
+                            ${!detalle.consumido ? `
+                                <div class="qr-warning">
+                                    ⚠️ <span>Este código es de un solo uso. Una vez escaneado, no podrá usarse nuevamente.</span>
+                                </div>
+                                <button 
+                                    class="btn-cancelar-detalle" 
+                                    data-detalle-id="${detalle.id}"
+                                    data-tipo-racion="${detalle.tipo_racion}"
+                                    onclick="cancelarDetalleReserva('${detalle.id}', '${detalle.tipo_racion}')"
+                                    style="
+                                        margin-top: 15px;
+                                        width: 100%;
+                                        padding: 12px;
+                                        background: #f44336;
+                                        color: white;
+                                        border: none;
+                                        border-radius: 8px;
+                                        font-weight: 600;
+                                        cursor: pointer;
+                                        transition: all 0.3s;
+                                    "
+                                >
+                                    ✗ Cancelar ${detalle.tipo_racion}
+                                </button>
+                            ` : ''}
+                        </div>
                     </div>
-                    <div class="qr-info">
-                        <p><strong>Presenta este código para retirar tu ${detalle.tipo_racion.toLowerCase()}</strong></p>
-                        ${!detalle.consumido ? `
-                            <div class="qr-warning">
-                                ⚠️ <span>Este código es de un solo uso. Una vez escaneado, no podrá usarse nuevamente.</span>
-                            </div>
-                            <button 
-                                class="btn-cancelar-detalle" 
-                                data-detalle-id="${detalle.id}"
-                                data-tipo-racion="${detalle.tipo_racion}"
-                                onclick="cancelarDetalleReserva('${detalle.id}', '${detalle.tipo_racion}')"
-                                style="
-                                    margin-top: 15px;
-                                    width: 100%;
-                                    padding: 12px;
-                                    background: #f44336;
-                                    color: white;
-                                    border: none;
-                                    border-radius: 8px;
-                                    font-weight: 600;
-                                    cursor: pointer;
-                                    transition: all 0.3s;
-                                "
-                            >
-                                ✗ Cancelar ${detalle.tipo_racion}
-                            </button>
-                        ` : ''}
-                    </div>
                 </div>
-            </div>
-        `;
-    }).join('');
+            `;
+        }).join('');
 
     card.innerHTML = `
         <div class="reserva-header">
@@ -782,7 +807,7 @@ const horariosPromises = reserva.detalle_reserva
             await cargarReservas();
         });        
     </script>
-    <script src="js/pwa-install.js?v=2.2.7"></script>
-    <script src="js/pwa-update.js?v=2.2.7"></script>
+    <script src="js/pwa-install.js?v=3.0.1"></script>
+    <script src="js/pwa-update.js?v=3.0.1"></script>
 </body>
 </html>
