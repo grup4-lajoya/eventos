@@ -1,5 +1,5 @@
 // pwa-update.js - VERSIÓN MEJORADA
-const APP_VERSION = '2.2.6'; // ← Cambiar en cada actualización
+const APP_VERSION = '2.2.7'; // ← Cambiar en cada actualización
 const VERSION_KEY = 'app-version';
 
 const PROTECTED_KEYS = [
