@@ -35,18 +35,24 @@ const CONFIG = {
         EVENTO_ID: 'evento_id',
         EVENTO_NOMBRE: 'evento_nombre',
         EVENTO_FECHA_FIN: 'evento_fecha_fin',
-        USUARIO_DATA: 'usuario_data'
+        USUARIO_DATA: 'usuario_data',
+        LAST_VALIDATION: 'last_validation'
     },
     
     // Configuración de validación
     VALIDATION: {
-        TOKEN_CHECK_INTERVAL: 5 * 60 * 1000,
-        AUTO_LOGOUT_ON_ERROR: true
+        // ✅ Desactivar validación periódica automática para evitar sobrecarga
+        TOKEN_CHECK_INTERVAL: null, // Desactivado - solo validación on-demand
+        AUTO_LOGOUT_ON_ERROR: true,
+        // Intervalo mínimo entre validaciones manuales (30 minutos)
+        MIN_VALIDATION_INTERVAL: 30 * 60 * 1000,
+        // Número máximo de reintentos en caso de rate limit
+        MAX_RETRY_ATTEMPTS: 3
     },
     
     // PWA
-    APP_NAME: 'Sistema de Reservas',
-    APP_VERSION: '1.0.0'
+    APP_NAME: 'Sistema de Reservas GRUP4',
+    APP_VERSION: '1.0.1'
 };
 
 CONFIG.getEndpointURL = function(endpoint) {
