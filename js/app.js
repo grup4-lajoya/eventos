@@ -41,7 +41,7 @@ class App {
         // Mostrar datos del usuario
         this.displayUserInfo();
 
-        // Iniciar validación periódica
+        // Iniciar validación periódica (ahora desactivada por defecto)
         auth.startPeriodicValidation();
 
         // Setup event listeners
@@ -94,22 +94,50 @@ class App {
             });
         });
 
-        // Detectar cuando la app vuelve a primer plano
+        // ✅ Detectar cuando la app vuelve a primer plano - validación inteligente
         document.addEventListener('visibilitychange', async () => {
             if (!document.hidden) {
-                console.log('👁️ App visible, validando sesión...');
-                const validation = await auth.validateToken();
-                if (!validation.valid) {
-                    auth.hardLogout();
+                // Solo validar si pasaron más de 30 minutos desde la última validación
+                const lastValidation = parseInt(localStorage.getItem(CONFIG.STORAGE_KEYS.LAST_VALIDATION) || '0');
+                const now = Date.now();
+                const timeSinceLastValidation = now - lastValidation;
+                const minInterval = CONFIG.VALIDATION.MIN_VALIDATION_INTERVAL;
+                
+                if (timeSinceLastValidation > minInterval) {
+                    console.log(`👁️ App visible después de ${Math.round(timeSinceLastValidation/60000)} minutos, validando sesión...`);
+                    
+                    const validation = await auth.validateToken();
+                    
+                    if (!validation.valid && !validation.rateLimited && !validation.serverError) {
+                        console.log('❌ Sesión inválida, cerrando...');
+                        auth.hardLogout();
+                    } else if (validation.warning) {
+                        console.warn('⚠️ Validación con advertencia:', validation.warning);
+                        // Continuar normalmente, no cerrar sesión
+                    }
+                } else {
+                    const remainingTime = Math.round((minInterval - timeSinceLastValidation) / 60000);
+                    console.log(`👁️ App visible, validación reciente (hace ${Math.round(timeSinceLastValidation/60000)} min) - omitiendo. Próxima validación en ${remainingTime} min.`);
                 }
             }
+        });
+
+        // ✅ Detectar cuando el dispositivo pierde/recupera conexión
+        window.addEventListener('online', () => {
+            console.log('🌐 Conexión restaurada');
+            // Validar token si ha pasado suficiente tiempo
+            auth.validateTokenIfNeeded();
+        });
+
+        window.addEventListener('offline', () => {
+            console.log('📵 Sin conexión - modo offline');
         });
     }
 
     handleLogout() {
         const confirmLogout = confirm('¿Estás seguro de cerrar sesión?');
         if (confirmLogout) {
-            auth.hardLogout(); // ✅
+            auth.hardLogout();
         }
     }
 
