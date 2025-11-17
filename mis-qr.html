@@ -515,7 +515,7 @@ async function cargarReservas() {
         const hoy = ahoraPeru.toISOString().split('T')[0];
         
         // Consultar todas las reservas activas
-        const url = `${CONFIG.SUPABASE_URL}/rest/v1/reserva?id_usuario=eq.${userData.usuario_id}&activo=eq.true&select=*,programacion!inner(id,fecha),detalle_reserva(id,tipo_racion,confirmado,consumido,qr_code)&order=fecha_reserva.desc`;
+       const url = `${CONFIG.SUPABASE_URL}/rest/v1/reserva?id_usuario=eq.${userData.usuario_id}&activo=eq.true&select=*,programacion!inner(id,fecha),detalle_reserva(id,tipo_racion,codigo_menu,confirmado,consumido,qr_code)&order=fecha_reserva.desc`;
                         
         const response = await fetch(url, {
             headers: {
@@ -811,7 +811,7 @@ async function crearTarjetaReserva(reserva) {
             await cargarReservas();
         });        
     </script>
-    <script src="js/pwa-install.js?v=3.0.2"></script>
-    <script src="js/pwa-update.js?v=3.0.2"></script>
+    <script src="js/pwa-install.js?v=3.0.3"></script>
+    <script src="js/pwa-update.js?v=3.0.3"></script>
 </body>
 </html>
