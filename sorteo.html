@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sorteo EA-412 | Fuerza Aérea del Perú</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --azul-fap:    #003087;
+      --azul-oscuro: #001a4d;
+      --dorado:      #c9a84c;
+      --dorado-claro:#f0d080;
+      --gris-claro:  #f4f6f9;
+      --texto:       #1a1a2e;
+      --blanco:      #ffffff;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: var(--gris-claro);
+      color: var(--texto);
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, var(--azul-oscuro) 0%, var(--azul-fap) 100%);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 3px solid var(--dorado);
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .header-logo {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 2px solid var(--dorado);
+      background: var(--blanco);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .header-text h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(14px, 3.5vw, 20px);
+      font-weight: 700;
+      color: var(--blanco);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .header-text p {
+      font-size: clamp(11px, 2.5vw, 13px);
+      color: var(--dorado-claro);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 300;
+    }
+
+    /* ── LEMA ── */
+    .lema-banner {
+      background: var(--dorado);
+      padding: 10px 24px;
+      text-align: center;
+    }
+    .lema-banner p {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(13px, 3vw, 16px);
+      color: var(--azul-oscuro);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .lema-banner p.cargando {
+      opacity: 0.5;
+      font-style: italic;
+    }
+
+    /* ── CONTENIDO PRINCIPAL ── */
+    main {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 28px 16px 60px;
+    }
+
+    /* ── TÍTULO SORTEO ── */
+    .titulo-sorteo {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .titulo-sorteo h2 {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(22px, 5vw, 32px);
+      color: var(--azul-fap);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      line-height: 1.1;
+    }
+    .titulo-sorteo h2 span {
+      color: var(--dorado);
+    }
+    .titulo-sorteo p {
+      margin-top: 8px;
+      font-size: 15px;
+      color: #555;
+    }
+    .separador {
+      width: 60px;
+      height: 3px;
+      background: var(--dorado);
+      margin: 12px auto;
+      border-radius: 2px;
+    }
+
+    /* ── VIDEO ── */
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 8px;
+      border: 3px solid var(--azul-fap);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      margin-bottom: 32px;
+      background: #000;
+    }
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+
+    /* ── PREMIOS ── */
+    .premios {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+    .premio-card {
+      flex: 1;
+      min-width: 200px;
+      background: var(--blanco);
+      border: 2px solid var(--azul-fap);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .premio-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--azul-fap), var(--dorado));
+    }
+    .premio-card .icono { font-size: 36px; margin-bottom: 8px; }
+    .premio-card h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 15px;
+      color: var(--azul-fap);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .premio-card p { font-size: 13px; color: #666; margin-top: 4px; }
+
+    /* ── FORMULARIO ── */
+    .form-card {
+      background: var(--blanco);
+      border-radius: 10px;
+      box-shadow: 0 4px 24px rgba(0,48,135,0.10);
+      padding: 32px 28px;
+      border-top: 4px solid var(--azul-fap);
+    }
+    .form-card h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 20px;
+      color: var(--azul-fap);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 6px;
+    }
+    .form-card .subtitulo {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--azul-oscuro);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    input, select {
+      padding: 10px 14px;
+      border: 1.5px solid #d0d8e8;
+      border-radius: 6px;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 15px;
+      color: var(--texto);
+      background: #fafbfd;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--azul-fap);
+      box-shadow: 0 0 0 3px rgba(0,48,135,0.10);
+      background: var(--blanco);
+    }
+    select { cursor: pointer; }
+
+    .btn-registrar {
+      margin-top: 24px;
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--azul-fap), var(--azul-oscuro));
+      color: var(--blanco);
+      border: none;
+      border-radius: 7px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 17px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-registrar:hover { opacity: 0.92; transform: translateY(-1px); }
+    .btn-registrar:active { transform: translateY(0); }
+    .btn-registrar:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* ── MENSAJES ── */
+    .mensaje {
+      margin-top: 16px;
+      padding: 14px 18px;
+      border-radius: 7px;
+      font-size: 15px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+    .mensaje.exito {
+      background: #e8f5e9;
+      border: 1.5px solid #4caf50;
+      color: #2e7d32;
+      display: flex;
+    }
+    .mensaje.error {
+      background: #fdecea;
+      border: 1.5px solid #f44336;
+      color: #c62828;
+      display: flex;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: var(--azul-oscuro);
+      color: rgba(255,255,255,0.5);
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 520px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-card { padding: 22px 16px; }
+      .premios { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-logo">✈️</div>
+    <div class="header-text">
+      <h1>Fuerza Aérea del Perú</h1>
+      <p>Escuadrón · Sorteo Oficial</p>
+    </div>
+  </header>
+
+  <!-- LEMA DINÁMICO (viene de Supabase) -->
+  <div class="lema-banner">
+    <p id="lema-texto" class="cargando">Cargando...</p>
+  </div>
+
+  <!-- CONTENIDO -->
+  <main>
+
+    <!-- TÍTULO -->
+    <div class="titulo-sorteo">
+      <h2>Gran Sorteo <span>EA-412</span></h2>
+      <div class="separador"></div>
+      <p>Participa y gana uno de los siguientes premios exclusivos</p>
+    </div>
+
+    <!-- VIDEO DE GOOGLE DRIVE -->
+    <!-- 
+      ⚠️ IMPORTANTE: Reemplaza AQUI_TU_ID_DE_DRIVE con el ID de tu video.
+      El ID está en la URL de Drive, por ejemplo:
+      https://drive.google.com/file/d/  1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs  /view
+                                         ↑ ese es el ID ↑
+    -->
+    <div class="video-wrapper">
+      <iframe
+        src="https://drive.google.com/file/d/AQUI_TU_ID_DE_DRIVE/preview"
+        allow="autoplay"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+    <!-- PREMIOS -->
+    <div class="premios">
+      <div class="premio-card">
+        <div class="icono">🪙</div>
+        <h3>Moneda Conmemorativa</h3>
+        <p>Edición especial EA-412</p>
+      </div>
+      <div class="premio-card">
+        <div class="icono">🎖️</div>
+        <h3>Parche Oficial</h3>
+        <p>Insignia del escuadrón EA-412</p>
+      </div>
+    </div>
+
+    <!-- FORMULARIO -->
+    <div class="form-card">
+      <h3>Registrarse al Sorteo</h3>
+      <p class="subtitulo">Completa el formulario. Un registro por persona.</p>
+
+      <div class="form-grid">
+
+        <div class="form-group full">
+          <label for="grado">Grado</label>
+          <select id="grado" required>
+            <option value="" disabled selected>Selecciona tu grado</option>
+            <optgroup label="Oficiales">
+              <option>General del Aire</option>
+              <option>Teniente General FAP</option>
+              <option>General de División FAP</option>
+              <option>General de Brigada FAP</option>
+              <option>Coronel FAP</option>
+              <option>Teniente Coronel FAP</option>
+              <option>Mayor FAP</option>
+              <option>Capitán FAP</option>
+              <option>Teniente FAP</option>
+              <option>Alférez FAP</option>
+            </optgroup>
+            <optgroup label="Técnicos y Suboficiales">
+              <option>Técnico Inspector FAP</option>
+              <option>Técnico Superior FAP</option>
+              <option>Técnico Primero FAP</option>
+              <option>Técnico Segundo FAP</option>
+              <option>Técnico Tercero FAP</option>
+              <option>Suboficial FAP</option>
+            </optgroup>
+            <optgroup label="Otro">
+              <option>Civil / Otro</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="nombres">Nombres</label>
+          <input type="text" id="nombres" placeholder="Ej: Juan Carlos" required />
+        </div>
+
+        <div class="form-group">
+          <label for="apellidos">Apellidos</label>
+          <input type="text" id="apellidos" placeholder="Ej: Quispe Mamani" required />
+        </div>
+
+        <div class="form-group">
+          <label for="telefono">Teléfono de contacto</label>
+          <input type="tel" id="telefono" placeholder="Ej: 987654321" required />
+        </div>
+
+        <div class="form-group">
+          <label for="dependencia">Dependencia / Escuadrón</label>
+          <input type="text" id="dependencia" placeholder="Ej: Escuadrón 412" required />
+        </div>
+
+      </div>
+
+      <button class="btn-registrar" id="btn-enviar" onclick="registrar()">
+        ✈ Participar en el Sorteo
+      </button>
+
+      <div class="mensaje exito" id="msg-exito">
+        ✅ ¡Registro exitoso! Quedas inscrito en el sorteo. ¡Buena suerte!
+      </div>
+      <div class="mensaje error" id="msg-error">
+        ⚠️ Ocurrió un error. Verifica tu conexión e intenta nuevamente.
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>FUERZA AÉREA DEL PERÚ &nbsp;·&nbsp; ESCUADRÓN EA-412 &nbsp;·&nbsp; SORTEO OFICIAL</p>
+  </footer>
+
+  <!-- ============================================================
+       SUPABASE — REEMPLAZA LOS VALORES DE CONFIGURACIÓN ABAJO
+       ============================================================ -->
+  <script>
+    // ⚠️ REEMPLAZA estos dos valores con los de tu proyecto Supabase
+    // Los encuentras en: Supabase → Settings → API
+    const SUPABASE_URL  = 'https://XXXXXXXXXX.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.XXXXXX';
+
+    // ── Función genérica para llamar a Supabase ──
+    async function supabase(tabla, metodo = 'GET', body = null, filtro = '') {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${tabla}${filtro}`, {
+        method: metodo,
+        headers: {
+          'apikey': SUPABASE_ANON,
+          'Authorization': `Bearer ${SUPABASE_ANON}`,
+          'Content-Type': 'application/json',
+          'Prefer': metodo === 'POST' ? 'return=minimal' : ''
+        },
+        body: body ? JSON.stringify(body) : null
+      });
+      if (!res.ok) throw new Error(await res.text());
+      if (metodo === 'GET') return res.json();
+    }
+
+    // ── Cargar lema dinámico ──
+    async function cargarLema() {
+      try {
+        const data = await supabase('config', 'GET', null, '?clave=eq.lema&select=valor');
+        const lema = data?.[0]?.valor ?? '¡Orgullosos de servir al cielo y a la patria!';
+        const el = document.getElementById('lema-texto');
+        el.textContent = lema;
+        el.classList.remove('cargando');
+      } catch {
+        document.getElementById('lema-texto').textContent = '¡Orgullosos de servir al cielo y a la patria!';
+        document.getElementById('lema-texto').classList.remove('cargando');
+      }
+    }
+
+    // ── Registrar participante ──
+    async function registrar() {
+      const grado      = document.getElementById('grado').value.trim();
+      const nombres    = document.getElementById('nombres').value.trim();
+      const apellidos  = document.getElementById('apellidos').value.trim();
+      const telefono   = document.getElementById('telefono').value.trim();
+      const dependencia= document.getElementById('dependencia').value.trim();
+
+      // Validación básica
+      if (!grado || !nombres || !apellidos || !telefono || !dependencia) {
+        alert('Por favor completa todos los campos.');
+        return;
+      }
+
+      const btn = document.getElementById('btn-enviar');
+      btn.disabled = true;
+      btn.textContent = 'Enviando...';
+
+      ocultarMensajes();
+
+      try {
+        await supabase('sorteo_participantes', 'POST', {
+          grado, nombres, apellidos, telefono, dependencia
+        });
+        document.getElementById('msg-exito').style.display = 'flex';
+        btn.textContent = '✔ Registrado';
+        // Limpiar campos
+        ['grado','nombres','apellidos','telefono','dependencia'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el.tagName === 'SELECT') el.selectedIndex = 0;
+          else el.value = '';
+        });
+      } catch (e) {
+        document.getElementById('msg-error').style.display = 'flex';
+        btn.disabled = false;
+        btn.textContent = '✈ Participar en el Sorteo';
+      }
+    }
+
+    function ocultarMensajes() {
+      document.getElementById('msg-exito').style.display = 'none';
+      document.getElementById('msg-error').style.display = 'none';
+    }
+
+    // ── Iniciar ──
+    cargarLema();
+  </script>
+
+</body>
+</html>
