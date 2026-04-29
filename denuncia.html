@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Denuncias | Acoso Laboral y Hostigamiento Sexual</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --azul-fap:    #003087;
+      --azul-oscuro: #001a4d;
+      --dorado:      #c9a84c;
+      --dorado-claro:#f0d080;
+      --rojo-alerta: #b71c1c;
+      --rojo-suave:  #fdecea;
+      --gris-claro:  #f4f6f9;
+      --texto:       #1a1a2e;
+      --blanco:      #ffffff;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: var(--gris-claro);
+      color: var(--texto);
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, var(--azul-oscuro) 0%, var(--azul-fap) 100%);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 3px solid var(--dorado);
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .header-logos {
+      display: flex;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .header-logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 2px solid var(--dorado);
+      background: var(--blanco);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .header-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    .header-text h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(13px, 3.5vw, 19px);
+      font-weight: 700;
+      color: var(--blanco);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .header-text p {
+      font-size: clamp(10px, 2.5vw, 12px);
+      color: var(--dorado-claro);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 300;
+      margin-top: 3px;
+    }
+
+    /* ── BANNER ALERTA ── */
+    .alerta-banner {
+      background: linear-gradient(135deg, var(--rojo-alerta), #c62828);
+      padding: 12px 24px;
+      text-align: center;
+      border-bottom: 2px solid #ff8a80;
+    }
+    .alerta-banner p {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(12px, 3vw, 15px);
+      color: var(--blanco);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 28px 16px 60px;
+    }
+
+    /* ── TÍTULO ── */
+    .titulo-seccion {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .titulo-seccion h2 {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(20px, 5vw, 28px);
+      color: var(--azul-fap);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      line-height: 1.2;
+    }
+    .titulo-seccion h2 span {
+      color: var(--rojo-alerta);
+    }
+    .separador {
+      width: 60px;
+      height: 3px;
+      background: var(--dorado);
+      margin: 12px auto;
+      border-radius: 2px;
+    }
+    .titulo-seccion p {
+      font-size: 14px;
+      color: #666;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    /* ── AVISO CONFIDENCIAL ── */
+    .aviso-confidencial {
+      background: #fff8e1;
+      border: 1.5px solid var(--dorado);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .aviso-confidencial .icono { font-size: 22px; flex-shrink: 0; }
+    .aviso-confidencial p {
+      font-size: 13px;
+      color: #5a4200;
+      line-height: 1.5;
+    }
+    .aviso-confidencial strong { color: #3e2c00; }
+
+    /* ── SECCIONES DEL FORMULARIO ── */
+    .form-seccion {
+      background: var(--blanco);
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,48,135,0.08);
+      padding: 26px 24px;
+      margin-bottom: 20px;
+      border-top: 4px solid var(--azul-fap);
+    }
+    .form-seccion.seccion-denunciado {
+      border-top-color: var(--rojo-alerta);
+    }
+    .form-seccion.seccion-hechos {
+      border-top-color: var(--dorado);
+    }
+
+    .seccion-titulo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e8edf5;
+    }
+    .seccion-titulo .badge {
+      background: var(--azul-fap);
+      color: var(--blanco);
+      font-family: 'Oswald', sans-serif;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      flex-shrink: 0;
+    }
+    .seccion-denunciado .seccion-titulo .badge { background: var(--rojo-alerta); }
+    .seccion-hechos .seccion-titulo .badge { background: #8a6200; }
+    .seccion-titulo h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 17px;
+      color: var(--azul-oscuro);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ── GRID DE CAMPOS ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-group.campo-grado { display: none; }
+    .form-group.campo-grado.visible { display: flex; }
+
+    label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--azul-oscuro);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    label .opcional {
+      font-weight: 300;
+      color: #999;
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 11px;
+    }
+
+    input, select, textarea {
+      padding: 10px 14px;
+      border: 1.5px solid #d0d8e8;
+      border-radius: 6px;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 15px;
+      color: var(--texto);
+      background: #fafbfd;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--azul-fap);
+      box-shadow: 0 0 0 3px rgba(0,48,135,0.10);
+      background: var(--blanco);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 110px;
+      line-height: 1.5;
+    }
+    select { cursor: pointer; }
+
+    /* ── BOTÓN ── */
+    .btn-enviar {
+      margin-top: 8px;
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--rojo-alerta), #c62828);
+      color: var(--blanco);
+      border: none;
+      border-radius: 7px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 17px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    .btn-enviar:hover:not(:disabled) { opacity: 0.91; transform: translateY(-1px); }
+    .btn-enviar:active { transform: translateY(0); }
+    .btn-enviar:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* ── MENSAJES ── */
+    .mensaje {
+      margin-top: 16px;
+      padding: 14px 18px;
+      border-radius: 7px;
+      font-size: 15px;
+      display: none;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.5;
+    }
+    .mensaje.exito {
+      background: #e8f5e9;
+      border: 1.5px solid #4caf50;
+      color: #2e7d32;
+    }
+    .mensaje.error {
+      background: var(--rojo-suave);
+      border: 1.5px solid #f44336;
+      color: #c62828;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: var(--azul-oscuro);
+      color: rgba(255,255,255,0.45);
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 520px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-seccion { padding: 20px 14px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-logos">
+      <div class="header-logo">
+        <img src="assets/icons/icon-192.png" alt="FAP" onerror="this.style.display='none'">
+      </div>
+      <div class="header-logo">
+        <img src="assets/icons/logo_grup4.png" alt="GRUP4" onerror="this.style.display='none'">
+      </div>
+    </div>
+    <div class="header-text">
+      <h1>Grupo Aéreo N° 4</h1>
+      <p>Fuerza Aérea del Perú</p>
+    </div>
+  </header>
+
+  <!-- BANNER -->
+  <div class="alerta-banner">
+    <p>⚠ Canal Oficial de Denuncias — Uso Reservado</p>
+  </div>
+
+  <!-- CONTENIDO -->
+  <main>
+
+    <!-- TÍTULO -->
+    <div class="titulo-seccion">
+      <h2>Denuncias<br><span>Acoso Laboral y Hostigamiento Sexual</span></h2>
+      <div class="separador"></div>
+      <p>Completa el formulario con veracidad. Tu denuncia será tratada con la debida reserva y confidencialidad.</p>
+    </div>
+
+    <!-- AVISO -->
+    <div class="aviso-confidencial">
+      <span class="icono">🔒</span>
+      <p><strong>Confidencialidad garantizada.</strong> La información registrada es de uso exclusivo para el proceso de investigación y no será divulgada a terceros ajenos al procedimiento.</p>
+    </div>
+
+    <!-- SECCIÓN 1: DENUNCIANTE -->
+    <div class="form-seccion" id="seccion-denunciante">
+      <div class="seccion-titulo">
+        <span class="badge">Sección 1</span>
+        <h3>Datos del Denunciante</h3>
+      </div>
+
+      <div class="form-grid">
+
+        <div class="form-group full">
+          <label for="den_tipo">Condición</label>
+          <select id="den_tipo" onchange="toggleGrado('denunciante')" required>
+            <option value="">— Seleccione —</option>
+            <option value="militar">Personal Militar</option>
+            <option value="civil">Personal Civil</option>
+          </select>
+        </div>
+
+        <div class="form-group campo-grado" id="grado-denunciante-wrap">
+          <label for="den_grado">Grado</label>
+          <input type="text" id="den_grado" placeholder="Ej: Cap FAP" />
+        </div>
+
+        <div class="form-group full" id="nombres-denunciante-wrap">
+          <label for="den_nombres">Nombres y Apellidos</label>
+          <input type="text" id="den_nombres" placeholder="Ingrese nombres y apellidos completos" required />
+        </div>
+
+        <div class="form-group">
+          <label for="den_celular">N° de Celular</label>
+          <input type="tel" id="den_celular" placeholder="Ej: 987654321" required />
+        </div>
+
+        <div class="form-group">
+          <label for="den_correo">Correo Electrónico <span class="opcional">(opcional)</span></label>
+          <input type="email" id="den_correo" placeholder="correo@ejemplo.com" />
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECCIÓN 2: DENUNCIADO -->
+    <div class="form-seccion seccion-denunciado" id="seccion-denunciado">
+      <div class="seccion-titulo">
+        <span class="badge">Sección 2</span>
+        <h3>Datos del Denunciado</h3>
+      </div>
+
+      <div class="form-grid">
+
+        <div class="form-group full">
+          <label for="ddo_tipo">Condición</label>
+          <select id="ddo_tipo" onchange="toggleGrado('denunciado')" required>
+            <option value="">— Seleccione —</option>
+            <option value="militar">Personal Militar</option>
+            <option value="civil">Personal Civil</option>
+          </select>
+        </div>
+
+        <div class="form-group campo-grado" id="grado-denunciado-wrap">
+          <label for="ddo_grado">Grado</label>
+          <input type="text" id="ddo_grado" placeholder="Ej: My FAP" />
+        </div>
+
+        <div class="form-group full">
+          <label for="ddo_nombres">Nombres y Apellidos</label>
+          <input type="text" id="ddo_nombres" placeholder="Ingrese nombres y apellidos completos" required />
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECCIÓN 3: HECHOS -->
+    <div class="form-seccion seccion-hechos" id="seccion-hechos">
+      <div class="seccion-titulo">
+        <span class="badge">Sección 3</span>
+        <h3>Descripción de los Hechos</h3>
+      </div>
+
+      <div class="form-grid">
+
+        <div class="form-group full">
+          <label for="fecha_hechos">Fecha de los Hechos</label>
+          <input type="date" id="fecha_hechos" required />
+        </div>
+
+        <div class="form-group full">
+          <label for="descripcion">Descripción Detallada</label>
+          <textarea id="descripcion" placeholder="Describa con detalle los hechos ocurridos: lugar, circunstancias, testigos, etc." required></textarea>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BOTÓN ENVIAR -->
+    <button class="btn-enviar" id="btn-enviar" onclick="enviarDenuncia()">
+      📋 Enviar Denuncia
+    </button>
+
+    <div class="mensaje exito" id="msg-exito">
+      ✅ <span>Su denuncia ha sido registrada exitosamente. Será atendida con la reserva del caso.</span>
+    </div>
+    <div class="mensaje error" id="msg-error">
+      ⚠️ <span id="msg-error-texto">Ocurrió un error al enviar. Verifique su conexión e intente nuevamente.</span>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>FUERZA AÉREA DEL PERÚ &nbsp;·&nbsp; GRUPO AÉREO N° 4 &nbsp;·&nbsp; CANAL OFICIAL DE DENUNCIAS</p>
+  </footer>
+
+  <script>
+    const SUPABASE_URL  = 'https://qgbixgvidxeaoxxpyiyw.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFnYml4Z3ZpZHhlYW94eHB5aXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxOTU3NzMsImV4cCI6MjA3NTc3MTc3M30.NQ5n_vFnHDp8eNjV3I9vRujfWDWWGAywgyICpqX0OKQ';
+
+    // Mostrar/ocultar campo grado según condición
+    function toggleGrado(persona) {
+      const tipo = document.getElementById(persona === 'denunciante' ? 'den_tipo' : 'ddo_tipo').value;
+      const wrap = document.getElementById(`grado-${persona}-wrap`);
+      const input = document.getElementById(persona === 'denunciante' ? 'den_grado' : 'ddo_grado');
+
+      if (tipo === 'militar') {
+        wrap.classList.add('visible');
+        input.required = true;
+      } else {
+        wrap.classList.remove('visible');
+        input.required = false;
+        input.value = '';
+      }
+    }
+
+    async function enviarDenuncia() {
+      // Recoger valores
+      const den_tipo    = document.getElementById('den_tipo').value;
+      const den_grado   = document.getElementById('den_grado').value.trim();
+      const den_nombres = document.getElementById('den_nombres').value.trim();
+      const den_celular = document.getElementById('den_celular').value.trim();
+      const den_correo  = document.getElementById('den_correo').value.trim();
+
+      const ddo_tipo    = document.getElementById('ddo_tipo').value;
+      const ddo_grado   = document.getElementById('ddo_grado').value.trim();
+      const ddo_nombres = document.getElementById('ddo_nombres').value.trim();
+
+      const fecha_hechos = document.getElementById('fecha_hechos').value;
+      const descripcion  = document.getElementById('descripcion').value.trim();
+
+      // Validación
+      if (!den_tipo || !den_nombres || !den_celular) {
+        alert('Complete todos los campos obligatorios del Denunciante.'); return;
+      }
+      if (den_tipo === 'militar' && !den_grado) {
+        alert('Ingrese el grado del Denunciante.'); return;
+      }
+      if (!ddo_tipo || !ddo_nombres) {
+        alert('Complete todos los campos del Denunciado.'); return;
+      }
+      if (ddo_tipo === 'militar' && !ddo_grado) {
+        alert('Ingrese el grado del Denunciado.'); return;
+      }
+      if (!fecha_hechos || !descripcion) {
+        alert('Complete la fecha y descripción de los hechos.'); return;
+      }
+
+      const btn = document.getElementById('btn-enviar');
+      btn.disabled = true;
+      btn.textContent = 'Enviando...';
+      ocultarMensajes();
+
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/denuncias`, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_ANON,
+            'Authorization': `Bearer ${SUPABASE_ANON}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({
+            denunciante_tipo:    den_tipo,
+            denunciante_grado:   den_tipo === 'militar' ? den_grado : null,
+            denunciante_nombres: den_nombres,
+            denunciante_celular: den_celular,
+            denunciante_correo:  den_correo || null,
+            denunciado_tipo:     ddo_tipo,
+            denunciado_grado:    ddo_tipo === 'militar' ? ddo_grado : null,
+            denunciado_nombres:  ddo_nombres,
+            fecha_hechos:        fecha_hechos,
+            descripcion:         descripcion
+          })
+        });
+
+        if (!res.ok) throw new Error(await res.text());
+
+        document.getElementById('msg-exito').style.display = 'flex';
+        btn.textContent = '✔ Denuncia Enviada';
+
+        // Limpiar formulario
+        ['den_tipo','den_grado','den_nombres','den_celular','den_correo',
+         'ddo_tipo','ddo_grado','ddo_nombres','fecha_hechos','descripcion'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el.tagName === 'SELECT') el.selectedIndex = 0;
+          else el.value = '';
+        });
+        document.getElementById('grado-denunciante-wrap').classList.remove('visible');
+        document.getElementById('grado-denunciado-wrap').classList.remove('visible');
+
+      } catch (e) {
+        document.getElementById('msg-error-texto').textContent =
+          'Ocurrió un error al enviar. Verifique su conexión e intente nuevamente.';
+        document.getElementById('msg-error').style.display = 'flex';
+        btn.disabled = false;
+        btn.textContent = '📋 Enviar Denuncia';
+      }
+    }
+
+    function ocultarMensajes() {
+      document.getElementById('msg-exito').style.display = 'none';
+      document.getElementById('msg-error').style.display = 'none';
+    }
+
+    // Fecha máxima = hoy
+    document.getElementById('fecha_hechos').max = new Date().toISOString().split('T')[0];
+  </script>
+
+</body>
+</html>
