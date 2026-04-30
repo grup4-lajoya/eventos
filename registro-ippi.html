@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IPPI | Informe de Peligros Potenciales e Incidentes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --azul-fap:    #003087;
+      --azul-oscuro: #001a4d;
+      --dorado:      #c9a84c;
+      --dorado-claro:#f0d080;
+      --verde:       #1b5e20;
+      --verde-medio: #2e7d32;
+      --gris-claro:  #f4f6f9;
+      --texto:       #1a1a2e;
+      --blanco:      #ffffff;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Source Sans 3', sans-serif; background: var(--gris-claro); color: var(--texto); }
+
+    header {
+      background: linear-gradient(135deg, var(--azul-oscuro) 0%, var(--azul-fap) 100%);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 3px solid var(--dorado);
+    }
+    .header-logos { display: flex; gap: 10px; flex-shrink: 0; }
+    .header-logo {
+      width: 56px; height: 56px; border-radius: 50%;
+      border: 2px solid var(--dorado); background: var(--blanco);
+      overflow: hidden; display: flex; align-items: center; justify-content: center;
+    }
+    .header-logo img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .header-text h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(13px, 3.5vw, 19px);
+      font-weight: 700; color: var(--blanco);
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+    .header-text p {
+      font-size: clamp(10px, 2.5vw, 12px);
+      color: var(--dorado-claro); letter-spacing: 1.5px;
+      text-transform: uppercase; font-weight: 300; margin-top: 3px;
+    }
+
+    .banner-ippi {
+      background: linear-gradient(135deg, var(--azul-oscuro), var(--azul-fap));
+      padding: 12px 24px; text-align: center;
+      border-bottom: 2px solid #81c784;
+    }
+    .banner-ippi p {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(12px, 3vw, 15px);
+      color: var(--blanco); letter-spacing: 1.5px;
+      text-transform: uppercase; font-weight: 500;
+    }
+
+    main { max-width: 700px; margin: 0 auto; padding: 28px 16px 60px; }
+
+    .titulo-seccion { text-align: center; margin-bottom: 28px; }
+    .titulo-seccion h2 {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(20px, 5vw, 28px);
+      color: var(--azul-fap); text-transform: uppercase;
+      letter-spacing: 2px; line-height: 1.2;
+    }
+    .titulo-seccion h2 span { color: var(--verde-medio); }
+    .separador { width: 60px; height: 3px; background: var(--dorado); margin: 12px auto; border-radius: 2px; }
+    .titulo-seccion p { font-size: 14px; color: #666; margin-top: 6px; line-height: 1.5; }
+
+    .badge-sucursal {
+      background: var(--azul-fap); color: var(--blanco);
+      font-family: 'Oswald', sans-serif; font-size: 13px;
+      padding: 6px 16px; border-radius: 20px;
+      display: inline-block; margin-top: 10px;
+      letter-spacing: 2px;
+    }
+
+    .form-seccion {
+      background: var(--blanco); border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,48,135,0.08);
+      padding: 26px 24px; margin-bottom: 20px;
+      border-top: 4px solid var(--azul-fap);
+    }
+    .form-seccion.seccion-verde { border-top-color: var(--verde-medio); }
+
+    .seccion-titulo {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 20px; padding-bottom: 12px;
+      border-bottom: 1px solid #e8edf5;
+    }
+    .seccion-titulo .badge {
+      background: var(--azul-fap); color: var(--blanco);
+      font-family: 'Oswald', sans-serif; font-size: 11px;
+      padding: 4px 10px; border-radius: 12px;
+      text-transform: uppercase; letter-spacing: 1px; flex-shrink: 0;
+    }
+    .seccion-verde .seccion-titulo .badge { background: var(--verde-medio); }
+    .seccion-titulo h3 {
+      font-family: 'Oswald', sans-serif; font-size: 17px;
+      color: var(--azul-oscuro); text-transform: uppercase; letter-spacing: 1px;
+    }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 11px; font-weight: 600; color: var(--azul-oscuro);
+      text-transform: uppercase; letter-spacing: 0.8px;
+    }
+    label .opcional { font-weight: 300; color: #999; text-transform: none; font-size: 11px; }
+
+    input, select, textarea {
+      padding: 10px 14px; border: 1.5px solid #d0d8e8;
+      border-radius: 6px; font-family: 'Source Sans 3', sans-serif;
+      font-size: 15px; color: var(--texto); background: #fafbfd;
+      transition: border-color 0.2s, box-shadow 0.2s; -webkit-appearance: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none; border-color: var(--azul-fap);
+      box-shadow: 0 0 0 3px rgba(0,48,135,0.10); background: var(--blanco);
+    }
+    textarea { resize: vertical; min-height: 110px; line-height: 1.5; }
+
+    .upload-area {
+      border: 2px dashed #d0d8e8; border-radius: 8px;
+      padding: 20px; text-align: center; cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      background: #fafbfd;
+    }
+    .upload-area:hover { border-color: var(--azul-fap); background: #f0f4ff; }
+    .upload-area p { font-size: 13px; color: #888; margin-top: 6px; }
+    .upload-area .icono-upload { font-size: 28px; }
+    #preview-imagenes {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;
+    }
+    #preview-imagenes img {
+      width: 80px; height: 80px; object-fit: cover;
+      border-radius: 6px; border: 2px solid #d0d8e8;
+    }
+
+    .btn-enviar {
+      margin-top: 8px; width: 100%; padding: 15px;
+      background: linear-gradient(135deg, var(--verde), var(--verde-medio));
+      color: var(--blanco); border: none; border-radius: 7px;
+      font-family: 'Oswald', sans-serif; font-size: 17px;
+      letter-spacing: 2px; text-transform: uppercase;
+      cursor: pointer; transition: opacity 0.2s, transform 0.1s;
+    }
+    .btn-enviar:hover:not(:disabled) { opacity: 0.91; transform: translateY(-1px); }
+    .btn-enviar:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .mensaje-exito {
+      display: none; position: fixed; top: 20px; left: 50%;
+      transform: translateX(-50%); width: 90%; max-width: 380px;
+      background: #e8f5e9; border: 1.5px solid #4caf50; color: #2e7d32;
+      border-radius: 10px; box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+      z-index: 9999; padding: 16px 20px; font-size: 15px; line-height: 1.5;
+    }
+
+    .error-sucursal {
+      background: #fdecea; border: 1.5px solid #f44336;
+      border-radius: 8px; padding: 16px 20px;
+      text-align: center; color: #c62828; font-size: 14px;
+      margin-bottom: 20px; display: none;
+    }
+
+    footer {
+      text-align: center; padding: 20px;
+      background: var(--azul-oscuro); color: rgba(255,255,255,0.45);
+      font-size: 11px; letter-spacing: 1px;
+    }
+
+    @media (max-width: 520px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-seccion { padding: 20px 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="banner-ippi">
+  <p>📋 Informe de Peligros Potenciales e Incidentes — IPPI</p>
+</div>
+
+<main>
+  <div class="titulo-seccion">
+    <h2>Registro<br><span>IPPI</span></h2>
+    <div class="separador"></div>
+    <p>Complete el formulario con veracidad y detalle.</p>
+    <div class="badge-sucursal" id="badge-sucursal">Cargando sucursal...</div>
+  </div>
+
+  <div class="error-sucursal" id="error-sucursal">
+    ⚠️ Sucursal no reconocida. Verifique que está usando el QR correcto.
+  </div>
+
+  <div id="contenido-formulario">
+
+    <div class="form-seccion">
+      <div class="seccion-titulo">
+        <span class="badge">Sección 1</span>
+        <h3>Datos del Informe</h3>
+      </div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label for="informe">Informe (asunto breve)</label>
+          <input type="text" id="informe" placeholder="Describa brevemente el asunto" required />
+        </div>
+        <div class="form-group">
+          <label for="fecha">Fecha</label>
+          <input type="date" id="fecha" required />
+        </div>
+        <div class="form-group">
+          <label for="hora">Hora</label>
+          <input type="time" id="hora" required />
+        </div>
+      </div>
+    </div>
+
+    <div class="form-seccion seccion-verde">
+      <div class="seccion-titulo">
+        <span class="badge">Sección 2</span>
+        <h3>Lugar y Descripción</h3>
+      </div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label for="lugar">Lugar del acto o condición insegura</label>
+          <select id="lugar" required>
+            <option value="">— Seleccione —</option>
+            <option value="Base Sede">Base Sede</option>
+            <option value="Otra Base">Otra Base</option>
+            <option value="Vuelo">Vuelo</option>
+            <option value="Mantenimiento">Mantenimiento</option>
+            <option value="Facilidades/ Instalaciones">Facilidades / Instalaciones</option>
+            <option value="Equipo de Apoyo">Equipo de Apoyo</option>
+            <option value="Transporte y Conexos">Transporte y Conexos</option>
+            <option value="Contraincedio">Contraincendio</option>
+            <option value="Armamento y explosivos">Armamento y explosivos</option>
+            <option value="Otros">Otros (especificar)</option>
+          </select>
+          <div class="form-group full" id="lugar-otro-wrap" style="display:none; margin-top:10px;">
+            <label for="lugar_otro">Especifique el lugar</label>
+            <input type="text" id="lugar_otro" placeholder="Describa el lugar..." />
+          </div>
+        </div>
+        <div class="form-group full">
+          <label for="descripcion">Descripción completa de la ocurrencia</label>
+          <textarea id="descripcion" placeholder="Describa con detalle los hechos ocurridos..." required></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-seccion">
+      <div class="seccion-titulo">
+        <span class="badge">Sección 3</span>
+        <h3>Imágenes y Recomendaciones</h3>
+      </div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Imágenes <span class="opcional">(opcional, máx. 3)</span></label>
+          <div class="upload-area" onclick="document.getElementById('archivos').click()">
+            <div class="icono-upload">📎</div>
+            <p>Toca para adjuntar imágenes</p>
+            <p>Máximo 3 imágenes</p>
+          </div>
+          <input type="file" id="archivos" accept="image/*" multiple style="display:none" onchange="previsualizarImagenes(this)" />
+          <div id="preview-imagenes"></div>
+        </div>
+        <div class="form-group full">
+          <label for="recomendaciones">Recomendaciones</label>
+          <textarea id="recomendaciones" placeholder="Ingrese sus recomendaciones..." required></textarea>
+        </div>
+        <div class="form-group full">
+          <label for="nombre_reporta">Nombre de quien reporta <span class="opcional">(opcional)</span></label>
+          <input type="text" id="nombre_reporta" placeholder="Su nombre completo" />
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-enviar" id="btn-enviar" onclick="enviarIPPI()">
+      📋 Enviar IPPI
+    </button>
+
+  </div>
+
+  <div class="mensaje-exito" id="msg-exito">
+    ✅ Su IPPI ha sido registrado exitosamente. Gracias por contribuir a la seguridad.
+  </div>
+
+</main>
+
+<footer>
+  <p>FUERZA AÉREA DEL PERÚ &nbsp;·&nbsp; PREVENCIÓN DE ACCIDENTES &nbsp;·&nbsp; IPPI</p>
+</footer>
+
+<script>
+  const SUPABASE_URL  = 'https://qgbixgvidxeaoxxpyiyw.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFnYml4Z3ZpZHhlYW94eHB5aXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxOTU3NzMsImV4cCI6MjA3NTc3MTc3M30.NQ5n_vFnHDp8eNjV3I9vRujfWDWWGAywgyICpqX0OKQ';
+
+  let sucursalId = null;
+  let archivosSeleccionados = [];
+
+  // LEER SUCURSAL DE LA URL
+  async function inicializar() {
+    const params = new URLSearchParams(window.location.search);
+    const codigoSucursal = params.get('sucursal');
+
+    if (!codigoSucursal) {
+      mostrarErrorSucursal();
+      return;
+    }
+
+    // BUSCAR SUCURSAL EN SUPABASE
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/sucursales?codigo=eq.${codigoSucursal}&activa=eq.true&select=id,nombre`,
+      {
+        headers: {
+          'apikey': SUPABASE_ANON,
+          'Authorization': `Bearer ${SUPABASE_ANON}`
+        }
+      }
+    );
+
+    const data = await res.json();
+
+    if (!data || data.length === 0) {
+      mostrarErrorSucursal();
+      return;
+    }
+
+    sucursalId = data[0].id;
+    document.getElementById('badge-sucursal').textContent = data[0].nombre;
+  }
+
+  function mostrarErrorSucursal() {
+    document.getElementById('badge-sucursal').style.display = 'none';
+    document.getElementById('error-sucursal').style.display = 'block';
+    document.getElementById('contenido-formulario').style.display = 'none';
+  }
+
+  // PREVISUALIZAR IMÁGENES
+  function previsualizarImagenes(input) {
+    const archivos = Array.from(input.files).slice(0, 3);
+    archivosSeleccionados = archivos;
+
+    const preview = document.getElementById('preview-imagenes');
+    preview.innerHTML = '';
+
+    archivos.forEach(archivo => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        preview.appendChild(img);
+      };
+      reader.readAsDataURL(archivo);
+    });
+  }
+
+  // COMPRIMIR IMAGEN
+  function comprimirImagen(file, maxWidth = 1200, quality = 0.75) {
+    return new Promise(resolve => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          if (width > maxWidth) {
+            height = (height * maxWidth) / width;
+            width = maxWidth;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          canvas.toBlob(blob => resolve(blob), 'image/jpeg', quality);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // SUBIR IMAGEN A SUPABASE STORAGE
+  async function subirImagen(file, nombre) {
+    const blob = await comprimirImagen(file);
+    const res = await fetch(
+      `${SUPABASE_URL}/storage/v1/object/ippi-archivos/${nombre}`,
+      {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON,
+          'Authorization': `Bearer ${SUPABASE_ANON}`,
+          'Content-Type': 'image/jpeg'
+        },
+        body: blob
+      }
+    );
+
+    if (!res.ok) throw new Error('Error al subir imagen');
+    return `${SUPABASE_URL}/storage/v1/object/public/ippi-archivos/${nombre}`;
+  }
+
+  // ENVIAR IPPI
+  async function enviarIPPI() {
+    if (!sucursalId) {
+      alert('Sucursal no válida. Use el QR correcto.');
+      return;
+    }
+
+    const informe      = document.getElementById('informe').value.trim();
+    const fecha        = document.getElementById('fecha').value;
+    const hora         = document.getElementById('hora').value;
+    const lugarSelect = document.getElementById('lugar').value;
+    const lugarOtro = document.getElementById('lugar_otro').value.trim();
+    const lugar = lugarSelect === 'Otros' ? `Otros: ${lugarOtro}` : lugarSelect;
+    const descripcion  = document.getElementById('descripcion').value.trim();
+    const recomendaciones = document.getElementById('recomendaciones').value.trim();
+    const nombre_reporta  = document.getElementById('nombre_reporta').value.trim();
+
+    if (!informe || !fecha || !hora || !lugar || !descripcion || !recomendaciones) {
+      alert('Complete todos los campos obligatorios.');
+      return;
+    }
+
+    const btn = document.getElementById('btn-enviar');
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+
+    try {
+      // SUBIR IMÁGENES
+      const urlsImagenes = [];
+      for (let i = 0; i < archivosSeleccionados.length; i++) {
+        btn.textContent = `Subiendo imagen ${i + 1} de ${archivosSeleccionados.length}...`;
+        const nombre = `${Date.now()}_${i}_${archivosSeleccionados[i].name}`;
+        const url = await subirImagen(archivosSeleccionados[i], nombre);
+        urlsImagenes.push(url);
+      }
+
+      // GUARDAR REGISTRO EN SUPABASE
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/ippis`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON,
+          'Authorization': `Bearer ${SUPABASE_ANON}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({
+          sucursal_id:    sucursalId,
+          informe:        informe,
+          fecha:          fecha,
+          hora:           hora,
+          lugar:          lugar,
+          descripcion:    descripcion,
+          recomendaciones: recomendaciones,
+          nombre_reporta: nombre_reporta || null,
+          archivos:       urlsImagenes.length > 0 ? urlsImagenes : null,
+          estado:         'Abierto'
+        })
+      });
+
+      if (!res.ok) throw new Error(await res.text());
+
+      document.getElementById('msg-exito').style.display = 'block';
+      document.getElementById('contenido-formulario').style.display = 'none';
+
+    } catch (e) {
+      alert('Error al enviar. Verifique su conexión e intente nuevamente.');
+      btn.disabled = false;
+      btn.textContent = '📋 Enviar IPPI';
+    }
+  }
+
+      // CAMPO OTROS EN LUGAR
+    document.getElementById('lugar').addEventListener('change', function() {
+      const wrap = document.getElementById('lugar-otro-wrap');
+      const input = document.getElementById('lugar_otro');
+      if (this.value === 'Otros') {
+        wrap.style.display = 'block';
+        input.required = true;
+      } else {
+        wrap.style.display = 'none';
+        input.required = false;
+        input.value = '';
+      }
+    });
+
+  // FECHA MÁXIMA = HOY
+  document.getElementById('fecha').max = new Date().toISOString().split('T')[0];
+
+  // INICIALIZAR
+  inicializar();
+</script>
+
+</body>
+</html>
