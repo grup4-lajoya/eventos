@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Olimpiadas Regionales ALAR3 | Fuerza Aérea del Perú</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --azul-fap:    #003087;
+      --azul-oscuro: #001a4d;
+      --dorado:      #c9a84c;
+      --dorado-claro:#f0d080;
+      --gris-claro:  #f4f6f9;
+      --texto:       #1a1a2e;
+      --blanco:      #ffffff;
+
+      /* Colores por unidad */
+      --grup4:       #e8650a;
+      --grup4-light: #fde8d8;
+      --alar3:       #003087;
+      --alar3-light: #dce8f7;
+      --hores:       #0099cc;
+      --hores-light: #d6f0fa;
+      --grup2:       #c9a84c;
+      --grup2-light: #fdf3d0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: var(--gris-claro);
+      color: var(--texto);
+      scroll-behavior: smooth;
+    }
+
+    /* ══════════════════════════════════════
+       HEADER
+    ══════════════════════════════════════ */
+    header {
+      background: linear-gradient(135deg, var(--azul-oscuro) 0%, var(--azul-fap) 100%);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 3px solid var(--dorado);
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .header-logos {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .header-logo {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      border: 2px solid var(--dorado);
+      background: var(--blanco);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .header-logo img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .header-logo-placeholder {
+      font-family: 'Oswald', sans-serif;
+      font-size: 11px; font-weight: 700;
+      color: var(--azul-fap);
+      text-align: center; line-height: 1.2;
+    }
+    .header-text h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(14px, 3.5vw, 20px);
+      font-weight: 700;
+      color: var(--blanco);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .header-text p {
+      font-size: clamp(10px, 2.5vw, 13px);
+      color: var(--dorado-claro);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 300;
+    }
+    .header-badge {
+      margin-left: auto;
+      background: var(--grup4);
+      color: var(--blanco);
+      font-family: 'Oswald', sans-serif;
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      flex-shrink: 0;
+    }
+
+    /* ══════════════════════════════════════
+       NAVEGACIÓN
+    ══════════════════════════════════════ */
+    nav {
+      background: var(--azul-oscuro);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 2px solid var(--dorado);
+    }
+    .nav-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav-inner::-webkit-scrollbar { display: none; }
+    .nav-link {
+      font-family: 'Oswald', sans-serif;
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      padding: 12px 16px;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.2s, border-bottom-color 0.2s;
+      border-bottom: 3px solid transparent;
+      flex-shrink: 0;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: var(--dorado-claro);
+      border-bottom-color: var(--dorado);
+    }
+    .nav-hamburger {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--blanco);
+      font-size: 24px;
+      cursor: pointer;
+      padding: 10px 16px;
+    }
+
+    /* ══════════════════════════════════════
+       MAIN
+    ══════════════════════════════════════ */
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 16px 60px;
+    }
+
+    /* ══════════════════════════════════════
+       SECCIÓN GENÉRICA
+    ══════════════════════════════════════ */
+    .seccion {
+      padding: 40px 0 10px;
+    }
+    .seccion-titulo {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(20px, 4vw, 28px);
+      color: var(--azul-fap);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    .seccion-titulo span.icono { font-size: 22px; }
+    .separador {
+      width: 50px; height: 3px;
+      background: var(--dorado);
+      border-radius: 2px;
+      margin-bottom: 20px;
+    }
+
+    /* ══════════════════════════════════════
+       AVISO BANNER
+    ══════════════════════════════════════ */
+    #aviso-banner {
+      background: var(--dorado);
+      padding: 10px 24px;
+      text-align: center;
+      display: none;
+    }
+    #aviso-banner p {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(12px, 2.5vw, 15px);
+      color: var(--azul-oscuro);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    /* ══════════════════════════════════════
+       HERO / INICIO
+    ══════════════════════════════════════ */
+    #inicio {
+      padding: 36px 0 10px;
+    }
+    .hero-card {
+      background: linear-gradient(135deg, var(--azul-oscuro) 0%, var(--azul-fap) 60%, #0050b3 100%);
+      border-radius: 12px;
+      border: 3px solid var(--dorado);
+      padding: 32px 28px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+    .hero-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-eyebrow {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(11px, 2vw, 14px);
+      color: var(--dorado-claro);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .hero-titulo {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(30px, 7vw, 52px);
+      font-weight: 700;
+      color: var(--blanco);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .hero-titulo span { color: var(--dorado); }
+    .hero-subtitulo {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(13px, 2.5vw, 17px);
+      color: var(--dorado-claro);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .hero-fecha {
+      display: inline-block;
+      background: var(--dorado);
+      color: var(--azul-oscuro);
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(14px, 3vw, 20px);
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 6px 24px;
+      border-radius: 4px;
+      margin-bottom: 24px;
+    }
+    .countdown {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .countdown-box {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      padding: 10px 18px;
+      min-width: 72px;
+      text-align: center;
+    }
+    .countdown-num {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(24px, 5vw, 36px);
+      font-weight: 700;
+      color: var(--blanco);
+      line-height: 1;
+    }
+    .countdown-lbl {
+      font-size: 11px;
+      color: var(--dorado-claro);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    /* Accesos rápidos */
+    .accesos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .acceso-btn {
+      background: var(--blanco);
+      border: 2px solid var(--azul-fap);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      text-decoration: none;
+      color: var(--azul-fap);
+      transition: background 0.2s, transform 0.1s, border-color 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .acceso-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--azul-fap), var(--dorado));
+    }
+    .acceso-btn:hover { background: var(--gris-claro); transform: translateY(-2px); border-color: var(--dorado); }
+    .acceso-btn .icono { font-size: 28px; margin-bottom: 6px; display: block; }
+    .acceso-btn span {
+      font-family: 'Oswald', sans-serif;
+      font-size: 14px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* Próximas competencias + tabla rápida */
+    .dos-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+
+    /* ══════════════════════════════════════
+       CARDS GENÉRICAS
+    ══════════════════════════════════════ */
+    .card {
+      background: var(--blanco);
+      border-radius: 10px;
+      border: 1.5px solid #d0d8e8;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+    }
+    .card-azul::before   { background: var(--azul-fap); }
+    .card-dorado::before { background: var(--dorado); }
+    .card-grup4::before  { background: var(--grup4); }
+    .card-verde::before  { background: #2e7d32; }
+
+    .card h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 16px;
+      color: var(--azul-fap);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    /* ══════════════════════════════════════
+       PRÓXIMAS COMPETENCIAS
+    ══════════════════════════════════════ */
+    .comp-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+    }
+    .comp-item:last-child { border-bottom: none; }
+    .comp-deporte {
+      font-size: 18px;
+      flex-shrink: 0;
+      width: 28px;
+      text-align: center;
+    }
+    .comp-info { flex: 1; }
+    .comp-nombre { font-weight: 600; color: var(--texto); font-size: 13px; }
+    .comp-lugar  { color: #888; font-size: 12px; }
+    .comp-hora {
+      font-family: 'Oswald', sans-serif;
+      font-size: 15px;
+      color: var(--azul-fap);
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+    .proximamente {
+      text-align: center;
+      padding: 24px;
+      color: #aaa;
+      font-size: 14px;
+    }
+    .proximamente .icono-grande { font-size: 36px; display: block; margin-bottom: 8px; }
+
+    /* ══════════════════════════════════════
+       TABLA POSICIONES RÁPIDA
+    ══════════════════════════════════════ */
+    .pos-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .pos-table th {
+      font-family: 'Oswald', sans-serif;
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #888;
+      padding: 6px 4px;
+      text-align: left;
+      border-bottom: 1.5px solid #eee;
+    }
+    .pos-table td { padding: 8px 4px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+    .pos-table tr:last-child td { border-bottom: none; }
+    .unidad-dot {
+      display: inline-block;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      margin-right: 6px;
+      flex-shrink: 0;
+    }
+    .pos-num {
+      font-family: 'Oswald', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--azul-fap);
+    }
+    .pos-pts {
+      font-family: 'Oswald', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    /* ══════════════════════════════════════
+       INAUGURACIÓN
+    ══════════════════════════════════════ */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .info-item {
+      background: var(--blanco);
+      border: 1.5px solid #d0d8e8;
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .info-item-icono { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+    .info-item-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 2px;
+    }
+    .info-item-val {
+      font-family: 'Oswald', sans-serif;
+      font-size: 16px;
+      color: var(--azul-fap);
+      font-weight: 500;
+    }
+    .mapa-placeholder {
+      background: #e8eef7;
+      border: 2px dashed #b0bdd8;
+      border-radius: 8px;
+      height: 180px;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
+      color: #7a8faf;
+      font-size: 14px;
+      gap: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+    }
+    .mapa-placeholder:hover { background: #dce8f7; }
+    .mapa-placeholder .icono { font-size: 36px; }
+
+    /* ══════════════════════════════════════
+       HORARIOS
+    ══════════════════════════════════════ */
+    .filtros {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .filtro-btn {
+      font-family: 'Oswald', sans-serif;
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border: 1.5px solid #d0d8e8;
+      border-radius: 20px;
+      background: var(--blanco);
+      color: #666;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filtro-btn:hover  { border-color: var(--azul-fap); color: var(--azul-fap); }
+    .filtro-btn.active { background: var(--azul-fap); color: var(--blanco); border-color: var(--azul-fap); }
+
+    .horario-tabla { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .horario-tabla th {
+      font-family: 'Oswald', sans-serif;
+      font-size: 12px; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--blanco); background: var(--azul-fap);
+      padding: 10px 12px; text-align: left;
+    }
+    .horario-tabla th:first-child { border-radius: 8px 0 0 0; }
+    .horario-tabla th:last-child  { border-radius: 0 8px 0 0; }
+    .horario-tabla td { padding: 10px 12px; border-bottom: 1px solid #eee; vertical-align: middle; }
+    .horario-tabla tr:last-child td { border-bottom: none; }
+    .horario-tabla tr:nth-child(even) td { background: #f8fafd; }
+    .deporte-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 12px; font-weight: 600;
+      white-space: nowrap;
+    }
+    .badge-futbol    { background: #e3f2fd; color: #0d47a1; }
+    .badge-basquet   { background: #fff3e0; color: #e65100; }
+    .badge-voley     { background: #f3e5f5; color: #6a1b9a; }
+    .badge-natacion  { background: #e0f7fa; color: #006064; }
+    .badge-atletismo { background: #e8f5e9; color: #1b5e20; }
+    .badge-otro      { background: #fafafa; color: #555; border: 1px solid #ddd; }
+
+    /* ══════════════════════════════════════
+       MAPA DEL COMPLEJO
+    ══════════════════════════════════════ */
+    .mapa-complejo-wrap {
+      background: var(--blanco);
+      border: 1.5px solid #d0d8e8;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .mapa-complejo-img {
+      width: 100%;
+      min-height: 280px;
+      background: #e8eef7;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
+      color: #7a8faf;
+      gap: 10px;
+      padding: 40px;
+      text-align: center;
+    }
+    .mapa-complejo-img .icono { font-size: 48px; }
+    .mapa-leyenda {
+      padding: 16px 20px;
+      display: flex; flex-wrap: wrap; gap: 10px;
+      border-top: 1px solid #eee;
+    }
+    .leyenda-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px;
+    }
+    .leyenda-dot {
+      width: 12px; height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    /* Zonas */
+    .zonas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .zona-card {
+      background: var(--blanco);
+      border: 1.5px solid #d0d8e8;
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+      border-top: 4px solid #ccc;
+    }
+    .zona-card .zona-icono  { font-size: 28px; margin-bottom: 6px; }
+    .zona-card .zona-nombre {
+      font-family: 'Oswald', sans-serif;
+      font-size: 14px; text-transform: uppercase; letter-spacing: 1px;
+      color: var(--azul-fap);
+    }
+    .zona-card .zona-lugar  { font-size: 12px; color: #888; margin-top: 3px; }
+
+    /* Servicios */
+    .servicios {
+      display: flex; flex-wrap: wrap; gap: 10px;
+    }
+    .servicio-chip {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--blanco);
+      border: 1.5px solid #d0d8e8;
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 13px;
+    }
+
+    /* ══════════════════════════════════════
+       INGRESO / SALIDA
+    ══════════════════════════════════════ */
+    .recom-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .recom-card {
+      background: var(--blanco);
+      border: 1.5px solid #d0d8e8;
+      border-radius: 10px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .recom-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+    }
+    .recom-ingreso::before  { background: #2e7d32; }
+    .recom-salida::before   { background: var(--azul-fap); }
+    .recom-general::before  { background: var(--dorado); }
+    .recom-emergencia::before { background: #c62828; }
+
+    .recom-card h4 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 16px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .recom-card ul { list-style: none; padding: 0; }
+    .recom-card ul li {
+      font-size: 14px;
+      color: #444;
+      padding: 5px 0;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex; align-items: flex-start; gap: 6px;
+      line-height: 1.45;
+    }
+    .recom-card ul li:last-child { border-bottom: none; }
+    .recom-card ul li::before {
+      content: '▸';
+      color: var(--dorado);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ══════════════════════════════════════
+       UNIDADES
+    ══════════════════════════════════════ */
+    .unidades-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .unidad-card {
+      background: var(--blanco);
+      border: 2px solid #d0d8e8;
+      border-radius: 10px;
+      padding: 20px 16px;
+      text-align: center;
+      transition: transform 0.15s, border-color 0.2s;
+    }
+    .unidad-card:hover { transform: translateY(-2px); }
+    .unidad-logo {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      margin: 0 auto 12px;
+      border: 3px solid #eee;
+      overflow: hidden;
+      background: var(--gris-claro);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .unidad-logo img { width: 100%; height: 100%; object-fit: contain; }
+    .unidad-logo-text {
+      font-family: 'Oswald', sans-serif;
+      font-size: 16px; font-weight: 700;
+      color: var(--azul-fap);
+    }
+    .unidad-nombre {
+      font-family: 'Oswald', sans-serif;
+      font-size: 17px;
+      color: var(--azul-fap);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .unidad-rol {
+      display: inline-block;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase;
+      padding: 2px 10px; border-radius: 20px;
+      margin-bottom: 8px;
+    }
+    .rol-anfitrion { background: var(--grup4-light); color: var(--grup4); }
+    .rol-visitante { background: var(--gris-claro); color: #666; }
+
+    /* ══════════════════════════════════════
+       FECHAS DEL EVENTO (timeline)
+    ══════════════════════════════════════ */
+    .fechas-timeline { position: relative; padding-left: 24px; }
+    .fechas-timeline::before {
+      content: '';
+      position: absolute;
+      left: 8px; top: 8px; bottom: 8px;
+      width: 2px; background: #d0d8e8;
+    }
+    .fecha-item {
+      position: relative;
+      margin-bottom: 20px;
+      padding-left: 20px;
+    }
+    .fecha-item::before {
+      content: '';
+      position: absolute;
+      left: -20px; top: 6px;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: #d0d8e8;
+      border: 2px solid var(--blanco);
+      box-shadow: 0 0 0 2px #d0d8e8;
+    }
+    .fecha-item.activa::before {
+      background: var(--grup4);
+      box-shadow: 0 0 0 2px var(--grup4);
+    }
+    .fecha-item.proxima::before { background: var(--azul-fap); box-shadow: 0 0 0 2px var(--azul-fap); }
+    .fecha-num {
+      font-family: 'Oswald', sans-serif;
+      font-size: 12px; letter-spacing: 1px; text-transform: uppercase;
+      color: #999; margin-bottom: 2px;
+    }
+    .fecha-titulo {
+      font-family: 'Oswald', sans-serif;
+      font-size: 16px; font-weight: 500;
+      color: var(--azul-fap);
+    }
+    .fecha-detalle { font-size: 13px; color: #888; margin-top: 2px; }
+    .fecha-chip {
+      display: inline-block;
+      font-size: 11px; font-weight: 600;
+      padding: 2px 8px; border-radius: 20px;
+      margin-top: 4px;
+    }
+    .chip-activa { background: var(--grup4-light); color: var(--grup4); }
+    .chip-proxima { background: var(--alar3-light); color: var(--alar3); }
+    .chip-pendiente { background: var(--gris-claro); color: #aaa; }
+
+    /* ══════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════ */
+    footer {
+      background: var(--azul-oscuro);
+      border-top: 3px solid var(--dorado);
+      padding: 20px 24px;
+      text-align: center;
+    }
+    footer p {
+      font-family: 'Oswald', sans-serif;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+    }
+    footer .dorado { color: var(--dorado-claro); }
+
+    /* ══════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════ */
+    @media (max-width: 600px) {
+      .dos-col { grid-template-columns: 1fr; }
+      .accesos { grid-template-columns: repeat(2, 1fr); }
+      .hero-card { padding: 24px 16px; }
+      .header-logos .header-logo:not(:first-child) { display: none; }
+      .header-badge { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ HEADER ══ -->
+  <header>
+    <div class="header-logos">
+      <!-- Logo GRUP4 (anfitrión) -->
+      <div class="header-logo">
+        <img src="assets/icons/logo_grup4.png" alt="GRUP4"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="header-logo-placeholder" style="display:none;">G4</div>
+      </div>
+      <!-- Logo ALAR3 -->
+      <div class="header-logo">
+        <img src="assets/icons/logo_alar3.png" alt="ALAR3"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="header-logo-placeholder" style="display:none;">A3</div>
+      </div>
+      <!-- Logo HORES/ESCOM -->
+      <div class="header-logo">
+        <img src="assets/icons/logo_hores.png" alt="HORES"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="header-logo-placeholder" style="display:none;">HE</div>
+      </div>
+      <!-- Logo GRUP2 -->
+      <div class="header-logo">
+        <img src="assets/icons/logo_grup2.png" alt="GRUP2"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="header-logo-placeholder" style="display:none;">G2</div>
+      </div>
+    </div>
+    <div class="header-text">
+      <h1>Olimpiadas Regionales ALAR3</h1>
+      <p>Complejo Dep. "Cor. FAP Cesar Faura G." &nbsp;·&nbsp; 2026</p>
+    </div>
+    <div class="header-badge">GRUP4 Organiza</div>
+  </header>
+
+  <!-- ══ AVISO DINÁMICO (Supabase) ══ -->
+  <div id="aviso-banner">
+    <p id="aviso-texto">Cargando...</p>
+  </div>
+
+  <!-- ══ NAVEGACIÓN ══ -->
+  <nav>
+    <div class="nav-inner">
+      <a class="nav-link active" href="#inicio">Inicio</a>
+      <a class="nav-link" href="#inauguracion">Inauguración</a>
+      <a class="nav-link" href="#horarios">Horarios</a>
+      <a class="nav-link" href="#mapa">Mapa del complejo</a>
+      <a class="nav-link" href="#ingreso">Ingreso / Salida</a>
+      <a class="nav-link" href="#unidades">Unidades</a>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- ══════════════════════════════
+         INICIO
+    ══════════════════════════════ -->
+    <section id="inicio" class="seccion" style="padding-top:32px;">
+
+      <!-- Hero -->
+      <div class="hero-card">
+        <div class="hero-eyebrow">Olimpiadas Regionales</div>
+        <div class="hero-titulo">ALAR<span>3</span></div>
+        <div class="hero-subtitulo">Inauguración &nbsp;—&nbsp; 1ra Fecha &nbsp;—&nbsp; GRUP4</div>
+        <div class="hero-fecha">15 de Mayo 2026</div>
+        <div class="countdown" id="countdown">
+          <div class="countdown-box"><div class="countdown-num" id="cd-dias">--</div><div class="countdown-lbl">Días</div></div>
+          <div class="countdown-box"><div class="countdown-num" id="cd-horas">--</div><div class="countdown-lbl">Horas</div></div>
+          <div class="countdown-box"><div class="countdown-num" id="cd-min">--</div><div class="countdown-lbl">Min</div></div>
+          <div class="countdown-box"><div class="countdown-num" id="cd-seg">--</div><div class="countdown-lbl">Seg</div></div>
+        </div>
+      </div>
+
+      <!-- Accesos rápidos -->
+      <div class="accesos">
+        <a class="acceso-btn" href="#inauguracion">
+          <span class="icono">🏅</span>
+          <span>Inauguración</span>
+        </a>
+        <a class="acceso-btn" href="#horarios">
+          <span class="icono">📅</span>
+          <span>Horarios</span>
+        </a>
+        <a class="acceso-btn" href="#mapa">
+          <span class="icono">🗺️</span>
+          <span>Mapa</span>
+        </a>
+        <a class="acceso-btn" href="#ingreso">
+          <span class="icono">🚪</span>
+          <span>Ingreso / Salida</span>
+        </a>
+      </div>
+
+      <!-- Próximas + Posiciones -->
+      <div class="dos-col">
+        <div class="card card-azul">
+          <h3>⏱ Próximas competencias</h3>
+          <div id="proximas-lista">
+            <div class="proximamente">
+              <span class="icono-grande">📋</span>
+              Los horarios serán publicados próximamente
+            </div>
+          </div>
+        </div>
+        <div class="card card-dorado">
+          <h3>🏆 Posiciones generales</h3>
+          <div id="posiciones-lista">
+            <div class="proximamente">
+              <span class="icono-grande">🏅</span>
+              Se actualizará al iniciar el evento
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════
+         INAUGURACIÓN
+    ══════════════════════════════ -->
+    <section id="inauguracion" class="seccion">
+      <div class="seccion-titulo"><span class="icono">🏅</span> Inauguración</div>
+      <div class="separador"></div>
+
+      <div id="inauguracion-contenido">
+        <!-- Datos de la ceremonia -->
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-item-icono">📅</div>
+            <div>
+              <div class="info-item-label">Fecha</div>
+              <div class="info-item-val">15 de Mayo 2026</div>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-item-icono">🕐</div>
+            <div>
+              <div class="info-item-label">Hora</div>
+              <div class="info-item-val" id="inau-hora">Por confirmar</div>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-item-icono">📍</div>
+            <div>
+              <div class="info-item-label">Lugar</div>
+              <div class="info-item-val">Instalaciones GRUP4</div>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-item-icono">🏠</div>
+            <div>
+              <div class="info-item-label">Organizador</div>
+              <div class="info-item-val" style="color:var(--grup4);">GRUP4</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Programa de la ceremonia -->
+        <div class="card card-azul" style="margin-bottom:16px;">
+          <h3>📋 Programa de la ceremonia</h3>
+          <div id="programa-contenido">
+            <div class="proximamente">
+              <span class="icono-grande">📝</span>
+              El programa detallado de la ceremonia inaugural se publicará próximamente.
+            </div>
+          </div>
+        </div>
+
+        <!-- Mapa de ubicación -->
+        <a class="mapa-placeholder" id="mapa-link-inau" href="#" target="_blank">
+          <span class="icono">🗺️</span>
+          <span>Ver ubicación en Google Maps</span>
+          <span style="font-size:12px; color:#aaa;">Se habilitará próximamente</span>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════
+         HORARIOS
+    ══════════════════════════════ -->
+    <section id="horarios" class="seccion">
+      <div class="seccion-titulo"><span class="icono">📅</span> Horarios</div>
+      <div class="separador"></div>
+
+      <div class="filtros" id="filtros-deporte">
+        <button class="filtro-btn active" onclick="filtrarHorario('todos', this)">Todos</button>
+        <button class="filtro-btn" onclick="filtrarHorario('futbol', this)">⚽ Fútbol</button>
+        <button class="filtro-btn" onclick="filtrarHorario('basquet', this)">🏀 Básquet</button>
+        <button class="filtro-btn" onclick="filtrarHorario('voley', this)">🏐 Vóley</button>
+        <button class="filtro-btn" onclick="filtrarHorario('natacion', this)">🏊 Natación</button>
+        <button class="filtro-btn" onclick="filtrarHorario('atletismo', this)">🏃 Atletismo</button>
+      </div>
+
+      <div id="horarios-contenido">
+        <div class="card" style="text-align:center; padding:40px 20px;">
+          <div style="font-size:48px; margin-bottom:12px;">📋</div>
+          <div style="font-family:'Oswald',sans-serif; font-size:18px; color:var(--azul-fap); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">
+            Horarios en elaboración
+          </div>
+          <div style="font-size:14px; color:#888;">
+            Los horarios de las disciplinas serán publicados aquí en cuanto estén confirmados.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════
+         MAPA DEL COMPLEJO
+    ══════════════════════════════ -->
+    <section id="mapa" class="seccion">
+      <div class="seccion-titulo"><span class="icono">🗺️</span> Mapa del complejo</div>
+      <div class="separador"></div>
+
+      <p style="font-size:14px; color:#666; margin-bottom:16px;">
+        Todas las disciplinas se realizan dentro del <strong>Complejo Deportivo "Cor. FAP Cesar Faura G."</strong> — GRUP4.
+        A continuación, los planos de ubicación y estacionamientos.
+      </p>
+
+      <!-- Plano estacionamientos -->
+      <div class="mapa-complejo-wrap" style="margin-bottom:20px;">
+        <div style="background:var(--azul-fap);padding:12px 20px;">
+          <span style="font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:var(--dorado-claro);">
+            🅿️ Plano de Estacionamientos — por unidad
+          </span>
+        </div>
+        <img src="assets/maps/mapa_estacionamientos.png"
+             alt="Estacionamientos Complejo GRUP4"
+             style="width:100%;display:block;cursor:zoom-in;"
+             onclick="abrirImagen(this.src,'Estacionamientos — Complejo Cor. FAP Cesar Faura G.')">
+      </div>
+
+      <!-- Plano complejo -->
+      <div class="mapa-complejo-wrap" style="margin-bottom:20px;">
+        <div style="background:var(--azul-fap);padding:12px 20px;">
+          <span style="font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:var(--dorado-claro);">
+            🏟️ Plano general del complejo deportivo
+          </span>
+        </div>
+        <img src="assets/maps/mapa_complejo.png"
+             alt="Plano Complejo Deportivo GRUP4"
+             style="width:100%;display:block;cursor:zoom-in;"
+             onclick="abrirImagen(this.src,'Plano Complejo Deportivo Cor. FAP Cesar Faura G.')">
+      </div>
+
+      <!-- Zonas deportivas -->
+      <div class="zonas-grid">
+        <div class="zona-card" style="border-top-color:#0d47a1;">
+          <div class="zona-icono">⚽</div>
+          <div class="zona-nombre">Fútbol</div>
+          <div class="zona-lugar">Cancha Principal</div>
+        </div>
+        <div class="zona-card" style="border-top-color:#e65100;">
+          <div class="zona-icono">🏀</div>
+          <div class="zona-nombre">Básquet</div>
+          <div class="zona-lugar">Losa Cubierta</div>
+        </div>
+        <div class="zona-card" style="border-top-color:#6a1b9a;">
+          <div class="zona-icono">🏐</div>
+          <div class="zona-nombre">Vóley</div>
+          <div class="zona-lugar">Polideportivo</div>
+        </div>
+        <div class="zona-card" style="border-top-color:#006064;">
+          <div class="zona-icono">🏊</div>
+          <div class="zona-nombre">Natación</div>
+          <div class="zona-lugar">Piscina</div>
+        </div>
+        <div class="zona-card" style="border-top-color:#1b5e20;">
+          <div class="zona-icono">🏃</div>
+          <div class="zona-nombre">Atletismo</div>
+          <div class="zona-lugar">Pista Atlética</div>
+        </div>
+        <div class="zona-card" style="border-top-color:#888;">
+          <div class="zona-icono">🎯</div>
+          <div class="zona-nombre">Otros</div>
+          <div class="zona-lugar">Por confirmar</div>
+        </div>
+      </div>
+
+      <!-- Servicios -->
+      <div class="card card-azul">
+        <h3>🛎 Servicios dentro del complejo</h3>
+        <div class="servicios">
+          <div class="servicio-chip">🚻 Servicios higiénicos</div>
+          <div class="servicio-chip">🅿️ Estacionamiento por unidad</div>
+          <div class="servicio-chip">🚑 Ambulancia Sanidad GRUP4</div>
+          <div class="servicio-chip">☕ Cafetería</div>
+          <div class="servicio-chip">🔒 Control de acceso (PA)</div>
+          <div class="servicio-chip">👮 Seguridad Villa</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════
+         INGRESO / SALIDA
+    ══════════════════════════════ -->
+    <section id="ingreso" class="seccion">
+      <div class="seccion-titulo"><span class="icono">🚪</span> Ingreso y Salida</div>
+      <div class="separador"></div>
+
+      <!-- Tarjetas de info rápida -->
+      <div class="recom-grid" style="margin-bottom:24px;">
+        <div class="recom-card recom-ingreso">
+          <h4 style="color:#2e7d32;">✅ Ingreso</h4>
+          <ul id="lista-ingreso">
+            <li>Horario de ingreso: <strong>07:30 a 08:30 hrs</strong></li>
+            <li>Presentar credencial o identificación vigente en control de acceso.</li>
+            <li>Ingresar por la puerta asignada a su unidad.</li>
+            <li>Pasar por los Puestos de Acceso (PA) y Seguridad Villa.</li>
+            <li>Estacionar únicamente en la zona asignada a su unidad.</li>
+          </ul>
+        </div>
+        <div class="recom-card recom-salida">
+          <h4 style="color:var(--azul-fap);">🚶 Salida</h4>
+          <ul id="lista-salida">
+            <li>Seguir la ruta de salida señalizada en el complejo.</li>
+            <li>Pasar por los puntos de control PA y Seguridad Villa al salir.</li>
+            <li>No bloquear accesos ni zonas de emergencia.</li>
+            <li>Coordinar el transporte con anticipación.</li>
+          </ul>
+        </div>
+        <div class="recom-card recom-general">
+          <h4 style="color:#7a5000;">⚠️ Recomendaciones generales</h4>
+          <ul id="lista-recom">
+            <li>Llegar con al menos 30 minutos de anticipación.</li>
+            <li>Límite de velocidad dentro del complejo: <strong>20 km/h</strong></li>
+            <li>Personal al volante pasará <strong>alcoholímetro</strong>.</li>
+            <li>Usar ropa y calzado deportivo adecuado.</li>
+            <li>No ingresar con objetos punzocortantes ni botellas de vidrio.</li>
+          </ul>
+        </div>
+        <div class="recom-card recom-emergencia">
+          <h4 style="color:#c62828;">🚨 Emergencias y Sanidad</h4>
+          <ul id="lista-emergencia">
+            <li>Ambulancia de Sanidad GRUP4 disponible durante todo el evento.</li>
+            <li>Ubicada en el lado sur del complejo deportivo.</li>
+            <li>En caso de emergencia, acudir al personal de sanidad o seguridad.</li>
+            <li>Contacto de emergencia: <strong id="contacto-emergencia">Por confirmar</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Mapas de rutas -->
+      <div style="margin-bottom:10px;">
+        <div class="card card-azul" style="margin-bottom:16px;">
+          <h3>🗺️ Mapas de rutas — Complejo GRUP4</h3>
+          <p style="font-size:13px;color:#666;margin-bottom:14px;">
+            Rutas oficiales de ingreso y salida del Complejo Deportivo "Cor. FAP Cesar Faura G."
+          </p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;">
+            <div>
+              <div style="font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:1px;text-transform:uppercase;color:#2e7d32;margin-bottom:6px;">✅ Ruta de Ingreso</div>
+              <img src="assets/maps/mapa_ingreso.png" alt="Ruta de Ingreso al Complejo GRUP4"
+                   style="width:100%;border-radius:8px;border:2px solid #2e7d32;box-shadow:0 4px 16px rgba(0,0,0,0.12);cursor:zoom-in;"
+                   onclick="abrirImagen(this.src,'Ruta de Ingreso — Complejo GRUP4')">
+            </div>
+            <div>
+              <div style="font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--azul-fap);margin-bottom:6px;">🚶 Ruta de Salida</div>
+              <img src="assets/maps/mapa_salida.png" alt="Ruta de Salida del Complejo GRUP4"
+                   style="width:100%;border-radius:8px;border:2px solid var(--azul-fap);box-shadow:0 4px 16px rgba(0,0,0,0.12);cursor:zoom-in;"
+                   onclick="abrirImagen(this.src,'Ruta de Salida — Complejo GRUP4')">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════
+         UNIDADES
+    ══════════════════════════════ -->
+    <section id="unidades" class="seccion">
+      <div class="seccion-titulo"><span class="icono">🏟️</span> Unidades participantes</div>
+      <div class="separador"></div>
+
+      <div class="unidades-grid">
+        <!-- GRUP4 -->
+        <div class="unidad-card" style="border-color:var(--grup4);">
+          <div class="unidad-logo" style="border-color:var(--grup4-light);">
+            <img src="assets/icons/logo_grup4.png" alt="GRUP4"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="unidad-logo-text" style="display:none;">G4</div>
+          </div>
+          <div class="unidad-nombre" style="color:var(--grup4);">GRUP4</div>
+          <div class="unidad-rol rol-anfitrion">🏠 Anfitrión 1ra Fecha</div>
+          <div style="font-size:12px; color:#888;">Sede: Instalaciones GRUP4</div>
+        </div>
+
+        <!-- ALAR3 -->
+        <div class="unidad-card" style="border-color:var(--alar3);">
+          <div class="unidad-logo" style="border-color:var(--alar3-light);">
+            <img src="assets/icons/logo_alar3.png" alt="ALAR3"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="unidad-logo-text" style="display:none; color:var(--alar3);">A3</div>
+          </div>
+          <div class="unidad-nombre">ALAR3</div>
+          <div class="unidad-rol rol-visitante">Participante</div>
+          <div style="font-size:12px; color:#888;">Organizador de la próxima fecha</div>
+        </div>
+
+        <!-- HORES/ESCOM -->
+        <div class="unidad-card" style="border-color:var(--hores);">
+          <div class="unidad-logo" style="border-color:var(--hores-light);">
+            <img src="assets/icons/logo_hores.png" alt="HORES/ESCOM"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="unidad-logo-text" style="display:none; color:var(--hores);">HE</div>
+          </div>
+          <div class="unidad-nombre" style="color:var(--hores);">HORES/ESCOM</div>
+          <div class="unidad-rol rol-visitante">Participante</div>
+          <div style="font-size:12px; color:#888;">&nbsp;</div>
+        </div>
+
+        <!-- GRUP2 -->
+        <div class="unidad-card" style="border-color:var(--grup2);">
+          <div class="unidad-logo" style="border-color:var(--grup2-light);">
+            <img src="assets/icons/logo_grup2.png" alt="GRUP2"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="unidad-logo-text" style="display:none; color:var(--grup2);">G2</div>
+          </div>
+          <div class="unidad-nombre" style="color:var(--grup2);">GRUP2</div>
+          <div class="unidad-rol rol-visitante">Participante</div>
+          <div style="font-size:12px; color:#888;">&nbsp;</div>
+        </div>
+      </div>
+
+      <!-- Timeline de fechas -->
+      <div class="card card-azul" style="margin-bottom:10px;">
+        <h3>📆 Calendario del evento</h3>
+        <div class="fechas-timeline" style="margin-top:8px;">
+          <div class="fecha-item activa">
+            <div class="fecha-num">1ra Fecha</div>
+            <div class="fecha-titulo">Inauguración — GRUP4</div>
+            <div class="fecha-detalle">15 de Mayo 2026 · Instalaciones GRUP4</div>
+            <span class="fecha-chip chip-activa">En curso / Próximo</span>
+          </div>
+          <div class="fecha-item proxima">
+            <div class="fecha-num">2da Fecha</div>
+            <div class="fecha-titulo">ALAR3</div>
+            <div class="fecha-detalle">Fecha por confirmar · Instalaciones ALAR3</div>
+            <span class="fecha-chip chip-proxima">Próximamente</span>
+          </div>
+          <div class="fecha-item">
+            <div class="fecha-num">3ra Fecha</div>
+            <div class="fecha-titulo">GRUP2</div>
+            <div class="fecha-detalle">Fecha por confirmar · Instalaciones GRUP2</div>
+            <span class="fecha-chip chip-pendiente">Pendiente</span>
+          </div>
+          <div class="fecha-item">
+            <div class="fecha-num">4ta Fecha</div>
+            <div class="fecha-titulo">HORES/ESCOM</div>
+            <div class="fecha-detalle">Fecha por confirmar</div>
+            <span class="fecha-chip chip-pendiente">Pendiente</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ══ FOOTER ══ -->
+  <footer>
+    <p>
+      <span class="dorado">Olimpiadas Regionales ALAR3</span>
+      &nbsp;·&nbsp; Fuerza Aérea del Perú &nbsp;·&nbsp; 2026
+    </p>
+    <p style="margin-top:6px;">GRUP4 &nbsp;·&nbsp; ALAR3 &nbsp;·&nbsp; HORES/ESCOM &nbsp;·&nbsp; GRUP2</p>
+  </footer>
+
+  <!-- ══════════════════════════════════════
+       JAVASCRIPT
+  ══════════════════════════════════════ -->
+  <!-- Modal zoom imágenes -->
+  <div id="modal-img" onclick="cerrarModal()"
+       style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:9999;
+              align-items:center;justify-content:center;flex-direction:column;cursor:zoom-out;padding:20px;">
+    <div style="font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:1px;
+                color:var(--dorado-claro);margin-bottom:10px;text-transform:uppercase;"
+         id="modal-titulo"></div>
+    <img id="modal-img-src" src="" alt=""
+         style="max-width:95vw;max-height:85vh;border-radius:8px;border:2px solid var(--dorado);
+                box-shadow:0 8px 48px rgba(0,0,0,0.6);">
+    <div style="color:rgba(255,255,255,0.5);font-size:12px;margin-top:10px;">Clic para cerrar</div>
+  </div>
+
+  <script>
+    function abrirImagen(src, titulo) {
+      document.getElementById('modal-img-src').src = src;
+      document.getElementById('modal-titulo').textContent = titulo;
+      const m = document.getElementById('modal-img');
+      m.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+    function cerrarModal() {
+      document.getElementById('modal-img').style.display = 'none';
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => { if(e.key==='Escape') cerrarModal(); });
+
+    /* ────────────────────────────────
+       CONFIGURACIÓN SUPABASE
+       Reemplaza con los valores de tu proyecto
+    ──────────────────────────────── */
+    const SUPABASE_URL  = 'TU_SUPABASE_URL';
+    const SUPABASE_ANON = 'TU_SUPABASE_ANON_KEY';
+
+    async function supabase(tabla, metodo = 'GET', body = null, filtro = '') {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${tabla}${filtro}`, {
+        method: metodo,
+        headers: {
+          'apikey': SUPABASE_ANON,
+          'Authorization': `Bearer ${SUPABASE_ANON}`,
+          'Content-Type': 'application/json',
+          'Prefer': metodo === 'POST' ? 'return=minimal' : ''
+        },
+        body: body ? JSON.stringify(body) : null
+      });
+      if (!res.ok) throw new Error(await res.text());
+      if (metodo === 'GET') return res.json();
+    }
+
+    /* ────────────────────────────────
+       CUENTA REGRESIVA
+    ──────────────────────────────── */
+    function actualizarCuentaRegresiva() {
+      const objetivo = new Date('2026-05-15T00:00:00').getTime();
+      const ahora = Date.now();
+      const diff = objetivo - ahora;
+
+      if (diff <= 0) {
+        document.getElementById('countdown').innerHTML =
+          '<div style="color:var(--dorado-claro);font-family:Oswald,sans-serif;font-size:18px;letter-spacing:2px;">¡EL EVENTO HA COMENZADO! 🏅</div>';
+        return;
+      }
+      const dias  = Math.floor(diff / 86400000);
+      const horas = Math.floor((diff % 86400000) / 3600000);
+      const min   = Math.floor((diff % 3600000) / 60000);
+      const seg   = Math.floor((diff % 60000) / 1000);
+
+      document.getElementById('cd-dias').textContent  = String(dias).padStart(2,'0');
+      document.getElementById('cd-horas').textContent = String(horas).padStart(2,'0');
+      document.getElementById('cd-min').textContent   = String(min).padStart(2,'0');
+      document.getElementById('cd-seg').textContent   = String(seg).padStart(2,'0');
+    }
+    actualizarCuentaRegresiva();
+    setInterval(actualizarCuentaRegresiva, 1000);
+
+    /* ────────────────────────────────
+       NAVEGACIÓN ACTIVA AL HACER SCROLL
+    ──────────────────────────────── */
+    const secciones = ['inicio','inauguracion','horarios','mapa','ingreso','unidades'];
+    const navLinks  = document.querySelectorAll('.nav-link');
+
+    window.addEventListener('scroll', () => {
+      let actual = 'inicio';
+      secciones.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && window.scrollY >= el.offsetTop - 80) actual = id;
+      });
+      navLinks.forEach(l => {
+        l.classList.toggle('active', l.getAttribute('href') === '#' + actual);
+      });
+    }, { passive: true });
+
+    /* ────────────────────────────────
+       FILTRO DE HORARIOS
+    ──────────────────────────────── */
+    let horariosDatos = []; // Se llenará desde Supabase cuando estén disponibles
+
+    function filtrarHorario(deporte, btn) {
+      document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      if (horariosDatos.length === 0) return; // Aún no hay datos
+
+      const filtrados = deporte === 'todos'
+        ? horariosDatos
+        : horariosDatos.filter(h => h.deporte === deporte);
+      renderHorarios(filtrados);
+    }
+
+    function renderHorarios(datos) {
+      const contenedor = document.getElementById('horarios-contenido');
+      if (!datos || datos.length === 0) {
+        contenedor.innerHTML = `
+          <div class="card" style="text-align:center;padding:40px 20px;">
+            <div style="font-size:48px;margin-bottom:12px;">📋</div>
+            <div style="font-family:'Oswald',sans-serif;font-size:18px;color:var(--azul-fap);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">
+              Horarios en elaboración
+            </div>
+            <div style="font-size:14px;color:#888;">
+              Los horarios serán publicados próximamente.
+            </div>
+          </div>`;
+        return;
+      }
+      const badgeClass = { futbol:'badge-futbol', basquet:'badge-basquet', voley:'badge-voley', natacion:'badge-natacion', atletismo:'badge-atletismo' };
+      const iconos = { futbol:'⚽', basquet:'🏀', voley:'🏐', natacion:'🏊', atletismo:'🏃', otro:'🎯' };
+      contenedor.innerHTML = `
+        <div style="overflow-x:auto;">
+          <table class="horario-tabla">
+            <thead><tr>
+              <th>Hora</th><th>Disciplina</th><th>Categoría</th><th>Lugar</th><th>Unidades</th>
+            </tr></thead>
+            <tbody>
+              ${datos.map(h => `
+                <tr>
+                  <td><strong>${h.hora}</strong></td>
+                  <td><span class="deporte-badge ${badgeClass[h.deporte]||'badge-otro'}">${iconos[h.deporte]||'🎯'} ${h.disciplina}</span></td>
+                  <td>${h.categoria||'-'}</td>
+                  <td>${h.lugar||'-'}</td>
+                  <td>${h.unidades||'-'}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>`;
+    }
+
+    /* ────────────────────────────────
+       POSICIONES
+    ──────────────────────────────── */
+    function renderPosiciones(datos) {
+      const el = document.getElementById('posiciones-lista');
+      if (!datos || datos.length === 0) {
+        el.innerHTML = `<div class="proximamente"><span class="icono-grande">🏅</span>Se actualizará al iniciar el evento</div>`;
+        return;
+      }
+      const colores = { GRUP4: 'var(--grup4)', ALAR3: 'var(--alar3)', 'HORES/ESCOM': 'var(--hores)', GRUP2: 'var(--grup2)' };
+      el.innerHTML = `
+        <table class="pos-table">
+          <thead><tr><th>#</th><th>Unidad</th><th>Pts</th></tr></thead>
+          <tbody>
+            ${datos.sort((a,b) => b.puntos - a.puntos).map((u, i) => `
+              <tr>
+                <td><span class="pos-num">${i+1}</span></td>
+                <td><span class="unidad-dot" style="background:${colores[u.unidad]||'#888'}"></span>${u.unidad}</td>
+                <td><span class="pos-pts" style="color:${colores[u.unidad]||'var(--azul-fap)'}">${u.puntos}</span></td>
+              </tr>`).join('')}
+          </tbody>
+        </table>`;
+    }
+
+    /* ────────────────────────────────
+       PRÓXIMAS COMPETENCIAS
+    ──────────────────────────────── */
+    function renderProximas(datos) {
+      const el = document.getElementById('proximas-lista');
+      if (!datos || datos.length === 0) {
+        el.innerHTML = `<div class="proximamente"><span class="icono-grande">📋</span>Los horarios serán publicados próximamente</div>`;
+        return;
+      }
+      const iconos = { futbol:'⚽', basquet:'🏀', voley:'🏐', natacion:'🏊', atletismo:'🏃', otro:'🎯' };
+      el.innerHTML = datos.slice(0, 4).map(c => `
+        <div class="comp-item">
+          <div class="comp-deporte">${iconos[c.deporte]||'🎯'}</div>
+          <div class="comp-info">
+            <div class="comp-nombre">${c.nombre}</div>
+            <div class="comp-lugar">${c.lugar||''}</div>
+          </div>
+          <div class="comp-hora">${c.hora}</div>
+        </div>`).join('');
+    }
+
+    /* ────────────────────────────────
+       CARGA INICIAL DESDE SUPABASE
+       Tablas sugeridas:
+       - olimpiadas_config  (clave, valor)
+       - olimpiadas_horarios (hora, deporte, disciplina, categoria, lugar, unidades)
+       - olimpiadas_posiciones (unidad, puntos)
+       - olimpiadas_avisos (mensaje, activo)
+    ──────────────────────────────── */
+    async function cargarDatos() {
+      if (SUPABASE_URL === 'TU_SUPABASE_URL') return; // Sin config aún
+
+      try {
+        // Aviso banner
+        const avisos = await supabase('olimpiadas_avisos', 'GET', null, '?activo=eq.true&select=mensaje&limit=1');
+        if (avisos && avisos[0]) {
+          document.getElementById('aviso-texto').textContent = avisos[0].mensaje;
+          document.getElementById('aviso-banner').style.display = 'block';
+        }
+      } catch(e) { console.warn('Avisos no disponibles'); }
+
+      try {
+        // Horarios
+        const horarios = await supabase('olimpiadas_horarios', 'GET', null, '?select=*&order=hora');
+        if (horarios && horarios.length > 0) {
+          horariosDatos = horarios;
+          renderHorarios(horarios);
+          renderProximas(horarios);
+        }
+      } catch(e) { console.warn('Horarios no disponibles'); }
+
+      try {
+        // Posiciones
+        const posiciones = await supabase('olimpiadas_posiciones', 'GET', null, '?select=*');
+        if (posiciones && posiciones.length > 0) renderPosiciones(posiciones);
+      } catch(e) { console.warn('Posiciones no disponibles'); }
+
+      try {
+        // Config (hora inauguración, contacto emergencia, etc.)
+        const config = await supabase('olimpiadas_config', 'GET', null, '?select=clave,valor');
+        if (config) {
+          config.forEach(c => {
+            if (c.clave === 'hora_inauguracion') document.getElementById('inau-hora').textContent = c.valor;
+            if (c.clave === 'contacto_emergencia') document.getElementById('contacto-emergencia').textContent = c.valor;
+            if (c.clave === 'maps_url') {
+              const link = document.getElementById('mapa-link-inau');
+              link.href = c.valor;
+              link.querySelector('span:last-child').textContent = 'Haz clic para abrir en Google Maps';
+            }
+          });
+        }
+      } catch(e) { console.warn('Config no disponible'); }
+    }
+
+    cargarDatos();
+  </script>
+
+</body>
+</html>
