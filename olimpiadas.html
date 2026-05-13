@@ -910,6 +910,19 @@
                       text-transform:uppercase;">hrs</div>
         </div>
       </div>
+
+      <!-- Banner Pase de Amigo Elegido -->
+      <div style="margin-bottom:20px;cursor:pointer;"
+           onclick="abrirImagen('assets/icons/pase_amigo_elegido.jpeg','Pase de Amigo Elegido — FAP')">
+        <img src="assets/icons/pase_amigo_elegido.jpeg"
+             alt="Pase de Amigo Elegido"
+             style="width:100%;border-radius:10px;border:2px solid var(--dorado);
+                    box-shadow:0 4px 20px rgba(0,0,0,0.15);">
+        <div style="text-align:center;font-family:'Oswald',sans-serif;font-size:11px;
+                    color:#888;letter-spacing:1px;text-transform:uppercase;margin-top:5px;">
+          Clic para ampliar
+        </div>
+      </div>
       
       <!-- Accesos rápidos -->
       <div class="accesos">
@@ -1240,14 +1253,142 @@
         <button class="filtro-btn" onclick="filtrarTabla('ciclismo', this)">🚴 Ciclismo</button>
       </div>
 
-      <div id="horarios-contenido">
-        <div class="card" style="text-align:center; padding:40px 20px;">
-          <div style="font-size:48px; margin-bottom:12px;">📋</div>
-          <div style="font-family:'Oswald',sans-serif; font-size:18px; color:var(--azul-fap); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">
-            Programa general en elaboración
+<div id="horarios-contenido">
+        <div class="card card-azul" style="margin-bottom:16px;">
+          <h3>📋 Cronograma — Viernes 22 de Mayo 2026</h3>
+          <p style="font-size:13px;color:#666;margin-bottom:14px;">Complejo Deportivo "Cor. FAP Cesar Faura G." — GRUP4</p>
+          <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;font-size:13px;">
+              <thead>
+                <tr style="background:var(--azul-fap);color:white;">
+                  <th style="padding:8px 12px;text-align:left;">Hora</th>
+                  <th style="padding:8px 12px;text-align:left;">Disciplina</th>
+                  <th style="padding:8px 12px;text-align:left;">Encuentro</th>
+                  <th style="padding:8px 12px;text-align:left;">Lugar</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-deporte="especial" style="background:#fff3e0;">
+                  <td style="padding:7px 12px;font-weight:600;">07:30 h</td>
+                  <td style="padding:7px 12px;">🪖 Formación / Parte</td>
+                  <td style="padding:7px 12px;">—</td>
+                  <td style="padding:7px 12px;">Complejo GRUP4</td>
+                </tr>
+                <tr data-deporte="especial" style="background:#E6F1FB;">
+                  <td style="padding:7px 12px;font-weight:600;">07:45 h</td>
+                  <td style="padding:7px 12px;">🏅 Inauguración</td>
+                  <td style="padding:7px 12px;">Todas las unidades</td>
+                  <td style="padding:7px 12px;">Complejo GRUP4</td>
+                </tr>
+                <tr data-deporte="futbol">
+                  <td style="padding:7px 12px;font-weight:600;">08:15 – 09:00</td>
+                  <td style="padding:7px 12px;">⚽ Fútbol Master Varones</td>
+                  <td style="padding:7px 12px;">ALAR3 vs GRUP4</td>
+                  <td style="padding:7px 12px;">Complejo GRUP4</td>
+                </tr>
+                <tr data-deporte="futbol" style="background:#f8fafd;">
+                  <td style="padding:7px 12px;font-weight:600;">09:05 – 09:50</td>
+                  <td style="padding:7px 12px;">⚽ Fútbol Libre Varones</td>
+                  <td style="padding:7px 12px;">ALAR3 vs GRUP4</td>
+                  <td style="padding:7px 12px;">Complejo GRUP4</td>
+                </tr>
+                <tr data-deporte="basquet">
+                  <td style="padding:7px 12px;font-weight:600;">09:55 – 10:40</td>
+                  <td style="padding:7px 12px;">🏀 Básquetball</td>
+                  <td style="padding:7px 12px;">GRUP2 vs HORES/ESCOM</td>
+                  <td style="padding:7px 12px;">Complejo GRUP4</td>
+                </tr>
+                <tr data-deporte="basquet" style="background:#f8fafd;">
+                  <td style="padding:7px 12px;font-weight:600;">10:45 – 11:30</td>
+                  <td style="padding:7px 12px;">🏀 Básquetball</td>
+                  <td style="padding:7px 12px;">ALAR3 vs GRUP4</td>
+                  <td style="padding:7px 12px;">Complejo GRUP4</td>
+                </tr>
+                <tr data-deporte="especial" style="background:#fff8e1;">
+                  <td style="padding:7px 12px;font-weight:600;">11:35 – 12:05</td>
+                  <td style="padding:7px 12px;">🎰 Bingo</td>
+                  <td style="padding:7px 12px;">Todas las unidades</td>
+                  <td style="padding:7px 12px;">Complejo GRUP4</td>
+                </tr>
+                <tr data-deporte="futbol">
+                  <td style="padding:7px 12px;font-weight:600;">12:15 – 13:00</td>
+                  <td style="padding:7px 12px;">⚽ Fútbol Master Varones</td>
+                  <td style="padding:7px 12px;">GRUP2 vs HORES/ESCOM</td>
+                  <td style="padding:7px 12px;">Complejo GRUP4</td>
+                </tr>
+                <tr data-deporte="futbol" style="background:#f8fafd;">
+                  <td style="padding:7px 12px;font-weight:600;">13:05 – 13:50</td>
+                  <td style="padding:7px 12px;">⚽ Fútbol Libre Varones</td>
+                  <td style="padding:7px 12px;">GRUP2 vs HORES/ESCOM</td>
+                  <td style="padding:7px 12px;">Complejo GRUP4</td>
+                </tr>
+                <tr data-deporte="voley">
+                  <td style="padding:7px 12px;font-weight:600;">13:55 – 14:40</td>
+                  <td style="padding:7px 12px;">🏐 Vóley Mixto</td>
+                  <td style="padding:7px 12px;">ALAR3 vs GRUP4</td>
+                  <td style="padding:7px 12px;">Complejo GRUP4</td>
+                </tr>
+                <tr data-deporte="voley" style="background:#f8fafd;">
+                  <td style="padding:7px 12px;font-weight:600;">14:45 – 15:30</td>
+                  <td style="padding:7px 12px;">🏐 Vóley Mixto</td>
+                  <td style="padding:7px 12px;">GRUP2 vs HORES/ESCOM</td>
+                  <td style="padding:7px 12px;">Complejo GRUP4</td>
+                </tr>
+                <tr data-deporte="futbol">
+                  <td style="padding:7px 12px;font-weight:600;">15:35 – 16:20</td>
+                  <td style="padding:7px 12px;">⚽ Fútbol Damas</td>
+                  <td style="padding:7px 12px;">ALAR3 vs GRUP4</td>
+                  <td style="padding:7px 12px;">Complejo GRUP4</td>
+                </tr>
+                <tr data-deporte="futbol" style="background:#f8fafd;">
+                  <td style="padding:7px 12px;font-weight:600;">16:25 – 17:10</td>
+                  <td style="padding:7px 12px;">⚽ Fútbol Damas</td>
+                  <td style="padding:7px 12px;">GRUP2 vs HORES/ESCOM</td>
+                  <td style="padding:7px 12px;">Complejo GRUP4</td>
+                </tr>
+                <tr data-deporte="ciclismo" style="background:#fff3e0;">
+                  <td style="padding:7px 12px;font-weight:600;">10:00 – 11:00</td>
+                  <td style="padding:7px 12px;">🚴 Ciclismo</td>
+                  <td style="padding:7px 12px;">Todos</td>
+                  <td style="padding:7px 12px;">Exterior Complejo GRUP4</td>
+                </tr>
+                <tr data-deporte="fronton" style="background:#f0f7f0;">
+                  <td style="padding:7px 12px;font-weight:600;">10:00 – 10:40</td>
+                  <td style="padding:7px 12px;">🎾 Frontón Singles</td>
+                  <td style="padding:7px 12px;">GRUP2 vs HORES/ESCOM</td>
+                  <td style="padding:7px 12px;">Exterior Complejo GRUP4</td>
+                </tr>
+                <tr data-deporte="fronton" style="background:#e8f5e9;">
+                  <td style="padding:7px 12px;font-weight:600;">10:45 – 11:25</td>
+                  <td style="padding:7px 12px;">🎾 Frontón Singles</td>
+                  <td style="padding:7px 12px;">ALAR3 vs GRUP4</td>
+                  <td style="padding:7px 12px;">Exterior Complejo GRUP4</td>
+                </tr>
+                <tr data-deporte="fronton" style="background:#f0f7f0;">
+                  <td style="padding:7px 12px;font-weight:600;">11:30 – 12:10</td>
+                  <td style="padding:7px 12px;">🎾 Frontón Dobles</td>
+                  <td style="padding:7px 12px;">GRUP2 vs HORES/ESCOM</td>
+                  <td style="padding:7px 12px;">Exterior Complejo GRUP4</td>
+                </tr>
+                <tr data-deporte="fronton" style="background:#e8f5e9;">
+                  <td style="padding:7px 12px;font-weight:600;">12:15 – 13:00</td>
+                  <td style="padding:7px 12px;">🎾 Frontón Dobles</td>
+                  <td style="padding:7px 12px;">ALAR3 vs GRUP4</td>
+                  <td style="padding:7px 12px;">Exterior Complejo GRUP4</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <div style="font-size:14px; color:#888;">
-            El cronograma de disciplinas del <strong>Viernes 22 de Mayo</strong> será publicado aquí en cuanto esté confirmado.
+          <div style="margin-top:14px;background:#fff8e1;border:1.5px solid #f9a825;
+                      border-radius:8px;padding:12px 16px;display:flex;align-items:center;gap:12px;">
+            <span style="font-size:28px;">🎰</span>
+            <div>
+              <div style="font-family:'Oswald',sans-serif;font-size:14px;color:#e65100;
+                          text-transform:uppercase;letter-spacing:1px;">Bingo — 11:35 a 12:05 hrs</div>
+              <div style="font-size:13px;color:#666;margin-top:2px;">
+                Actividad especial · Complejo GRUP4 · ¡Todas las unidades participan!
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1684,7 +1825,18 @@
         }
       } catch(e) { console.warn('Config no disponible'); }
     }
-
+function filtrarTabla(deporte, btn) {
+      document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('#horarios-contenido tr[data-deporte]').forEach(row => {
+        if (deporte === 'todos' || row.dataset.deporte === deporte) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+    
     cargarDatos();
   </script>
 
