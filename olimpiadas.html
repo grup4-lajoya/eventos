@@ -834,6 +834,15 @@
     <div class="header-badge">GRUP4 Organiza</div>
   </header>
 
+  <!-- ══ BANNER BINGO ══ -->
+  <div style="background:linear-gradient(90deg,#c9a84c,#f0d080,#c9a84c);
+              padding:10px 24px;text-align:center;border-bottom:2px solid #a07830;">
+    <p style="font-family:'Oswald',sans-serif;font-size:clamp(13px,2.5vw,16px);
+              color:#1a1a2e;letter-spacing:2px;text-transform:uppercase;font-weight:700;">
+      🎰 &nbsp; GRAN BINGO &nbsp;·&nbsp; HOY 11:35 HRS &nbsp;·&nbsp; ¡PARTICIPA Y GANA! &nbsp; 🎰
+    </p>
+  </div>
+  
   <!-- ══ AVISO DINÁMICO (Supabase) ══ -->
   <div id="aviso-banner">
     <p id="aviso-texto">Cargando...</p>
@@ -873,6 +882,35 @@
         </div>
       </div>
 
+      <!-- Card Bingo -->
+      <div style="background:linear-gradient(135deg,#7a5000,#c9a84c);
+                  border-radius:12px;border:3px solid #f0d080;
+                  padding:20px 24px;margin-bottom:20px;
+                  display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+        <div style="font-size:52px;flex-shrink:0;">🎰</div>
+        <div style="flex:1;min-width:200px;">
+          <div style="font-family:'Oswald',sans-serif;font-size:11px;
+                      color:#f0d080;letter-spacing:3px;text-transform:uppercase;
+                      margin-bottom:4px;">Actividad especial</div>
+          <div style="font-family:'Oswald',sans-serif;font-size:clamp(22px,5vw,32px);
+                      font-weight:700;color:#ffffff;letter-spacing:2px;
+                      text-transform:uppercase;line-height:1;">GRAN BINGO</div>
+          <div style="font-size:14px;color:#fde8d8;margin-top:6px;">
+            📅 Viernes 22 de Mayo &nbsp;·&nbsp; 🕐 11:35 – 12:05 hrs
+          </div>
+          <div style="font-size:13px;color:#f0d080;margin-top:4px;">
+            Complejo GRUP4 &nbsp;·&nbsp; ¡Todas las unidades participan!
+          </div>
+        </div>
+        <div style="background:rgba(255,255,255,0.15);border:2px solid #f0d080;
+                    border-radius:8px;padding:10px 18px;text-align:center;flex-shrink:0;">
+          <div style="font-family:'Oswald',sans-serif;font-size:28px;
+                      font-weight:700;color:#ffffff;">11:35</div>
+          <div style="font-size:11px;color:#f0d080;letter-spacing:2px;
+                      text-transform:uppercase;">hrs</div>
+        </div>
+      </div>
+      
       <!-- Accesos rápidos -->
       <div class="accesos">
         <a class="acceso-btn" href="#disciplinas">
@@ -1193,14 +1231,13 @@
       <div class="seccion-titulo"><span class="icono">📅</span> Horarios</div>
       <div class="separador"></div>
 
-      <div class="filtros" id="filtros-deporte">
-        <button class="filtro-btn active" onclick="filtrarHorario('todos', this)">Todos</button>
-        <button class="filtro-btn" onclick="filtrarHorario('futbol', this)">⚽ Fulbito</button>
-        <button class="filtro-btn" onclick="filtrarHorario('basquet', this)">🏀 Básquet</button>
-        <button class="filtro-btn" onclick="filtrarHorario('voley', this)">🏐 Vóley</button>
-        <button class="filtro-btn" onclick="filtrarHorario('fronton', this)">🎾 Frontón</button>
-        <button class="filtro-btn" onclick="filtrarHorario('tiro', this)">🎯 Tiro</button>
-        <button class="filtro-btn" onclick="filtrarHorario('ciclismo', this)">🚴 Ciclismo</button>
+<div class="filtros" id="filtros-deporte">
+        <button class="filtro-btn active" onclick="filtrarTabla('todos', this)">Todos</button>
+        <button class="filtro-btn" onclick="filtrarTabla('futbol', this)">⚽ Fulbito</button>
+        <button class="filtro-btn" onclick="filtrarTabla('basquet', this)">🏀 Básquet</button>
+        <button class="filtro-btn" onclick="filtrarTabla('voley', this)">🏐 Vóley</button>
+        <button class="filtro-btn" onclick="filtrarTabla('fronton', this)">🎾 Frontón</button>
+        <button class="filtro-btn" onclick="filtrarTabla('ciclismo', this)">🚴 Ciclismo</button>
       </div>
 
       <div id="horarios-contenido">
