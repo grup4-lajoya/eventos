@@ -844,8 +844,9 @@
     <div class="nav-inner">
       <a class="nav-link active" href="#inicio">Inicio</a>
       <a class="nav-link" href="#inauguracion">Inauguración</a>
+      <a class="nav-link" href="#disciplinas">Disciplinas</a>
       <a class="nav-link" href="#horarios">Horarios</a>
-      <a class="nav-link" href="#mapa">Mapa del complejo</a>
+      <a class="nav-link" href="#mapa">Mapa</a>
       <a class="nav-link" href="#ingreso">Ingreso / Salida</a>
       <a class="nav-link" href="#unidades">Unidades</a>
     </div>
@@ -863,7 +864,7 @@
         <div class="hero-eyebrow">Olimpiadas Regionales</div>
         <div class="hero-titulo">ALAR<span>3</span></div>
         <div class="hero-subtitulo">Inauguración &nbsp;—&nbsp; 1ra Fecha &nbsp;—&nbsp; GRUP4</div>
-        <div class="hero-fecha">15 de Mayo 2026</div>
+        <div class="hero-fecha">Viernes 22 de Mayo 2026</div>
         <div class="countdown" id="countdown">
           <div class="countdown-box"><div class="countdown-num" id="cd-dias">--</div><div class="countdown-lbl">Días</div></div>
           <div class="countdown-box"><div class="countdown-num" id="cd-horas">--</div><div class="countdown-lbl">Horas</div></div>
@@ -877,6 +878,10 @@
         <a class="acceso-btn" href="#inauguracion">
           <span class="icono">🏅</span>
           <span>Inauguración</span>
+        </a>
+        <a class="acceso-btn" href="#disciplinas">
+          <span class="icono">⚽</span>
+          <span>Disciplinas</span>
         </a>
         <a class="acceso-btn" href="#horarios">
           <span class="icono">📅</span>
@@ -924,13 +929,13 @@
       <div class="separador"></div>
 
       <div id="inauguracion-contenido">
-        <!-- Datos de la ceremonia -->
+        <!-- Datos clave -->
         <div class="info-grid">
           <div class="info-item">
             <div class="info-item-icono">📅</div>
             <div>
               <div class="info-item-label">Fecha</div>
-              <div class="info-item-val">15 de Mayo 2026</div>
+              <div class="info-item-val">Viernes 22 de Mayo 2026</div>
             </div>
           </div>
           <div class="info-item">
@@ -944,7 +949,7 @@
             <div class="info-item-icono">📍</div>
             <div>
               <div class="info-item-label">Lugar</div>
-              <div class="info-item-val">Instalaciones GRUP4</div>
+              <div class="info-item-val">Complejo Dep. "Cor. FAP Cesar Faura G."</div>
             </div>
           </div>
           <div class="info-item">
@@ -962,18 +967,248 @@
           <div id="programa-contenido">
             <div class="proximamente">
               <span class="icono-grande">📝</span>
-              El programa detallado de la ceremonia inaugural se publicará próximamente.
+              El programa detallado de la ceremonia inaugural está en elaboración.<br>
+              <span style="font-size:12px;color:#bbb;">Se publicará próximamente.</span>
             </div>
           </div>
         </div>
 
-        <!-- Mapa de ubicación -->
-        <a class="mapa-placeholder" id="mapa-link-inau" href="#" target="_blank">
-          <span class="icono">🗺️</span>
-          <span>Ver ubicación en Google Maps</span>
-          <span style="font-size:12px; color:#aaa;">Se habilitará próximamente</span>
-        </a>
+        <!-- Distribución inauguración — placeholder para imagen -->
+        <div class="card card-grup4" style="margin-bottom:16px;">
+          <h3 style="color:var(--grup4);">🏟️ Distribución en el campo — Inauguración</h3>
+          <p style="font-size:13px;color:#666;margin-bottom:14px;">
+            Ubicación de cada unidad en el campo y distribución de tribunas durante la ceremonia inaugural.
+          </p>
+          <div id="imagen-distribucion"
+               style="background:#f4f0e8;border:2px dashed var(--dorado);border-radius:8px;
+                      min-height:200px;display:flex;align-items:center;justify-content:center;
+                      flex-direction:column;gap:8px;cursor:pointer;"
+               onclick="abrirImagen('assets/maps/distribucion_inauguracion.png','Distribución — Inauguración GRUP4')">
+            <span style="font-size:40px;">🗺️</span>
+            <span style="font-family:'Oswald',sans-serif;font-size:14px;color:#8a7040;text-transform:uppercase;letter-spacing:1px;">
+              Distribución de unidades y tribunas
+            </span>
+            <span style="font-size:12px;color:#aaa;">Imagen en elaboración — se publicará próximamente</span>
+          </div>
+          <p style="font-size:11px;color:#bbb;margin-top:8px;text-align:center;">
+            📌 Cuando tengas la imagen, súbela como: <code>assets/maps/distribucion_inauguracion.png</code>
+          </p>
+        </div>
 
+        <!-- Uniforme -->
+        <div class="card" style="border-top:4px solid var(--dorado);margin-bottom:16px;">
+          <h3 style="color:var(--azul-fap);">👕 Uniforme oficial</h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;">
+            <div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;background:#fde8d8;border:1.5px solid var(--grup4);">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--grup4);flex-shrink:0;"></div>
+              <div><div style="font-weight:600;font-size:13px;color:var(--grup4);">GRUP4</div><div style="font-size:12px;color:#888;">Color Naranja</div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;background:var(--alar3-light);border:1.5px solid #0099cc;">
+              <div style="width:28px;height:28px;border-radius:50%;background:#0099cc;flex-shrink:0;"></div>
+              <div><div style="font-weight:600;font-size:13px;color:#0099cc;">ALAR3</div><div style="font-size:12px;color:#888;">Color Celeste</div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;background:var(--grup2-light);border:1.5px solid var(--grup2);">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--grup2);flex-shrink:0;"></div>
+              <div><div style="font-weight:600;font-size:13px;color:var(--grup2);">GRUP2</div><div style="font-size:12px;color:#888;">Color Amarillo</div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;background:#f5f5f5;border:1.5px solid #bbb;">
+              <div style="width:28px;height:28px;border-radius:50%;background:#ccc;border:1px solid #aaa;flex-shrink:0;"></div>
+              <div><div style="font-weight:600;font-size:13px;color:#555;">HORES/ESCOM</div><div style="font-size:12px;color:#888;">Color Blanco</div></div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:#888;margin-top:10px;padding-top:10px;border-top:1px solid #eee;">
+            Buzo FAP con polo del color de su respectiva unidad durante todo el evento.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════
+         DISCIPLINAS
+    ══════════════════════════════ -->
+    <section id="disciplinas" class="seccion">
+      <div class="seccion-titulo"><span class="icono">⚽</span> Disciplinas</div>
+      <div class="separador"></div>
+      <p style="font-size:14px;color:#666;margin-bottom:18px;">
+        Disciplinas que se desarrollarán en la <strong>1ra Fecha — GRUP4</strong>.
+        Consulta las bases oficiales para el detalle de cada reglamento.
+      </p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:20px;">
+
+        <!-- Fulbito -->
+        <div class="card" style="border-top:4px solid #0d47a1;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span style="font-size:28px;">⚽</span>
+            <div>
+              <div style="font-family:'Oswald',sans-serif;font-size:16px;color:#0d47a1;text-transform:uppercase;letter-spacing:1px;">Fulbito</div>
+              <div style="font-size:12px;color:#888;">Varones / Damas</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:#555;line-height:1.6;">
+            6 vs 6 · 10 jugadores por equipo (6 titulares + 4 suplentes)<br>
+            2 tiempos de 20 min · Goles desde mitad de cancha<br>
+            <strong>Puntaje:</strong> Ganado 3 pts · Empate 1 pt · Perdido 0 pts
+          </div>
+          <div style="margin-top:8px;font-size:11px;color:#888;background:#f4f6f9;padding:5px 8px;border-radius:4px;">
+            👤 2 Oficiales + 2 TT.SS.OO + 2 SMV/Civil
+          </div>
+        </div>
+
+        <!-- Fulbito Master -->
+        <div class="card" style="border-top:4px solid #1565c0;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span style="font-size:28px;">⚽</span>
+            <div>
+              <div style="font-family:'Oswald',sans-serif;font-size:16px;color:#1565c0;text-transform:uppercase;letter-spacing:1px;">Fulbito Master</div>
+              <div style="font-size:12px;color:#888;">42 años a más</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:#555;line-height:1.6;">
+            6 vs 6 · 10 jugadores (6 titulares + 4 suplentes)<br>
+            2 tiempos de 20 min · Goles desde mitad de cancha<br>
+            <strong>Puntaje:</strong> Ganado 3 pts · Empate 1 pt · Perdido 0 pts
+          </div>
+          <div style="margin-top:8px;font-size:11px;color:#888;background:#f4f6f9;padding:5px 8px;border-radius:4px;">
+            👤 2 Oficiales + 3 TT.SS.OO + 1 Civil
+          </div>
+        </div>
+
+        <!-- Vóley Mixto -->
+        <div class="card" style="border-top:4px solid #6a1b9a;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span style="font-size:28px;">🏐</span>
+            <div>
+              <div style="font-family:'Oswald',sans-serif;font-size:16px;color:#6a1b9a;text-transform:uppercase;letter-spacing:1px;">Vóley Mixto</div>
+              <div style="font-size:12px;color:#888;">3 varones + 3 damas</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:#555;line-height:1.6;">
+            12 jugadores (6 titulares + 6 suplentes) · Cambios ilimitados<br>
+            Sets a 25 pts · Mejor de 3 sets · 3er set a 15 pts<br>
+            <strong>Puntaje:</strong> Ganado 2 pts · Perdido 0 pts
+          </div>
+          <div style="margin-top:8px;font-size:11px;color:#888;background:#f4f6f9;padding:5px 8px;border-radius:4px;">
+            👤 2 Oficiales + 2 TT.SS.OO + 2 SMV/Civil
+          </div>
+        </div>
+
+        <!-- Básquet -->
+        <div class="card" style="border-top:4px solid #e65100;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span style="font-size:28px;">🏀</span>
+            <div>
+              <div style="font-family:'Oswald',sans-serif;font-size:16px;color:#e65100;text-transform:uppercase;letter-spacing:1px;">Básquetball</div>
+              <div style="font-size:12px;color:#888;">5 vs 5</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:#555;line-height:1.6;">
+            10 jugadores (5 titulares + 5 suplentes) · Cambios ilimitados<br>
+            4 tiempos de 10 min corridos · En empate: 5to tiempo de 5 min<br>
+            Máx. 5 faltas por jugador<br>
+            <strong>Puntaje:</strong> Ganado 3 pts · Perdido 0 pts
+          </div>
+          <div style="margin-top:8px;font-size:11px;color:#888;background:#f4f6f9;padding:5px 8px;border-radius:4px;">
+            👤 3 Oficiales + 1 TT.SS.OO + 1 SMV/Civil
+          </div>
+        </div>
+
+        <!-- Frontón Singles -->
+        <div class="card" style="border-top:4px solid #2e7d32;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span style="font-size:28px;">🎾</span>
+            <div>
+              <div style="font-family:'Oswald',sans-serif;font-size:16px;color:#2e7d32;text-transform:uppercase;letter-spacing:1px;">Frontón Singles</div>
+              <div style="font-size:12px;color:#888;">1 vs 1 · Categoría libre</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:#555;line-height:1.6;">
+            Todos vs todos en todas las fechas<br>
+            3 sets de 15 puntos · Cada jugador lleva su paleta<br>
+            <strong>Puntaje:</strong> Ganado 2 pts · Perdido 0 pts
+          </div>
+        </div>
+
+        <!-- Frontón Dobles -->
+        <div class="card" style="border-top:4px solid #388e3c;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span style="font-size:28px;">🎾</span>
+            <div>
+              <div style="font-family:'Oswald',sans-serif;font-size:16px;color:#388e3c;text-transform:uppercase;letter-spacing:1px;">Frontón Dobles</div>
+              <div style="font-size:12px;color:#888;">2 vs 2 · Categoría libre</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:#555;line-height:1.6;">
+            Todos vs todos en todas las fechas<br>
+            3 sets de 15 puntos · Cada jugador lleva su paleta<br>
+            <strong>Puntaje:</strong> Ganado 2 pts · Perdido 0 pts
+          </div>
+        </div>
+
+        <!-- Tiro con Carabina -->
+        <div class="card" style="border-top:4px solid #37474f;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span style="font-size:28px;">🎯</span>
+            <div>
+              <div style="font-family:'Oswald',sans-serif;font-size:16px;color:#37474f;text-transform:uppercase;letter-spacing:1px;">Tiro con Carabina</div>
+              <div style="font-size:12px;color:#888;">Rifle de Aire 4.5 · 10 m</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:#555;line-height:1.6;">
+            5 representantes por equipo (3 varones + 2 damas)<br>
+            2 series de 5 disparos · Posición de pie<br>
+            Todos vs todos durante todas las fechas
+          </div>
+          <div style="margin-top:8px;font-size:11px;color:#888;background:#f4f6f9;padding:5px 8px;border-radius:4px;">
+            👤 2 Oficiales + 2 TT.SS.OO + 1 SMV
+          </div>
+        </div>
+
+        <!-- Ciclismo -->
+        <div class="card" style="border-top:4px solid #f57f17;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span style="font-size:28px;">🚴</span>
+            <div>
+              <div style="font-family:'Oswald',sans-serif;font-size:16px;color:#f57f17;text-transform:uppercase;letter-spacing:1px;">Ciclismo</div>
+              <div style="font-size:12px;color:#888;">Solo en fecha GRUP4</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:#555;line-height:1.6;">
+            5 participantes libres por equipo<br>
+            Recorrido de ~5 km en trocha/tierra<br>
+            Sin modificaciones de motor en bicicletas
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Tabla de puntajes -->
+      <div class="card card-dorado">
+        <h3>🏆 Sistema de puntajes</h3>
+        <div style="overflow-x:auto;">
+          <table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:8px;">
+            <thead>
+              <tr style="background:var(--azul-fap);color:white;">
+                <th style="padding:8px 12px;text-align:left;border-radius:6px 0 0 0;">Disciplina</th>
+                <th style="padding:8px 12px;text-align:center;">1° lugar</th>
+                <th style="padding:8px 12px;text-align:center;">2° lugar</th>
+                <th style="padding:8px 12px;text-align:center;">3° lugar</th>
+                <th style="padding:8px 12px;text-align:center;border-radius:0 6px 0 0;">4° lugar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="background:#f8fafd;"><td style="padding:7px 12px;">⚽ Fulbito (por partido)</td><td style="text-align:center;font-weight:600;color:var(--azul-fap);">3 pts</td><td style="text-align:center;">1 pt</td><td style="text-align:center;">—</td><td style="text-align:center;">0</td></tr>
+              <tr><td style="padding:7px 12px;">🏐 Vóley (por partido)</td><td style="text-align:center;font-weight:600;color:var(--azul-fap);">2 pts</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">0</td></tr>
+              <tr style="background:#f8fafd;"><td style="padding:7px 12px;">🏀 Básquet (por partido)</td><td style="text-align:center;font-weight:600;color:var(--azul-fap);">3 pts</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">0</td></tr>
+              <tr><td style="padding:7px 12px;">🎾 Frontón (por partido)</td><td style="text-align:center;font-weight:600;color:var(--azul-fap);">2 pts</td><td style="text-align:center;">—</td><td style="text-align:center;">—</td><td style="text-align:center;">0</td></tr>
+              <tr style="background:#f8fafd;"><td style="padding:7px 12px;">🎯 Tiro / 🚴 Ciclismo (individual)</td><td style="text-align:center;font-weight:600;color:var(--azul-fap);">4 pts</td><td style="text-align:center;">3 pts</td><td style="text-align:center;">2 pts</td><td style="text-align:center;">1 pt</td></tr>
+              <tr><td style="padding:7px 12px;">🎯 Tiro (colectivo)</td><td style="text-align:center;font-weight:600;color:var(--azul-fap);">8 pts</td><td style="text-align:center;">6 pts</td><td style="text-align:center;">4 pts</td><td style="text-align:center;">2 pts</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="font-size:12px;color:#888;margin-top:10px;">
+          🏆 Campeón: equipo con mayor puntaje acumulado al final de las 4 fechas.
+        </div>
       </div>
     </section>
 
@@ -986,21 +1221,22 @@
 
       <div class="filtros" id="filtros-deporte">
         <button class="filtro-btn active" onclick="filtrarHorario('todos', this)">Todos</button>
-        <button class="filtro-btn" onclick="filtrarHorario('futbol', this)">⚽ Fútbol</button>
+        <button class="filtro-btn" onclick="filtrarHorario('futbol', this)">⚽ Fulbito</button>
         <button class="filtro-btn" onclick="filtrarHorario('basquet', this)">🏀 Básquet</button>
         <button class="filtro-btn" onclick="filtrarHorario('voley', this)">🏐 Vóley</button>
-        <button class="filtro-btn" onclick="filtrarHorario('natacion', this)">🏊 Natación</button>
-        <button class="filtro-btn" onclick="filtrarHorario('atletismo', this)">🏃 Atletismo</button>
+        <button class="filtro-btn" onclick="filtrarHorario('fronton', this)">🎾 Frontón</button>
+        <button class="filtro-btn" onclick="filtrarHorario('tiro', this)">🎯 Tiro</button>
+        <button class="filtro-btn" onclick="filtrarHorario('ciclismo', this)">🚴 Ciclismo</button>
       </div>
 
       <div id="horarios-contenido">
         <div class="card" style="text-align:center; padding:40px 20px;">
           <div style="font-size:48px; margin-bottom:12px;">📋</div>
           <div style="font-family:'Oswald',sans-serif; font-size:18px; color:var(--azul-fap); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">
-            Horarios en elaboración
+            Programa general en elaboración
           </div>
           <div style="font-size:14px; color:#888;">
-            Los horarios de las disciplinas serán publicados aquí en cuanto estén confirmados.
+            El cronograma de disciplinas del <strong>Viernes 22 de Mayo</strong> será publicado aquí en cuanto esté confirmado.
           </div>
         </div>
       </div>
@@ -1048,7 +1284,7 @@
       <div class="zonas-grid">
         <div class="zona-card" style="border-top-color:#0d47a1;">
           <div class="zona-icono">⚽</div>
-          <div class="zona-nombre">Fútbol</div>
+          <div class="zona-nombre">Fulbito</div>
           <div class="zona-lugar">Cancha Principal</div>
         </div>
         <div class="zona-card" style="border-top-color:#e65100;">
@@ -1061,20 +1297,20 @@
           <div class="zona-nombre">Vóley</div>
           <div class="zona-lugar">Polideportivo</div>
         </div>
-        <div class="zona-card" style="border-top-color:#006064;">
-          <div class="zona-icono">🏊</div>
-          <div class="zona-nombre">Natación</div>
-          <div class="zona-lugar">Piscina</div>
+        <div class="zona-card" style="border-top-color:#2e7d32;">
+          <div class="zona-icono">🎾</div>
+          <div class="zona-nombre">Frontón</div>
+          <div class="zona-lugar">Cancha de Frontón</div>
         </div>
-        <div class="zona-card" style="border-top-color:#1b5e20;">
-          <div class="zona-icono">🏃</div>
-          <div class="zona-nombre">Atletismo</div>
-          <div class="zona-lugar">Pista Atlética</div>
-        </div>
-        <div class="zona-card" style="border-top-color:#888;">
+        <div class="zona-card" style="border-top-color:#37474f;">
           <div class="zona-icono">🎯</div>
-          <div class="zona-nombre">Otros</div>
-          <div class="zona-lugar">Por confirmar</div>
+          <div class="zona-nombre">Tiro Carabina</div>
+          <div class="zona-lugar">Polígono de Tiro</div>
+        </div>
+        <div class="zona-card" style="border-top-color:#f57f17;">
+          <div class="zona-icono">🚴</div>
+          <div class="zona-nombre">Ciclismo</div>
+          <div class="zona-lugar">Circuito ~5 km</div>
         </div>
       </div>
 
@@ -1195,7 +1431,7 @@
           </div>
           <div class="unidad-nombre">ALAR3</div>
           <div class="unidad-rol rol-visitante">Participante</div>
-          <div style="font-size:12px; color:#888;">Organizador de la próxima fecha</div>
+          <div style="font-size:12px; color:#888;">&nbsp;</div>
         </div>
 
         <!-- HORES/ESCOM -->
@@ -1223,37 +1459,7 @@
         </div>
       </div>
 
-      <!-- Timeline de fechas -->
-      <div class="card card-azul" style="margin-bottom:10px;">
-        <h3>📆 Calendario del evento</h3>
-        <div class="fechas-timeline" style="margin-top:8px;">
-          <div class="fecha-item activa">
-            <div class="fecha-num">1ra Fecha</div>
-            <div class="fecha-titulo">Inauguración — GRUP4</div>
-            <div class="fecha-detalle">15 de Mayo 2026 · Instalaciones GRUP4</div>
-            <span class="fecha-chip chip-activa">En curso / Próximo</span>
-          </div>
-          <div class="fecha-item proxima">
-            <div class="fecha-num">2da Fecha</div>
-            <div class="fecha-titulo">ALAR3</div>
-            <div class="fecha-detalle">Fecha por confirmar · Instalaciones ALAR3</div>
-            <span class="fecha-chip chip-proxima">Próximamente</span>
-          </div>
-          <div class="fecha-item">
-            <div class="fecha-num">3ra Fecha</div>
-            <div class="fecha-titulo">GRUP2</div>
-            <div class="fecha-detalle">Fecha por confirmar · Instalaciones GRUP2</div>
-            <span class="fecha-chip chip-pendiente">Pendiente</span>
-          </div>
-          <div class="fecha-item">
-            <div class="fecha-num">4ta Fecha</div>
-            <div class="fecha-titulo">HORES/ESCOM</div>
-            <div class="fecha-detalle">Fecha por confirmar</div>
-            <span class="fecha-chip chip-pendiente">Pendiente</span>
-          </div>
-        </div>
-      </div>
-
+      <!-- Sin timeline: solo las 4 unidades -->
     </section>
 
   </main>
@@ -1323,7 +1529,7 @@
        CUENTA REGRESIVA
     ──────────────────────────────── */
     function actualizarCuentaRegresiva() {
-      const objetivo = new Date('2026-05-15T00:00:00').getTime();
+      const objetivo = new Date('2026-05-22T00:00:00').getTime();
       const ahora = Date.now();
       const diff = objetivo - ahora;
 
@@ -1348,7 +1554,7 @@
     /* ────────────────────────────────
        NAVEGACIÓN ACTIVA AL HACER SCROLL
     ──────────────────────────────── */
-    const secciones = ['inicio','inauguracion','horarios','mapa','ingreso','unidades'];
+    const secciones = ['inicio','inauguracion','disciplinas','horarios','mapa','ingreso','unidades'];
     const navLinks  = document.querySelectorAll('.nav-link');
 
     window.addEventListener('scroll', () => {
@@ -1394,8 +1600,8 @@
           </div>`;
         return;
       }
-      const badgeClass = { futbol:'badge-futbol', basquet:'badge-basquet', voley:'badge-voley', natacion:'badge-natacion', atletismo:'badge-atletismo' };
-      const iconos = { futbol:'⚽', basquet:'🏀', voley:'🏐', natacion:'🏊', atletismo:'🏃', otro:'🎯' };
+      const badgeClass = { futbol:'badge-futbol', basquet:'badge-basquet', voley:'badge-voley', fronton:'badge-verde', tiro:'badge-otro', ciclismo:'badge-otro' };
+      const iconos = { futbol:'⚽', basquet:'🏀', voley:'🏐', fronton:'🎾', tiro:'🎯', ciclismo:'🚴', otro:'🏅' };
       contenedor.innerHTML = `
         <div style="overflow-x:auto;">
           <table class="horario-tabla">
