@@ -1210,18 +1210,34 @@
               🗺️ Ruta del recorrido
             </div>
             <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;">
-              <img src="assets/icons/ciclismo_ruta_01.jpeg"
+<img src="assets/icons/ciclismo_ruta_01.jpeg"
                    style="height:120px;border-radius:6px;cursor:zoom-in;flex-shrink:0;"
-                   onclick="abrirImagen(this.src,'Ciclismo — Ruta del recorrido')">
+                   onclick="abrirImagen(this.src,'Ciclismo — Ruta del recorrido',
+                   ['assets/icons/ciclismo_ruta_01.jpeg',
+                    'assets/icons/ciclismo_ruta_02.jpeg',
+                    'assets/icons/ciclismo_ruta_03.jpeg',
+                    'assets/icons/ciclismo_ruta_04.jpeg'])">
               <img src="assets/icons/ciclismo_ruta_02.jpeg"
                    style="height:120px;border-radius:6px;cursor:zoom-in;flex-shrink:0;"
-                   onclick="abrirImagen(this.src,'Ciclismo — Ruta del recorrido')">
+                   onclick="abrirImagen(this.src,'Ciclismo — Ruta del recorrido',
+                   ['assets/icons/ciclismo_ruta_01.jpeg',
+                    'assets/icons/ciclismo_ruta_02.jpeg',
+                    'assets/icons/ciclismo_ruta_03.jpeg',
+                    'assets/icons/ciclismo_ruta_04.jpeg'])">
               <img src="assets/icons/ciclismo_ruta_03.jpeg"
                    style="height:120px;border-radius:6px;cursor:zoom-in;flex-shrink:0;"
-                   onclick="abrirImagen(this.src,'Ciclismo — Ruta del recorrido')">
+                   onclick="abrirImagen(this.src,'Ciclismo — Ruta del recorrido',
+                   ['assets/icons/ciclismo_ruta_01.jpeg',
+                    'assets/icons/ciclismo_ruta_02.jpeg',
+                    'assets/icons/ciclismo_ruta_03.jpeg',
+                    'assets/icons/ciclismo_ruta_04.jpeg'])">
               <img src="assets/icons/ciclismo_ruta_04.jpeg"
                    style="height:120px;border-radius:6px;cursor:zoom-in;flex-shrink:0;"
-                   onclick="abrirImagen(this.src,'Ciclismo — Ruta del recorrido')">
+                   onclick="abrirImagen(this.src,'Ciclismo — Ruta del recorrido',
+                   ['assets/icons/ciclismo_ruta_01.jpeg',
+                    'assets/icons/ciclismo_ruta_02.jpeg',
+                    'assets/icons/ciclismo_ruta_03.jpeg',
+                    'assets/icons/ciclismo_ruta_04.jpeg'])">
             </div>
             <div style="font-size:11px;color:#aaa;margin-top:4px;">
               Desliza para ver más · Clic en cada imagen para ampliar
@@ -1604,32 +1620,82 @@
   <!-- ══════════════════════════════════════
        JAVASCRIPT
   ══════════════════════════════════════ -->
-  <!-- Modal zoom imágenes -->
-  <div id="modal-img" onclick="cerrarModal()"
-       style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:9999;
-              align-items:center;justify-content:center;flex-direction:column;cursor:zoom-out;padding:20px;">
+<!-- Modal zoom imágenes con navegación -->
+  <div id="modal-img"
+       style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;
+              align-items:center;justify-content:center;flex-direction:column;padding:20px;">
     <div style="font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:1px;
                 color:var(--dorado-claro);margin-bottom:10px;text-transform:uppercase;"
          id="modal-titulo"></div>
-    <img id="modal-img-src" src="" alt=""
-         style="max-width:95vw;max-height:85vh;border-radius:8px;border:2px solid var(--dorado);
-                box-shadow:0 8px 48px rgba(0,0,0,0.6);">
-    <div style="color:rgba(255,255,255,0.5);font-size:12px;margin-top:10px;">Clic para cerrar</div>
+    <div style="position:relative;display:flex;align-items:center;gap:12px;">
+      <!-- Flecha izquierda -->
+      <button id="modal-prev"
+              onclick="navegarModal(-1)"
+              style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.3);
+                     color:white;font-size:24px;width:44px;height:44px;border-radius:50%;
+                     cursor:pointer;flex-shrink:0;display:none;align-items:center;
+                     justify-content:center;transition:background 0.2s;">&#8249;</button>
+      <!-- Imagen -->
+      <img id="modal-img-src" src="" alt=""
+           style="max-width:85vw;max-height:80vh;border-radius:8px;border:2px solid var(--dorado);
+                  box-shadow:0 8px 48px rgba(0,0,0,0.6);">
+      <!-- Flecha derecha -->
+      <button id="modal-next"
+              onclick="navegarModal(1)"
+              style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.3);
+                     color:white;font-size:24px;width:44px;height:44px;border-radius:50%;
+                     cursor:pointer;flex-shrink:0;display:none;align-items:center;
+                     justify-content:center;transition:background 0.2s;">&#8250;</button>
+    </div>
+    <div style="color:rgba(255,255,255,0.5);font-size:12px;margin-top:10px;" id="modal-contador"></div>
+    <div style="color:rgba(255,255,255,0.35);font-size:11px;margin-top:4px;cursor:pointer;"
+         onclick="cerrarModal()">✕ Clic aquí o ESC para cerrar</div>
   </div>
 
   <script>
-    function abrirImagen(src, titulo) {
-      document.getElementById('modal-img-src').src = src;
+let modalGaleria = [];
+    let modalIndice  = 0;
+
+    function abrirImagen(src, titulo, galeria) {
+      modalGaleria = galeria || [src];
+      modalIndice  = modalGaleria.indexOf(src);
+      if (modalIndice < 0) modalIndice = 0;
+      mostrarModalFrame();
       document.getElementById('modal-titulo').textContent = titulo;
-      const m = document.getElementById('modal-img');
-      m.style.display = 'flex';
+      document.getElementById('modal-img').style.display = 'flex';
       document.body.style.overflow = 'hidden';
     }
+
+    function mostrarModalFrame() {
+      const total = modalGaleria.length;
+      document.getElementById('modal-img-src').src = modalGaleria[modalIndice];
+      const prev = document.getElementById('modal-prev');
+      const next = document.getElementById('modal-next');
+      prev.style.display = total > 1 ? 'flex' : 'none';
+      next.style.display = total > 1 ? 'flex' : 'none';
+      prev.style.opacity = modalIndice > 0          ? '1' : '0.3';
+      next.style.opacity = modalIndice < total - 1  ? '1' : '0.3';
+      document.getElementById('modal-contador').textContent =
+        total > 1 ? (modalIndice + 1) + ' / ' + total : '';
+    }
+
+    function navegarModal(dir) {
+      const total = modalGaleria.length;
+      modalIndice = Math.max(0, Math.min(total - 1, modalIndice + dir));
+      mostrarModalFrame();
+    }
+
     function cerrarModal() {
       document.getElementById('modal-img').style.display = 'none';
       document.body.style.overflow = '';
+      modalGaleria = [];
     }
-    document.addEventListener('keydown', e => { if(e.key==='Escape') cerrarModal(); });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape')     cerrarModal();
+      if (e.key === 'ArrowRight') navegarModal(1);
+      if (e.key === 'ArrowLeft')  navegarModal(-1);
+    });
 
     /* ────────────────────────────────
        CONFIGURACIÓN SUPABASE
