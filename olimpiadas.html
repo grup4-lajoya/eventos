@@ -1034,20 +1034,23 @@
           <p style="font-size:13px;color:#666;margin-bottom:14px;">
             Ubicación de cada unidad en el campo y distribución de tribunas durante la ceremonia inaugural.
           </p>
-          <div id="imagen-distribucion"
-               style="background:#f4f0e8;border:2px dashed var(--dorado);border-radius:8px;
-                      min-height:200px;display:flex;align-items:center;justify-content:center;
-                      flex-direction:column;gap:8px;cursor:pointer;"
-               onclick="abrirImagen('assets/icons/distribucion_inauguracion.png','Distribución — Inauguración GRUP4')">
-            <span style="font-size:40px;">🗺️</span>
-            <span style="font-family:'Oswald',sans-serif;font-size:14px;color:#8a7040;text-transform:uppercase;letter-spacing:1px;">
-              Distribución de unidades y tribunas
-            </span>
-            <span style="font-size:12px;color:#aaa;">Imagen en elaboración — se publicará próximamente</span>
+<div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;">
+            <img src="assets/icons/distribucion_inauguracion.jpeg"
+                 alt="Distribución vista 1"
+                 style="height:180px;border-radius:8px;cursor:zoom-in;flex-shrink:0;border:1.5px solid var(--dorado);"
+                 onclick="abrirImagen(this.src,'Distribución de unidades y tribunas — Inauguración GRUP4',
+                 ['assets/icons/distribucion_inauguracion.jpeg',
+                  'assets/icons/distribucion_inauguracion_02.jpeg'])">
+            <img src="assets/icons/distribucion_inauguracion_02.jpeg"
+                 alt="Distribución vista 2"
+                 style="height:180px;border-radius:8px;cursor:zoom-in;flex-shrink:0;border:1.5px solid var(--dorado);"
+                 onclick="abrirImagen(this.src,'Distribución de unidades y tribunas — Inauguración GRUP4',
+                 ['assets/icons/distribucion_inauguracion.jpeg',
+                  'assets/icons/distribucion_inauguracion_02.jpeg'])">
           </div>
-          <p style="font-size:11px;color:#bbb;margin-top:8px;text-align:center;">
-            📌 Cuando tengas la imagen, súbela como: <code>assets/icons/distribucion_inauguracion.png</code>
-          </p>
+          <div style="font-size:11px;color:#aaa;margin-top:6px;">
+            Clic en cada imagen para ampliar · Navega con las flechas
+          </div>
         </div>
 
         <!-- Uniforme -->
