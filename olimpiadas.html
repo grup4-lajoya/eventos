@@ -1566,30 +1566,43 @@
         A continuación, los planos de ubicación y estacionamientos.
       </p>
 
-      <!-- Plano estacionamientos -->
-      <div class="mapa-complejo-wrap" style="margin-bottom:20px;">
-        <div style="background:var(--azul-fap);padding:12px 20px;">
-          <span style="font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:var(--dorado-claro);">
-            🅿️ Plano de Estacionamientos — por unidad
-          </span>
+ <!-- Planos del complejo -->
+      <div class="card card-azul" style="margin-bottom:20px;">
+        <h3>🗺️ Planos del complejo deportivo</h3>
+        <p style="font-size:13px;color:#666;margin-bottom:16px;">
+          Plano general y estacionamientos por unidad. Clic para ampliar y navegar entre imágenes.
+        </p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px;">
+          <div>
+            <div style="font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:1px;
+                        text-transform:uppercase;color:#888;margin-bottom:6px;">
+              🏟️ Plano general
+            </div>
+            <img src="assets/icons/mapa_complejo.jpeg"
+                 alt="Plano general complejo GRUP4"
+                 style="width:100%;border-radius:8px;cursor:zoom-in;
+                        border:1.5px solid var(--dorado);object-fit:cover;height:120px;"
+                 onclick="abrirImagen(this.src,'Planos — Complejo Cor. FAP Cesar Faura G.',
+                 ['assets/icons/mapa_complejo.jpeg',
+                  'assets/icons/mapa_estacionamientos.jpeg'])">
+          </div>
+          <div>
+            <div style="font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:1px;
+                        text-transform:uppercase;color:#888;margin-bottom:6px;">
+              🅿️ Estacionamientos
+            </div>
+            <img src="assets/icons/mapa_estacionamientos.jpeg"
+                 alt="Estacionamientos Complejo GRUP4"
+                 style="width:100%;border-radius:8px;cursor:zoom-in;
+                        border:1.5px solid var(--dorado);object-fit:cover;height:120px;"
+                 onclick="abrirImagen(this.src,'Planos — Complejo Cor. FAP Cesar Faura G.',
+                 ['assets/icons/mapa_complejo.jpeg',
+                  'assets/icons/mapa_estacionamientos.jpeg'])">
+          </div>
         </div>
-        <img src="assets/icons/mapa_estacionamientos.jpeg"
-             alt="Estacionamientos Complejo GRUP4"
-             style="width:100%;display:block;cursor:zoom-in;"
-             onclick="abrirImagen(this.src,'Estacionamientos — Complejo Cor. FAP Cesar Faura G.')">
-      </div>
-
-      <!-- Plano complejo -->
-      <div class="mapa-complejo-wrap" style="margin-bottom:20px;">
-        <div style="background:var(--azul-fap);padding:12px 20px;">
-          <span style="font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:var(--dorado-claro);">
-            🏟️ Plano general del complejo deportivo
-          </span>
+        <div style="font-size:11px;color:#aaa;margin-top:4px;">
+          Clic en cada imagen para ampliar · Navega con las flechas
         </div>
-        <img src="assets/icons/mapa_complejo.jpeg"
-             alt="Plano Complejo Deportivo GRUP4"
-             style="width:100%;display:block;cursor:zoom-in;"
-             onclick="abrirImagen(this.src,'Plano Complejo Deportivo Cor. FAP Cesar Faura G.')">
       </div>
 
     </section>
