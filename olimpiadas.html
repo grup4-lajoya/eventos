@@ -800,6 +800,24 @@
     /* ══════════════════════════════════════
        RESPONSIVE
     ══════════════════════════════════════ */
+   @keyframes bingo-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.7), 0 8px 32px rgba(0,0,0,0.3); transform: scale(1); }
+      50% { box-shadow: 0 0 0 12px rgba(201,168,76,0), 0 8px 32px rgba(0,0,0,0.3); transform: scale(1.01); }
+    }
+    @keyframes bingo-shine {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    .bingo-card { animation: bingo-pulse 2s ease-in-out infinite; }
+    .bingo-titulo-text {
+      background: linear-gradient(90deg, #fff 0%, #f0d080 40%, #fff 60%, #f0d080 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: bingo-shine 2.5s linear infinite;
+    }
+    
     @media (max-width: 600px) {
       .dos-col { grid-template-columns: 1fr; }
       .accesos { grid-template-columns: repeat(2, 1fr); }
@@ -872,9 +890,10 @@
       <a class="nav-link" href="#inauguracion">Inauguración</a>
       <a class="nav-link" href="#disciplinas">Disciplinas</a>
       <a class="nav-link" href="#horarios">Horarios</a>
+     <a class="nav-link" href="#gastronomia">Gastronomía</a>
       <a class="nav-link" href="#mapa">Mapa</a>
       <a class="nav-link" href="#ingreso">Ingreso / Salida</a>
-      <a class="nav-link" href="#unidades">Unidades</a>
+      
     </div>
   </nav>
 
@@ -919,25 +938,48 @@
         </div>
       </div>
 
-      <!-- Card Bingo -->
-      <div style="background:linear-gradient(135deg,#7a5000,#c9a84c);
+<!-- Card Bingo -->
+      <div class="bingo-card" style="background:linear-gradient(135deg,#7a5000 0%,#c9a84c 50%,#7a5000 100%);
                   border-radius:12px;border:3px solid #f0d080;
-                  padding:20px 24px;margin-bottom:20px;
-                  display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
-        <div style="font-size:52px;flex-shrink:0;">🎰</div>
-        <div style="flex:1;min-width:200px;">
-          <div style="font-family:'Oswald',sans-serif;font-size:11px;
+                  padding:24px 28px;margin-bottom:20px;
+                  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+                  position:relative;overflow:hidden;">
+        <div style="position:absolute;inset:0;opacity:0.07;
+                    background:repeating-linear-gradient(45deg,#fff 0px,#fff 2px,transparent 2px,transparent 12px);
+                    pointer-events:none;"></div>
+        <div style="font-size:64px;flex-shrink:0;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+                    position:relative;z-index:1;">🎰</div>
+        <div style="flex:1;min-width:200px;position:relative;z-index:1;">
+          <div style="font-family:'Oswald',sans-serif;font-size:12px;
                       color:#f0d080;letter-spacing:3px;text-transform:uppercase;
-                      margin-bottom:4px;">Actividad especial</div>
-          <div style="font-family:'Oswald',sans-serif;font-size:clamp(22px,5vw,32px);
-                      font-weight:700;color:#ffffff;letter-spacing:2px;
-                      text-transform:uppercase;line-height:1;">GRAN BINGO</div>
-          <div style="font-size:14px;color:#fde8d8;margin-top:6px;">
-            📅 Viernes 22 de Mayo &nbsp;·&nbsp; 🕐 11:35 – 12:05 hrs
+                      margin-bottom:4px;">✨ Actividad especial del evento ✨</div>
+          <div class="bingo-titulo-text"
+               style="font-family:'Oswald',sans-serif;
+                      font-size:clamp(28px,6vw,42px);
+                      font-weight:700;letter-spacing:3px;
+                      text-transform:uppercase;line-height:1;margin-bottom:8px;">
+            GRAN BINGO
           </div>
-          <div style="font-size:13px;color:#f0d080;margin-top:4px;">
-            Complejo GRUP4 &nbsp;·&nbsp; ¡Todas las unidades participan!
+          <div style="display:inline-block;background:rgba(0,0,0,0.3);
+                      border:1.5px solid rgba(255,255,255,0.3);
+                      border-radius:6px;padding:6px 16px;margin-bottom:8px;">
+            <span style="font-family:'Oswald',sans-serif;font-size:clamp(16px,3.5vw,22px);
+                         color:#ffffff;font-weight:600;letter-spacing:1px;">
+              📅 Viernes 22 de Mayo &nbsp;·&nbsp; 🕐 14:50 – 15:30 hrs
+            </span>
           </div>
+          <div style="font-size:14px;color:#fde8d8;margin-top:4px;">
+            🏟️ Complejo GRUP4 &nbsp;·&nbsp; ¡Todas las unidades participan!
+          </div>
+        </div>
+        <div style="position:absolute;top:12px;right:12px;
+                    background:#c62828;color:#fff;
+                    font-family:'Oswald',sans-serif;font-size:11px;
+                    letter-spacing:1px;text-transform:uppercase;
+                    padding:4px 12px;border-radius:20px;
+                    border:1.5px solid rgba(255,255,255,0.4);
+                    z-index:1;">
+          ¡NO TE LO PIERDAS!
         </div>
       </div>
 
@@ -968,9 +1010,13 @@
           <span class="icono">🗺️</span>
           <span>Mapa</span>
         </a>
-        <a class="acceso-btn" href="#ingreso">
+       <a class="acceso-btn" href="#ingreso">
           <span class="icono">🚪</span>
           <span>Ingreso / Salida</span>
+        </a>
+        <a class="acceso-btn" href="#gastronomía">
+          <span class="icono">🍽️</span>
+          <span>Gastronomía</span>
         </a>
       </div>
 
@@ -1376,31 +1422,31 @@
                   <td style="padding:7px 12px;">Complejo GRUP4</td>
                 </tr>
                 <tr data-deporte="especial" style="background:#fff8e1;">
-                  <td style="padding:7px 12px;font-weight:600;">11:35 – 12:05</td>
+                  <td style="padding:7px 12px;font-weight:600;">14:50 – 15:30</td>
                   <td style="padding:7px 12px;">🎰 Bingo</td>
                   <td style="padding:7px 12px;">Todas las unidades</td>
                   <td style="padding:7px 12px;">Complejo GRUP4</td>
                 </tr>
                 <tr data-deporte="futbol">
-                  <td style="padding:7px 12px;font-weight:600;">12:15 – 13:00</td>
+                  <td style="padding:7px 12px;font-weight:600;">11:35 – 12:20</td>
                   <td style="padding:7px 12px;">⚽ Fútbol Master Varones</td>
                   <td style="padding:7px 12px;">GRUP2 vs HORES/ESCOM</td>
                   <td style="padding:7px 12px;">Complejo GRUP4</td>
                 </tr>
                 <tr data-deporte="futbol" style="background:#f8fafd;">
-                  <td style="padding:7px 12px;font-weight:600;">13:05 – 13:50</td>
+                  <td style="padding:7px 12px;font-weight:600;">12:25 – 13:10</td>
                   <td style="padding:7px 12px;">⚽ Fútbol Libre Varones</td>
                   <td style="padding:7px 12px;">GRUP2 vs HORES/ESCOM</td>
                   <td style="padding:7px 12px;">Complejo GRUP4</td>
                 </tr>
-                <tr data-deporte="voley">
-                  <td style="padding:7px 12px;font-weight:600;">13:55 – 14:40</td>
+                 <tr data-deporte="voley">
+                  <td style="padding:7px 12px;font-weight:600;">13:15 – 14:00</td>
                   <td style="padding:7px 12px;">🏐 Vóley Mixto</td>
                   <td style="padding:7px 12px;">ALAR3 vs GRUP4</td>
                   <td style="padding:7px 12px;">Complejo GRUP4</td>
                 </tr>
-                <tr data-deporte="voley" style="background:#f8fafd;">
-                  <td style="padding:7px 12px;font-weight:600;">14:45 – 15:30</td>
+              <tr data-deporte="voley" style="background:#f8fafd;">
+                  <td style="padding:7px 12px;font-weight:600;">14:05 – 14:50</td>
                   <td style="padding:7px 12px;">🏐 Vóley Mixto</td>
                   <td style="padding:7px 12px;">GRUP2 vs HORES/ESCOM</td>
                   <td style="padding:7px 12px;">Complejo GRUP4</td>
@@ -1450,16 +1496,70 @@
               </tbody>
             </table>
           </div>
-          <div style="margin-top:14px;background:#fff8e1;border:1.5px solid #f9a825;
-                      border-radius:8px;padding:12px 16px;display:flex;align-items:center;gap:12px;">
-            <span style="font-size:28px;">🎰</span>
-            <div>
-              <div style="font-family:'Oswald',sans-serif;font-size:14px;color:#e65100;
-                          text-transform:uppercase;letter-spacing:1px;">Bingo — 11:35 a 12:05 hrs</div>
-              <div style="font-size:13px;color:#666;margin-top:2px;">
+        <div style="margin-top:14px;background:linear-gradient(135deg,#7a5000,#c9a84c);
+                      border:2px solid #f0d080;border-radius:8px;padding:12px 16px;
+                      display:flex;align-items:center;gap:12px;">
+            <span style="font-size:32px;">🎰</span>
+            <div style="flex:1;">
+              <div style="font-family:'Oswald',sans-serif;font-size:15px;color:#ffffff;
+                          text-transform:uppercase;letter-spacing:1px;font-weight:700;">
+                Bingo — 14:50 a 15:30 hrs
+              </div>
+              <div style="font-size:13px;color:#fde8d8;margin-top:2px;">
                 Actividad especial · Complejo GRUP4 · ¡Todas las unidades participan!
               </div>
             </div>
+            <div style="background:rgba(0,0,0,0.25);border-radius:20px;padding:4px 12px;
+                        font-family:'Oswald',sans-serif;font-size:11px;
+                        color:#f0d080;letter-spacing:1px;text-transform:uppercase;
+                        white-space:nowrap;flex-shrink:0;">
+              ¡No te lo pierdas!
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════
+         GASTRONOMÍA
+    ══════════════════════════════ -->
+    <section id="gastronomia" class="seccion">
+      <div class="seccion-titulo"><span class="icono">🍽️</span> Gastronomía</div>
+      <div class="separador"></div>
+      <p style="font-size:14px;color:#666;margin-bottom:16px;">
+        Durante el evento encontrarás una variada oferta gastronómica disponible para todos los asistentes.
+        ¡Buena comida para mejor rendimiento!
+      </p>
+      <div class="card card-dorado" style="padding:0;overflow:hidden;">
+        <img src="assets/icons/platos.jpeg"
+             alt="Oferta gastronómica — Olimpiadas ALAR3"
+             style="width:100%;display:block;cursor:zoom-in;"
+             onclick="abrirImagen(this.src,'Gastronomía — Olimpiadas Regionales ALAR3')">
+        <div style="padding:14px 20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+                    border-top:1px solid #eee;">
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#555;">
+            <span>🍗</span> Pollada con pollo frito, papa y ensalada
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#555;">
+            <span>🥩</span> Chuleta de chancho con mote
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#555;">
+            <span>🍚</span> Arroz verde con pollo
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#555;">
+            <span>🍩</span> Donas, tortas y más sorpresas
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#555;">
+            <span>🥐</span> Desayunos: pan con chicharrón, pollo o chorizo
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#555;">
+            <span>🍺</span> Cervezas Pilsen Callao y gaseosas variadas
+          </div>
+          <div style="margin-left:auto;display:inline-block;background:var(--grup4);
+                      color:#fff;font-family:'Oswald',sans-serif;font-size:12px;
+                      letter-spacing:1px;text-transform:uppercase;
+                      padding:4px 14px;border-radius:20px;">
+            Abierto al público
           </div>
         </div>
       </div>
@@ -1549,7 +1649,10 @@
                 <span>Conductores de vehículos deberán portar el <strong>brazalete asignado</strong> a su unidad durante todo el evento.</span>
               </div>
             </li>
-            <li>Usar ropa y calzado deportivo adecuado.</li>
+           <li>Usar ropa y calzado deportivo adecuado.</li>
+            <li>🚫 Está <strong>prohibido el ingreso directo</strong> del complejo deportivo a la base del GRUP4.</li>
+            <li>🚗 Todos los asistentes en <strong>vehículos particulares</strong> serán debidamente identificados como <strong>Amigos Elegidos</strong>.</li>
+            <li>🍺 Habrá control de <strong>alcoholímetro a la salida de la unidad</strong>.</li>
             <li>No ingresar con objetos punzocortantes ni botellas de vidrio.</li>
           </ul>
         </div>
