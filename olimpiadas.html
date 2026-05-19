@@ -1038,44 +1038,36 @@
           Clic para ampliar
         </div>
       </div>
-<!-- Tabla de posiciones -->
-      <div class="card card-azul" style="margin-bottom:20px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;
-                    margin-bottom:12px;flex-wrap:wrap;gap:8px;">
-          <h3 style="margin-bottom:0;">🏆 Tabla de posiciones</h3>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span id="pos-actualizado"
-                  style="font-size:11px;color:#aaa;letter-spacing:0.5px;"></span>
-            <button onclick="abrirModalPuntajes()"
-                    style="background:#f4f6f9;border:1.5px solid #d0d8e8;
-                           border-radius:20px;padding:4px 12px;cursor:pointer;
-                           font-size:12px;color:#555;font-family:'Oswald',sans-serif;
-                           letter-spacing:1px;text-transform:uppercase;">
-              ℹ️ Puntajes
-            </button>
+<!-- Banner tabla de posiciones -->
+      <div onclick="abrirModalPosiciones()"
+           style="background:linear-gradient(135deg,#1b5e20,#2e7d32);
+                  border-radius:10px;border:2px solid #81c784;
+                  padding:16px 20px;margin-bottom:20px;
+                  display:flex;align-items:center;gap:16px;
+                  cursor:pointer;transition:transform 0.2s;"
+           onmouseover="this.style.transform='translateY(-2px)'"
+           onmouseout="this.style.transform='translateY(0)'">
+        <span style="font-size:36px;flex-shrink:0;">🏆</span>
+        <div style="flex:1;">
+          <div style="font-family:'Oswald',sans-serif;font-size:11px;
+                      color:rgba(255,255,255,0.6);letter-spacing:2px;
+                      text-transform:uppercase;margin-bottom:3px;">
+            En vivo · <span id="pos-actualizado" style="color:rgba(255,255,255,0.6);"></span>
+          </div>
+          <div style="font-family:'Oswald',sans-serif;font-size:18px;
+                      color:#fff;letter-spacing:1px;text-transform:uppercase;">
+            Tabla de Posiciones
+          </div>
+          <div id="pos-preview"
+               style="font-size:12px;color:rgba(255,255,255,0.75);margin-top:4px;">
+            Toca para ver el ranking completo
           </div>
         </div>
-        <table style="width:100%;border-collapse:collapse;font-size:14px;">
-          <thead>
-            <tr style="border-bottom:1.5px solid #eee;">
-              <th style="padding:6px 8px;text-align:left;font-size:11px;
-                         color:#888;text-transform:uppercase;letter-spacing:1px;
-                         font-family:'Oswald',sans-serif;">#</th>
-              <th style="padding:6px 8px;text-align:left;font-size:11px;
-                         color:#888;text-transform:uppercase;letter-spacing:1px;
-                         font-family:'Oswald',sans-serif;">Unidad</th>
-              <th style="padding:6px 8px;text-align:center;font-size:11px;
-                         color:#888;text-transform:uppercase;letter-spacing:1px;
-                         font-family:'Oswald',sans-serif;">Puntos</th>
-            </tr>
-          </thead>
-          <tbody id="posiciones-tabla">
-            <tr><td colspan="3"
-                    style="text-align:center;padding:20px;color:#aaa;font-size:13px;">
-              Cargando...
-            </td></tr>
-          </tbody>
-        </table>
+        <div style="font-family:'Oswald',sans-serif;font-size:13px;
+                    color:#a5d6a7;letter-spacing:1px;
+                    text-transform:uppercase;flex-shrink:0;">
+          Ver →
+        </div>
       </div>
       
     <!-- Accesos rápidos -->
@@ -2148,7 +2140,63 @@ function filtrarTabla(deporte, btn) {
     
     cargarDatos();
   </script>
-<!-- Modal sistema de puntajes -->
+<!-- Modal tabla de posiciones -->
+  <div id="modal-posiciones"
+       style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);
+              z-index:9999;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#fff;border-radius:12px;max-width:480px;width:100%;
+                max-height:90vh;overflow-y:auto;
+                box-shadow:0 16px 48px rgba(0,0,0,0.3);">
+      <div style="background:linear-gradient(135deg,#1b5e20,#2e7d32);
+                  padding:16px 20px;border-bottom:3px solid #81c784;
+                  border-radius:12px 12px 0 0;
+                  display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-family:'Oswald',sans-serif;font-size:16px;color:#fff;
+                     text-transform:uppercase;letter-spacing:1px;">
+          🏆 Tabla de Posiciones
+        </span>
+        <span onclick="cerrarModalPosiciones()"
+              style="color:rgba(255,255,255,0.7);font-size:24px;
+                     cursor:pointer;line-height:1;">×</span>
+      </div>
+      <div style="padding:20px;">
+        <table style="width:100%;border-collapse:collapse;font-size:14px;">
+          <thead>
+            <tr style="border-bottom:2px solid #eee;">
+              <th style="padding:8px;text-align:left;font-size:11px;
+                         color:#888;text-transform:uppercase;letter-spacing:1px;
+                         font-family:'Oswald',sans-serif;">#</th>
+              <th style="padding:8px;text-align:left;font-size:11px;
+                         color:#888;text-transform:uppercase;letter-spacing:1px;
+                         font-family:'Oswald',sans-serif;">Unidad</th>
+              <th style="padding:8px;text-align:center;font-size:11px;
+                         color:#888;text-transform:uppercase;letter-spacing:1px;
+                         font-family:'Oswald',sans-serif;">Puntos</th>
+            </tr>
+          </thead>
+          <tbody id="posiciones-tabla">
+            <tr><td colspan="3"
+                    style="text-align:center;padding:24px;color:#aaa;font-size:13px;">
+              Cargando...
+            </td></tr>
+          </tbody>
+        </table>
+        <div style="font-size:11px;color:#aaa;margin-top:12px;
+                    padding-top:12px;border-top:1px solid #eee;text-align:center;">
+          Se actualiza automáticamente cada 30 segundos
+        </div>
+        <button onclick="cerrarModalPosiciones()"
+                style="margin-top:14px;width:100%;padding:10px;
+                       background:#2e7d32;color:#fff;border:none;
+                       border-radius:6px;font-size:14px;cursor:pointer;
+                       font-family:'Oswald',sans-serif;letter-spacing:1px;
+                       text-transform:uppercase;">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- Modal sistema de puntajes -->
   <div id="modal-puntajes"
        style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);
               z-index:9999;align-items:center;justify-content:center;padding:20px;">
@@ -2495,16 +2543,46 @@ function filtrarTabla(deporte, btn) {
             </tr>`).join('');
         }
 
-        const el = document.getElementById('pos-actualizado');
+       const el = document.getElementById('pos-actualizado');
         if (el) el.textContent = 'Act. ' +
           new Date().toLocaleTimeString('es-PE',
             { hour: '2-digit', minute: '2-digit' });
+
+        // Preview en el banner: mostrar líder
+        const preview = document.getElementById('pos-preview');
+        if (preview && data.length > 0) {
+          const lider = data[0];
+          if (lider.puntos_total === 0) {
+            preview.textContent = 'El evento aún no ha comenzado';
+          } else {
+            const medallas = ['🥇','🥈','🥉','4°'];
+            const top = data.slice(0, 4).map((r, i) =>
+              `${medallas[i]} ${r.unidad} ${r.puntos_total}pts`
+            ).join(' · ');
+            preview.textContent = top;
+          }
+        }
 
       } catch(e) {
         console.warn('Error posiciones:', e);
       }
     }
 
+    // ── Modal posiciones ──
+    window.abrirModalPosiciones = function() {
+      document.getElementById('modal-posiciones').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.cerrarModalPosiciones = function() {
+      document.getElementById('modal-posiciones').style.display = 'none';
+      document.body.style.overflow = '';
+    };
+
+    document.getElementById('modal-posiciones')
+      .addEventListener('click', function(e) {
+        if (e.target === this) cerrarModalPosiciones();
+      });
     // ── Modal puntajes ──
     window.abrirModalPuntajes = function() {
       document.getElementById('modal-puntajes').style.display = 'flex';
