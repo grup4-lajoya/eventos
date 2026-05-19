@@ -1367,11 +1367,12 @@
           <p style="font-size:13px;color:#666;margin-bottom:14px;">Complejo Deportivo "Cor. FAP Cesar Faura G." — GRUP4</p>
           <div style="overflow-x:auto;">
             <table style="width:100%;border-collapse:collapse;font-size:13px;">
-              <thead>
+             <thead>
                 <tr style="background:var(--azul-fap);color:white;">
                   <th style="padding:8px 12px;text-align:left;">Hora</th>
                   <th style="padding:8px 12px;text-align:left;">Disciplina</th>
                   <th style="padding:8px 12px;text-align:left;">Encuentro</th>
+                  <th style="padding:8px 12px;text-align:left;">Resultado</th>
                   <th style="padding:8px 12px;text-align:left;">Lugar</th>
                 </tr>
               </thead>
@@ -1392,24 +1393,28 @@
                   <td style="padding:7px 12px;font-weight:600;">08:15 – 09:00</td>
                   <td style="padding:7px 12px;">⚽ Fútbol Master Varones</td>
                   <td style="padding:7px 12px;">ALAR3 vs GRUP4</td>
+                  <td style="padding:7px 12px;" id="res-fulbito-master-alar3-grup4">—</td>
                   <td style="padding:7px 12px;">Complejo GRUP4</td>
                 </tr>
-                <tr data-deporte="futbol" style="background:#f8fafd;">
+               <tr data-deporte="futbol" style="background:#f8fafd;">
                   <td style="padding:7px 12px;font-weight:600;">09:05 – 09:50</td>
                   <td style="padding:7px 12px;">⚽ Fútbol Libre Varones</td>
                   <td style="padding:7px 12px;">ALAR3 vs GRUP4</td>
+                  <td style="padding:7px 12px;" id="res-fulbito-libre-alar3-grup4">—</td>
                   <td style="padding:7px 12px;">Complejo GRUP4</td>
                 </tr>
-                <tr data-deporte="basquet">
+               <tr data-deporte="basquet">
                   <td style="padding:7px 12px;font-weight:600;">09:55 – 10:40</td>
                   <td style="padding:7px 12px;">🏀 Básquetball</td>
                   <td style="padding:7px 12px;">GRUP2 vs HORES/ESCOM</td>
+                  <td style="padding:7px 12px;" id="res-basquet-libre-grup2-hores">—</td>
                   <td style="padding:7px 12px;">Complejo GRUP4</td>
                 </tr>
                 <tr data-deporte="basquet" style="background:#f8fafd;">
                   <td style="padding:7px 12px;font-weight:600;">10:45 – 11:30</td>
                   <td style="padding:7px 12px;">🏀 Básquetball</td>
                   <td style="padding:7px 12px;">ALAR3 vs GRUP4</td>
+                  <td style="padding:7px 12px;" id="res-basquet-libre-alar3-grup4">—</td>
                   <td style="padding:7px 12px;">Complejo GRUP4</td>
                 </tr>
                 <tr data-deporte="especial" style="background:#fff8e1;">
@@ -1418,70 +1423,91 @@
                   <td style="padding:7px 12px;">Todas las unidades</td>
                   <td style="padding:7px 12px;">Complejo GRUP4</td>
                 </tr>
-                <tr data-deporte="futbol">
+               <tr data-deporte="futbol">
                   <td style="padding:7px 12px;font-weight:600;">11:35 – 12:20</td>
                   <td style="padding:7px 12px;">⚽ Fútbol Master Varones</td>
                   <td style="padding:7px 12px;">GRUP2 vs HORES/ESCOM</td>
+                  <td style="padding:7px 12px;" id="res-fulbito-master-grup2-hores">—</td>
                   <td style="padding:7px 12px;">Complejo GRUP4</td>
                 </tr>
-                <tr data-deporte="futbol" style="background:#f8fafd;">
+               <tr data-deporte="futbol" style="background:#f8fafd;">
                   <td style="padding:7px 12px;font-weight:600;">12:25 – 13:10</td>
                   <td style="padding:7px 12px;">⚽ Fútbol Libre Varones</td>
                   <td style="padding:7px 12px;">GRUP2 vs HORES/ESCOM</td>
+                  <td style="padding:7px 12px;" id="res-fulbito-libre-grup2-hores">—</td>
                   <td style="padding:7px 12px;">Complejo GRUP4</td>
                 </tr>
                  <tr data-deporte="voley">
                   <td style="padding:7px 12px;font-weight:600;">13:15 – 14:00</td>
                   <td style="padding:7px 12px;">🏐 Vóley Mixto</td>
                   <td style="padding:7px 12px;">ALAR3 vs GRUP4</td>
+                  <td style="padding:7px 12px;" id="res-voley-mixto-alar3-grup4">—</td>
                   <td style="padding:7px 12px;">Complejo GRUP4</td>
                 </tr>
-              <tr data-deporte="voley" style="background:#f8fafd;">
+             <tr data-deporte="voley" style="background:#f8fafd;">
                   <td style="padding:7px 12px;font-weight:600;">14:05 – 14:50</td>
                   <td style="padding:7px 12px;">🏐 Vóley Mixto</td>
                   <td style="padding:7px 12px;">GRUP2 vs HORES/ESCOM</td>
+                  <td style="padding:7px 12px;" id="res-voley-mixto-grup2-hores">—</td>
                   <td style="padding:7px 12px;">Complejo GRUP4</td>
                 </tr>
                 <tr data-deporte="futbol">
                   <td style="padding:7px 12px;font-weight:600;">15:35 – 16:20</td>
                   <td style="padding:7px 12px;">⚽ Fútbol Damas</td>
                   <td style="padding:7px 12px;">ALAR3 vs GRUP4</td>
+                  <td style="padding:7px 12px;" id="res-fulbito-damas-alar3-grup4">—</td>
                   <td style="padding:7px 12px;">Complejo GRUP4</td>
                 </tr>
                 <tr data-deporte="futbol" style="background:#f8fafd;">
                   <td style="padding:7px 12px;font-weight:600;">16:25 – 17:10</td>
                   <td style="padding:7px 12px;">⚽ Fútbol Damas</td>
                   <td style="padding:7px 12px;">GRUP2 vs HORES/ESCOM</td>
+                  <td style="padding:7px 12px;" id="res-fulbito-damas-grup2-hores">—</td>
                   <td style="padding:7px 12px;">Complejo GRUP4</td>
                 </tr>
                 <tr data-deporte="ciclismo" style="background:#fff3e0;">
                   <td style="padding:7px 12px;font-weight:600;">10:00 – 11:00</td>
                   <td style="padding:7px 12px;">🚴 Ciclismo</td>
                   <td style="padding:7px 12px;">Todos</td>
+                  <td style="padding:7px 12px;" id="res-ciclismo">
+                    <button onclick="verRankingCiclismo()"
+                            style="display:none;background:#f57f17;color:#fff;
+                                   border:none;border-radius:20px;padding:3px 12px;
+                                   font-size:12px;cursor:pointer;font-weight:600;"
+                            id="btn-ciclismo">
+                      Ver ranking
+                    </button>
+                    <span id="ciclismo-pendiente"
+                          style="font-size:12px;color:#aaa;">—</span>
+                  </td>
                   <td style="padding:7px 12px;">Exterior Complejo GRUP4</td>
                 </tr>
                 <tr data-deporte="fronton" style="background:#f0f7f0;">
                   <td style="padding:7px 12px;font-weight:600;">10:00 – 10:40</td>
                   <td style="padding:7px 12px;">🎾 Frontón Singles</td>
                   <td style="padding:7px 12px;">GRUP2 vs HORES/ESCOM</td>
+                  <td style="padding:7px 12px;" id="res-fronton-singles-grup2-hores">—</td>
                   <td style="padding:7px 12px;">Exterior Complejo GRUP4</td>
                 </tr>
                 <tr data-deporte="fronton" style="background:#e8f5e9;">
                   <td style="padding:7px 12px;font-weight:600;">10:45 – 11:25</td>
                   <td style="padding:7px 12px;">🎾 Frontón Singles</td>
                   <td style="padding:7px 12px;">ALAR3 vs GRUP4</td>
+                  <td style="padding:7px 12px;" id="res-fronton-singles-alar3-grup4">—</td>
                   <td style="padding:7px 12px;">Exterior Complejo GRUP4</td>
                 </tr>
                 <tr data-deporte="fronton" style="background:#f0f7f0;">
                   <td style="padding:7px 12px;font-weight:600;">11:30 – 12:10</td>
                   <td style="padding:7px 12px;">🎾 Frontón Dobles</td>
                   <td style="padding:7px 12px;">GRUP2 vs HORES/ESCOM</td>
+                  <td style="padding:7px 12px;" id="res-fronton-dobles-grup2-hores">—</td>
                   <td style="padding:7px 12px;">Exterior Complejo GRUP4</td>
                 </tr>
                 <tr data-deporte="fronton" style="background:#e8f5e9;">
                   <td style="padding:7px 12px;font-weight:600;">12:15 – 13:00</td>
                   <td style="padding:7px 12px;">🎾 Frontón Dobles</td>
                   <td style="padding:7px 12px;">ALAR3 vs GRUP4</td>
+                  <td style="padding:7px 12px;" id="res-fronton-dobles-alar3-grup4">—</td>
                   <td style="padding:7px 12px;">Exterior Complejo GRUP4</td>
                 </tr>
               </tbody>
@@ -2020,6 +2046,223 @@ function filtrarTabla(deporte, btn) {
     }
     
     cargarDatos();
+  </script>
+
+  <!-- ══ RESULTADOS EN TIEMPO REAL ══ -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0"></script>
+  <script>
+  (function() {
+    const SB_URL = 'https://qgbixgvidxeaoxxpyiyw.supabase.co';
+    const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFnYml4Z3ZpZHhlYW94eHB5aXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxOTU3NzMsImV4cCI6MjA3NTc3MTc3M30.NQ5n_vFnHDp8eNjV3I9vRujfWDWWGAywgyICpqX0OKQ';
+    const sb = window.supabase.createClient(SB_URL, SB_KEY);
+
+    // Mapa de IDs en el HTML → campos en Supabase
+    const MAPA_PARTIDOS = {
+      'res-fulbito-master-alar3-grup4':  { disciplina:'fulbito',  categoria:'master',  ea:'ALAR3',       eb:'GRUP4'       },
+      'res-fulbito-libre-alar3-grup4':   { disciplina:'fulbito',  categoria:'libre',   ea:'ALAR3',       eb:'GRUP4'       },
+      'res-fulbito-damas-alar3-grup4':   { disciplina:'fulbito',  categoria:'damas',   ea:'ALAR3',       eb:'GRUP4'       },
+      'res-fulbito-master-grup2-hores':  { disciplina:'fulbito',  categoria:'master',  ea:'GRUP2',       eb:'HORES/ESCOM' },
+      'res-fulbito-libre-grup2-hores':   { disciplina:'fulbito',  categoria:'libre',   ea:'GRUP2',       eb:'HORES/ESCOM' },
+      'res-fulbito-damas-grup2-hores':   { disciplina:'fulbito',  categoria:'damas',   ea:'GRUP2',       eb:'HORES/ESCOM' },
+      'res-basquet-libre-alar3-grup4':   { disciplina:'basquet',  categoria:'libre',   ea:'ALAR3',       eb:'GRUP4'       },
+      'res-basquet-libre-grup2-hores':   { disciplina:'basquet',  categoria:'libre',   ea:'GRUP2',       eb:'HORES/ESCOM' },
+      'res-voley-mixto-alar3-grup4':     { disciplina:'voley',    categoria:'mixto',   ea:'ALAR3',       eb:'GRUP4'       },
+      'res-voley-mixto-grup2-hores':     { disciplina:'voley',    categoria:'mixto',   ea:'GRUP2',       eb:'HORES/ESCOM' },
+      'res-fronton-singles-alar3-grup4': { disciplina:'fronton',  categoria:'singles', ea:'ALAR3',       eb:'GRUP4'       },
+      'res-fronton-singles-grup2-hores': { disciplina:'fronton',  categoria:'singles', ea:'GRUP2',       eb:'HORES/ESCOM' },
+      'res-fronton-dobles-alar3-grup4':  { disciplina:'fronton',  categoria:'dobles',  ea:'ALAR3',       eb:'GRUP4'       },
+      'res-fronton-dobles-grup2-hores':  { disciplina:'fronton',  categoria:'dobles',  ea:'GRUP2',       eb:'HORES/ESCOM' }
+    };
+
+    // Colores de estado
+    const COLOR_ESTADO = {
+      pendiente:  '#aaa',
+      en_curso:   '#e65100',
+      finalizado: '#2e7d32'
+    };
+
+    // Render marcador simple (fulbito, básquet)
+    function renderSimple(el, p) {
+      if (p.estado === 'pendiente') {
+        el.innerHTML = '<span style="color:#aaa;font-size:12px;">Por jugar</span>';
+        return;
+      }
+      const pa = p.puntos_a ?? '?';
+      const pb = p.puntos_b ?? '?';
+      const color = COLOR_ESTADO[p.estado];
+      el.innerHTML = `
+        <span style="display:inline-flex;align-items:center;gap:6px;">
+          <span style="font-size:11px;color:#555;">${p.equipo_a}</span>
+          <span style="background:${color};color:#fff;font-weight:700;
+                       font-size:14px;padding:2px 10px;border-radius:6px;
+                       letter-spacing:2px;">${pa} — ${pb}</span>
+          <span style="font-size:11px;color:#555;">${p.equipo_b}</span>
+        </span>`;
+    }
+
+    // Render sets (vóley, frontón)
+    function renderSets(el, p) {
+      if (p.estado === 'pendiente') {
+        el.innerHTML = '<span style="color:#aaa;font-size:12px;">Por jugar</span>';
+        return;
+      }
+      const sa = p.sets_a ?? '?';
+      const sb = p.sets_b ?? '?';
+      const color = COLOR_ESTADO[p.estado];
+
+      let detalle = '';
+      if (p.detalle_sets && p.detalle_sets.length > 0) {
+        detalle = p.detalle_sets.map(s =>
+          `<span style="font-size:10px;color:#888;">${s.local}-${s.visita}</span>`
+        ).join(' ');
+      }
+
+      el.innerHTML = `
+        <span style="display:inline-flex;flex-direction:column;gap:2px;">
+          <span style="display:inline-flex;align-items:center;gap:6px;">
+            <span style="font-size:11px;color:#555;">${p.equipo_a}</span>
+            <span style="background:${color};color:#fff;font-weight:700;
+                         font-size:14px;padding:2px 10px;border-radius:6px;
+                         letter-spacing:2px;">${sa} — ${sb}</span>
+            <span style="font-size:11px;color:#555;">${p.equipo_b}</span>
+          </span>
+          ${detalle ? `<span style="display:flex;gap:4px;justify-content:center;">${detalle}</span>` : ''}
+        </span>`;
+    }
+
+    // Actualizar todas las celdas
+    async function actualizarResultados() {
+      try {
+        const { data, error } = await sb
+          .from('olimpiadas_partidos')
+          .select('*');
+
+        if (error || !data) return;
+
+        // Partidos con marcador
+        data.forEach(p => {
+          Object.entries(MAPA_PARTIDOS).forEach(([elId, cfg]) => {
+            if (p.disciplina  === cfg.disciplina  &&
+                p.categoria   === cfg.categoria   &&
+                p.equipo_a    === cfg.ea          &&
+                p.equipo_b    === cfg.eb) {
+              const el = document.getElementById(elId);
+              if (!el) return;
+              if (p.disciplina === 'fulbito' || p.disciplina === 'basquet') {
+                renderSimple(el, p);
+              } else {
+                renderSets(el, p);
+              }
+            }
+          });
+        });
+
+        // Ciclismo
+        const ciclismo = data.find(p => p.disciplina === 'ciclismo');
+        if (ciclismo) {
+          const btn = document.getElementById('btn-ciclismo');
+          const span = document.getElementById('ciclismo-pendiente');
+          if (ciclismo.estado === 'pendiente') {
+            if (btn)  btn.style.display  = 'none';
+            if (span) span.style.display = 'inline';
+          } else {
+            if (btn)  btn.style.display  = 'inline-block';
+            if (span) span.style.display = 'none';
+          }
+        }
+
+      } catch(e) {
+        console.warn('Error actualizando resultados:', e);
+      }
+    }
+
+    // Modal ranking ciclismo
+    window.verRankingCiclismo = async function() {
+      try {
+        const { data } = await sb
+          .from('olimpiadas_ranking')
+          .select('*')
+          .eq('disciplina', 'ciclismo')
+          .order('puesto', { ascending: true });
+
+        if (!data || data.length === 0) {
+          alert('Ranking aún no disponible');
+          return;
+        }
+
+        const medallon = (i) => i===1?'🥇':i===2?'🥈':i===3?'🥉':i+'°';
+        const filas = data.map(r =>
+          `<tr>
+            <td style="padding:8px 12px;font-weight:700;font-size:16px;">
+              ${medallon(r.puesto)}
+            </td>
+            <td style="padding:8px 12px;">${r.participante}</td>
+            <td style="padding:8px 12px;">
+              <span style="background:#003087;color:#fff;padding:2px 10px;
+                           border-radius:20px;font-size:12px;">${r.unidad}</span>
+            </td>
+          </tr>`
+        ).join('');
+
+        const modal = document.getElementById('modal-img');
+        const titulo = document.getElementById('modal-titulo');
+        const imgSrc = document.getElementById('modal-img-src');
+        const prev   = document.getElementById('modal-prev');
+        const next   = document.getElementById('modal-next');
+
+        // Reutilizamos el modal de imágenes pero con tabla
+        titulo.textContent = '🚴 Ranking — Ciclismo';
+        prev.style.display = 'none';
+        next.style.display = 'none';
+
+        // Reemplazar imagen con tabla
+        imgSrc.style.display = 'none';
+        let tablaEl = document.getElementById('ranking-ciclismo-tabla');
+        if (!tablaEl) {
+          tablaEl = document.createElement('div');
+          tablaEl.id = 'ranking-ciclismo-tabla';
+          tablaEl.style.cssText = `
+            background:#fff;border-radius:10px;overflow:hidden;
+            min-width:300px;max-width:500px;`;
+          imgSrc.parentNode.insertBefore(tablaEl, imgSrc);
+        }
+
+        tablaEl.innerHTML = `
+          <table style="width:100%;border-collapse:collapse;font-size:14px;">
+            <thead>
+              <tr style="background:#003087;color:#fff;">
+                <th style="padding:8px 12px;">Pos.</th>
+                <th style="padding:8px 12px;text-align:left;">Participante</th>
+                <th style="padding:8px 12px;text-align:left;">Unidad</th>
+              </tr>
+            </thead>
+            <tbody>${filas}</tbody>
+          </table>`;
+
+        tablaEl.style.display = 'block';
+        modal.style.display   = 'flex';
+        document.body.style.overflow = 'hidden';
+
+      } catch(e) {
+        console.warn('Error cargando ranking:', e);
+      }
+    };
+
+    // Limpiar tabla al cerrar modal
+    const cerrarOriginal = window.cerrarModal;
+    window.cerrarModal = function() {
+      cerrarOriginal && cerrarOriginal();
+      const tablaEl = document.getElementById('ranking-ciclismo-tabla');
+      const imgSrc  = document.getElementById('modal-img-src');
+      if (tablaEl) tablaEl.style.display = 'none';
+      if (imgSrc)  imgSrc.style.display  = '';
+    };
+
+    // Arrancar
+    actualizarResultados();
+    setInterval(actualizarResultados, 30000);
+
+  })();
   </script>
 
 </body>
