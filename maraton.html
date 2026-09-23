@@ -283,12 +283,11 @@
   })();
 </script>
 
-<!-- Supabase: reemplaza estas dos constantes con las de TU proyecto (Settings > API en supabase.com) -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<!-- Reemplaza TU-PROYECTO y TU_ANON_KEY con los datos de tu proyecto Supabase (Settings > API) -->
 <script>
-  const SUPABASE_URL = 'https://TU-PROYECTO.supabase.co';
-  const SUPABASE_ANON_KEY = 'TU_ANON_KEY';
-  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const SUPABASE_URL = 'https://qgbixgvidxeaoxxpyiyw.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFnYml4Z3ZpZHhlYW94eHB5aXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxOTU3NzMsImV4cCI6MjA3NTc3MTc3M30.NQ5n_vFnHDp8eNjV3I9vRujfWDWWGAywgyICpqX0OKQ';
+  const EDGE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/inscribir`;
 
   const form = document.getElementById('form-inscripcion');
   const btnSubmit = document.getElementById('btn-submit');
@@ -303,44 +302,20 @@
     btnSubmit.textContent = 'Enviando...';
 
     try {
-      const data = new FormData(form);
-      const comprobanteFile = data.get('comprobante');
-      const carnetFile = data.get('carnet');
+      const formData = new FormData(form); // ya trae nombre, dni, telefono, correo, categoria,
+                                            // talla, institucion, unidad, localidad, carnet, comprobante
 
-      // 1. Subir la captura del comprobante y la foto del carnet al bucket "comprobantes"
-      const comprobantePath = `${Date.now()}_${data.get('dni')}_pago_${comprobanteFile.name}`;
-      const carnetPath = `${Date.now()}_${data.get('dni')}_carnet_${carnetFile.name}`;
+      const response = await fetch(EDGE_FUNCTION_URL, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'apikey': SUPABASE_ANON_KEY
+        },
+        body: formData
+      });
 
-      const { error: uploadPagoError } = await supabaseClient
-        .storage.from('comprobantes').upload(comprobantePath, comprobanteFile);
-      if (uploadPagoError) throw uploadPagoError;
-
-      const { error: uploadCarnetError } = await supabaseClient
-        .storage.from('comprobantes').upload(carnetPath, carnetFile);
-      if (uploadCarnetError) throw uploadCarnetError;
-
-      const { data: comprobanteUrlData } = supabaseClient.storage.from('comprobantes').getPublicUrl(comprobantePath);
-      const { data: carnetUrlData } = supabaseClient.storage.from('comprobantes').getPublicUrl(carnetPath);
-
-      // 2. Insertar la inscripción en la tabla "inscripciones"
-      const { error: insertError } = await supabaseClient
-        .from('inscripciones')
-        .insert({
-          nombre_completo: data.get('nombre'),
-          dni: data.get('dni'),
-          telefono: data.get('telefono'),
-          correo: data.get('correo'),
-          categoria: data.get('categoria'),
-          talla_polo: data.get('talla'),
-          institucion: data.get('institucion'),
-          unidad: data.get('unidad'),
-          localidad: data.get('localidad'),
-          carnet_url: carnetUrlData.publicUrl,
-          comprobante_url: comprobanteUrlData.publicUrl,
-          estado: 'pendiente'
-        });
-
-      if (insertError) throw insertError;
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Error desconocido');
 
       msgOk.style.display = 'block';
       form.reset();
