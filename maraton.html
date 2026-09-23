@@ -45,10 +45,13 @@
   .countdown-num { font-family: 'Oswald', sans-serif; font-size: 68px; line-height: 0.95; font-weight: 700; color: #fff; }
 
   /* HERO */
-  .hero { padding: 72px 56px 56px; background: linear-gradient(180deg, #1a1712 0%, #121212 100%); display: flex; flex-direction: column; gap: 28px; }
+  .hero { padding: 72px 56px 56px; background: linear-gradient(180deg, #1a1712 0%, #121212 100%); display: flex; flex-direction: row; align-items: center; gap: 48px; overflow: hidden; }
+  .hero-content { flex: 1 1 480px; display: flex; flex-direction: column; gap: 28px; min-width: 0; }
+  .hero-media { flex: 1 1 420px; display: flex; align-items: center; justify-content: center; min-width: 0; }
+  .hero-media img { width: 100%; height: auto; max-height: 480px; object-fit: contain; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5)); }
   .hero h1 { font-size: 84px; line-height: 0.95; }
   .info-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; max-width: 900px; }
-  @media (max-width: 720px) { .info-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 720px) { .info-grid { grid-template-columns: 1fr; } .hero { flex-direction: column; } .hero-media { order: -1; } }
 
   /* VALORES */
   .valores { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--line); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
@@ -105,6 +108,7 @@
 
   <!-- HERO -->
   <div class="hero">
+    <div class="hero-content">
     <div><span class="btn btn-red" style="padding:6px 14px; font-size:12px; letter-spacing:1px;">EVENTO DEPORTIVO OFICIAL FAP</span></div>
     <div>
       <h1 style="color:var(--text);">Desafío</h1>
@@ -128,6 +132,10 @@
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
         <div><div style="font-size:12px; color:var(--text-faint);">Inscripción</div><div style="font-size:17px; font-weight:600;">S/ 5.00</div></div>
       </div>
+    </div>
+    </div>
+    <div class="hero-media">
+      <img src="assets/icons/m2000.jpeg" alt="Mirage 2000 - Fuerza Aérea del Perú">
     </div>
   </div>
 
