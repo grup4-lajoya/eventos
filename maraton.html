@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Desafío La Joya — Fuerza Aérea del Perú</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #121212;
+    --bg-soft: #171717;
+    --bg-card: #1a1a1a;
+    --line: #2a2a2a;
+    --text: #f4efe4;
+    --text-dim: #cfc6b0;
+    --text-faint: #8a8272;
+    --gold: #f2c14e;
+    --red: #c0392b;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); }
+  h1, h2, h3 { font-family: 'Oswald', sans-serif; text-transform: uppercase; margin: 0; }
+  a { color: var(--gold); text-decoration: none; }
+  a:hover { color: #ffd873; }
+  input, select, button, textarea { font-family: 'Work Sans', sans-serif; }
+  .wrap { width: 100%; max-width: 1440px; margin: 0 auto; }
+  .section { padding: 64px 56px; }
+  @media (max-width: 720px) {
+    .section { padding: 40px 24px; }
+    .hero h1 { font-size: 52px !important; }
+  }
+
+  /* NAV */
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 56px; border-bottom: 1px solid var(--line); flex-wrap: wrap; gap: 16px; }
+  .nav-brand { display: flex; align-items: center; gap: 14px; }
+  .nav-logo { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #1b2a4a; border: 2px solid var(--gold); }
+  .nav-links { display: flex; gap: 28px; font-size: 14px; color: var(--text-dim); flex-wrap: wrap; }
+  .btn { display: inline-block; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; }
+  .btn-gold { background: var(--gold); color: #121212; }
+  .btn-red { background: var(--red); color: #fff; }
+
+  /* COUNTDOWN */
+  .countdown { background: var(--red); padding: 28px 56px; display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; text-align: center; }
+  .countdown-num { font-family: 'Oswald', sans-serif; font-size: 68px; line-height: 0.95; font-weight: 700; color: #fff; }
+
+  /* HERO */
+  .hero { padding: 72px 56px 56px; background: linear-gradient(180deg, #1a1712 0%, #121212 100%); display: flex; flex-direction: column; gap: 28px; }
+  .hero h1 { font-size: 84px; line-height: 0.95; }
+  .info-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; max-width: 900px; }
+  @media (max-width: 720px) { .info-grid { grid-template-columns: 1fr; } }
+
+  /* VALORES */
+  .valores { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--line); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  @media (max-width: 720px) { .valores { grid-template-columns: repeat(2, 1fr); } }
+  .valor-item { background: var(--bg-soft); padding: 24px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+
+  /* CARDS */
+  .card { background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 24px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  @media (max-width: 900px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } .grid-2 { grid-template-columns: 1fr; } }
+
+  /* FORM */
+  .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; max-width: 720px; }
+  @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
+  .field label { display: block; font-size: 13px; color: var(--text-dim); margin-bottom: 6px; }
+  .field input, .field select { width: 100%; background: var(--bg-card); border: 1px solid var(--line); border-radius: 4px; padding: 12px 14px; color: var(--text); font-size: 15px; }
+  .field input[type="file"] { padding: 10px 12px; }
+  .form-msg { font-size: 14px; padding: 14px 16px; border-radius: 6px; display: none; }
+  .form-msg.ok { background: rgba(46,160,67,0.12); border: 1px solid #2ea043; color: #7ee08a; }
+  .form-msg.err { background: rgba(192,57,43,0.12); border: 1px solid var(--red); color: #ff9c8f; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- NAV -->
+  <div class="nav">
+    <div class="nav-brand">
+      <img class="nav-logo" src="assets/icons/logo_grup4.png" alt="Escudo Grupo Aéreo N.º 4">
+      <div style="line-height:1.2;">
+        <div style="font-size:13px; letter-spacing:1px; color:var(--text-dim);">FUERZA AÉREA DEL PERÚ</div>
+        <div style="font-size:12px; color:var(--text-faint);">Grupo Aéreo N.º 4</div>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a href="#kit">Kit del corredor</a>
+      <a href="#recorrido">Recorrido</a>
+      <a href="#fotos">Mis fotos</a>
+      <a href="#resultados">Resultados</a>
+    </div>
+    <a href="#inscripcion" class="btn btn-red" style="padding:10px 22px; font-size:14px;">Inscríbete</a>
+  </div>
+
+  <!-- COUNTDOWN -->
+  <div class="countdown">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" style="opacity:.85;"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+    <div>
+      <div style="font-size:12px; letter-spacing:3px; color:#ffe3d6; font-weight:600;">FALTAN</div>
+      <div class="countdown-num" id="countdown-days">--</div>
+      <div style="font-size:14px; letter-spacing:2px; color:#ffe3d6; font-weight:600;">DÍAS PARA EL DESAFÍO LA JOYA</div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div><span class="btn btn-red" style="padding:6px 14px; font-size:12px; letter-spacing:1px;">EVENTO DEPORTIVO OFICIAL FAP</span></div>
+    <div>
+      <h1 style="color:var(--text);">Desafío</h1>
+      <h1 style="color:var(--gold);">La Joya</h1>
+      <div style="font-size:24px; letter-spacing:3px; color:var(--text-dim); margin-top:8px;">SUPERA TUS LÍMITES</div>
+    </div>
+    <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
+      <div class="btn btn-gold" style="font-family:'Oswald',sans-serif; font-size:22px; padding:10px 20px;">5K &amp; 10K</div>
+      <div style="font-size:15px; color:var(--text-dim);">Corre · Supérate · Hazlo real</div>
+    </div>
+    <div class="info-grid">
+      <div style="display:flex; gap:12px;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
+        <div><div style="font-size:12px; color:var(--text-faint);">Fecha</div><div style="font-size:17px; font-weight:600;">Jueves 22 de octubre</div></div>
+      </div>
+      <div style="display:flex; gap:12px;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M12 22s7-7.4 7-13a7 7 0 1 0-14 0c0 5.6 7 13 7 13z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        <div><div style="font-size:12px; color:var(--text-faint);">Lugar</div><div style="font-size:17px; font-weight:600;">Base Aérea La Joya</div><div style="font-size:13px; color:#a89f8c;">"Cor. FAP Víctor Maldonado Begazo"</div></div>
+      </div>
+      <div style="display:flex; gap:12px;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        <div><div style="font-size:12px; color:var(--text-faint);">Inscripción</div><div style="font-size:17px; font-weight:600;">S/ 5.00</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VALORES -->
+  <div class="valores">
+    <div class="valor-item"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg><div style="font-size:13px; color:var(--text-dim);">Espíritu de equipo</div></div>
+    <div class="valor-item"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><circle cx="12" cy="5" r="2"/><path d="M8 22l2-8-2-3 3-4 2 3 2-3 3 4-2 3 2 8"/></svg><div style="font-size:13px; color:var(--text-dim);">Disciplina y constancia</div></div>
+    <div class="valor-item"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-6z"/></svg><div style="font-size:13px; color:var(--text-dim);">Fuerza Aérea del Perú</div></div>
+    <div class="valor-item"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><path d="M3 18l6-8 4 4 8-10M13 4h8v8"/></svg><div style="font-size:13px; color:var(--text-dim);">Mente fuerte, cuerpo fuerte</div></div>
+  </div>
+
+  <!-- KIT -->
+  <div id="kit" class="section" style="display:flex; flex-direction:column; gap:32px;">
+    <div>
+      <div style="font-size:13px; color:var(--gold); letter-spacing:2px; margin-bottom:8px;">TU KIT INCLUYE</div>
+      <h2 style="font-size:34px;">Kit del corredor</h2>
+    </div>
+    <div class="grid-4">
+      <div class="card"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><path d="M8 3l4 2 4-2 4 4-3 3v11H7V10L4 7l4-4z"/></svg><div style="font-weight:600; font-size:15px; margin-top:12px;">Polo oficial</div><div style="font-size:13px; color:#a89f8c; margin-top:6px;">Polo de la carrera Desafío La Joya.</div></div>
+      <div class="card"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><rect x="4" y="6" width="16" height="12" rx="1"/><path d="M8 6V4h8v2"/></svg><div style="font-weight:600; font-size:15px; margin-top:12px;">Dorsal de competencia</div><div style="font-size:13px; color:#a89f8c; margin-top:6px;">Tu número oficial para la carrera.</div></div>
+      <div class="card"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><circle cx="12" cy="14" r="7"/><path d="M9 2h6l-1 5h-4l-1-5z"/></svg><div style="font-weight:600; font-size:15px; margin-top:12px;">Medalla finisher</div><div style="font-size:13px; color:#a89f8c; margin-top:6px;">Al completar tu recorrido.</div></div>
+      <div class="card"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><path d="M12 2s6 7 6 11a6 6 0 1 1-12 0c0-4 6-11 6-11z"/></svg><div style="font-weight:600; font-size:15px; margin-top:12px;">Hidratación en ruta</div><div style="font-size:13px; color:#a89f8c; margin-top:6px;">Puntos de hidratación durante el recorrido.</div></div>
+    </div>
+    <div class="grid-2">
+      <div class="card" style="display:flex; gap:16px; align-items:center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8" style="flex-shrink:0;"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg><div><div style="font-weight:600; font-size:15px;">Seguridad y primeros auxilios</div><div style="font-size:13px; color:#a89f8c;">Personal médico durante todo el evento.</div></div></div>
+      <div class="card" style="display:flex; gap:16px; align-items:center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8" style="flex-shrink:0;"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 1 1-10 0V4z"/><path d="M7 6H4a2 2 0 0 0 2 4M17 6h3a2 2 0 0 1-2 4"/></svg><div><div style="font-weight:600; font-size:15px;">Premiación a los ganadores</div><div style="font-size:13px; color:#a89f8c;">Premios por categoría y premiación general.</div></div></div>
+    </div>
+  </div>
+
+  <!-- RECORRIDO -->
+  <div id="recorrido" class="section" style="background:var(--bg-soft); display:flex; flex-direction:column; gap:32px;">
+    <div>
+      <div style="font-size:13px; color:var(--gold); letter-spacing:2px; margin-bottom:8px;">EL DÍA DE LA CARRERA</div>
+      <h2 style="font-size:34px;">Recorrido y transmisión en vivo</h2>
+    </div>
+    <div class="grid-2" style="grid-template-columns: 1.3fr 1fr;">
+      <!-- Reemplazar este bloque por el <iframe> de YouTube Live el día del evento -->
+      <div class="card" style="aspect-ratio:16/9; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; background:#101010;">
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><rect x="2" y="6" width="15" height="12" rx="2"/><path d="M17 10l5-3v10l-5-3"/></svg>
+        <div style="font-size:14px; color:var(--text-faint);">Transmisión en vivo — disponible el 22 de octubre</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div class="card"><div style="font-weight:600; font-size:15px; margin-bottom:6px;">Video del recorrido</div><div style="font-size:13px; color:#a89f8c;">Grabado previamente con dron sobre toda la ruta de 5K y 10K.</div></div>
+        <div class="card"><div style="font-weight:600; font-size:15px; margin-bottom:6px;">Puntos de control</div><div style="font-size:13px; color:#a89f8c;">Ubicaciones de hidratación y seguridad en ruta.</div></div>
+      </div>
+    </div>
+    <!-- Reemplazar por assets/mapa-recorrido.jpg cuando esté disponible -->
+    <div class="card" style="aspect-ratio:21/9; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; background:#101010;">
+      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M9 20l-6-3V4l6 3 6-3 6 3v13l-6-3-6 3z"/><path d="M9 4v13M15 7v13"/></svg>
+      <div style="font-size:14px; color:var(--text-faint);">Mapa del recorrido — circuitos 5K y 10K</div>
+    </div>
+  </div>
+
+  <!-- FOTOS (placeholder — se conecta cuando esté listo el sistema de fotos) -->
+  <div id="fotos" class="section" style="display:flex; flex-direction:column; gap:28px;">
+    <div>
+      <div style="font-size:13px; color:var(--gold); letter-spacing:2px; margin-bottom:8px;">DESPUÉS DE LA CARRERA</div>
+      <h2 style="font-size:34px;">Busca tus fotos</h2>
+      <div style="font-size:14px; color:#a89f8c; margin-top:8px; max-width:560px;">Ingresa tu número de dorsal para ver tus fotos del evento. Disponible después de la carrera.</div>
+    </div>
+    <div style="display:flex; gap:12px; max-width:480px; flex-wrap:wrap;">
+      <label for="dorsal-input" style="position:absolute; width:1px; height:1px; overflow:hidden;">Número de dorsal</label>
+      <input id="dorsal-input" type="text" placeholder="Ej. 042" style="flex-grow:1; background:var(--bg-card); border:1px solid var(--line); border-radius:4px; padding:14px 16px; color:var(--text); font-size:15px;">
+      <button type="button" class="btn btn-gold" style="padding:14px 26px; font-size:15px;">Buscar</button>
+    </div>
+  </div>
+
+  <!-- RESULTADOS -->
+  <div id="resultados" class="section" style="padding-top:0;">
+    <div class="card" style="display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap; padding:32px;">
+      <div><h2 style="font-size:24px; margin-bottom:6px;">Resultados de la carrera</h2><div style="font-size:14px; color:#a89f8c;">Se publican en vivo y al finalizar el evento.</div></div>
+      <div class="btn btn-red" style="padding:10px 20px; font-size:13px;">Disponible el día del evento</div>
+    </div>
+  </div>
+
+  <!-- INSCRIPCIÓN -->
+  <div id="inscripcion" class="section" style="background:var(--bg-soft); display:flex; flex-direction:column; gap:24px;">
+    <div>
+      <div style="font-size:13px; color:var(--gold); letter-spacing:2px; margin-bottom:8px;">INSCRIPCIÓN</div>
+      <h2 style="font-size:34px;">Inscríbete al Desafío La Joya</h2>
+      <div style="font-size:14px; color:#a89f8c; margin-top:8px; max-width:600px;">Completa tus datos, realiza el pago de S/ 5.00 por Yape o Plin, y sube la captura del comprobante. Tu inscripción quedará pendiente hasta que validemos el pago.</div>
+    </div>
+
+    <form id="form-inscripcion" class="form-grid">
+      <div class="field"><label for="nombre">Nombre completo</label><input id="nombre" name="nombre" type="text" required></div>
+      <div class="field"><label for="dni">DNI</label><input id="dni" name="dni" type="text" required pattern="[0-9]{8}" maxlength="8"></div>
+      <div class="field"><label for="telefono">Teléfono (WhatsApp)</label><input id="telefono" name="telefono" type="tel" required></div>
+      <div class="field"><label for="correo">Correo electrónico</label><input id="correo" name="correo" type="email" required></div>
+      <div class="field"><label for="categoria">Categoría</label>
+        <select id="categoria" name="categoria" required>
+          <option value="">Selecciona una opción</option>
+          <option value="5K">5K</option>
+          <option value="10K">10K</option>
+        </select>
+      </div>
+      <div class="field"><label for="talla">Talla de polo</label>
+        <select id="talla" name="talla" required>
+          <option value="">Selecciona una opción</option>
+          <option value="S">S</option>
+          <option value="M">M</option>
+          <option value="L">L</option>
+          <option value="XL">XL</option>
+        </select>
+      </div>
+      <div class="field" style="grid-column: 1 / -1;">
+        <label for="institucion">Institución a la que perteneces</label>
+        <input id="institucion" name="institucion" type="text" placeholder="Ej. FAP, Ejército, Marina, PNP, personal civil FAP..." required>
+      </div>
+      <div class="field"><label for="unidad">Unidad</label><input id="unidad" name="unidad" type="text" placeholder="Ej. Grupo Aéreo N.º 4" required></div>
+      <div class="field"><label for="localidad">Localidad</label><input id="localidad" name="localidad" type="text" placeholder="Ej. Arequipa" required></div>
+      <div class="field" style="grid-column: 1 / -1;">
+        <label for="carnet">Foto de tu carnet militar / institucional / fotocheck laboral</label>
+        <input id="carnet" name="carnet" type="file" accept="image/*" required>
+      </div>
+      <div class="field" style="grid-column: 1 / -1;">
+        <label for="comprobante">Captura del pago (Yape / Plin)</label>
+        <input id="comprobante" name="comprobante" type="file" accept="image/*" required>
+      </div>
+      <div style="grid-column: 1 / -1; display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
+        <button type="submit" id="btn-submit" class="btn btn-gold" style="padding:14px 32px; font-size:15px;">Enviar inscripción</button>
+        <div id="form-msg-ok" class="form-msg ok">Tu inscripción fue recibida. Te avisaremos por correo cuando validemos tu pago.</div>
+        <div id="form-msg-err" class="form-msg err">Hubo un problema al enviar tu inscripción. Inténtalo de nuevo.</div>
+      </div>
+    </form>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="section" style="padding-top:24px; padding-bottom:24px; border-top:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; font-size:13px; color:var(--text-faint); flex-wrap:wrap; gap:12px;">
+    <div>Fuerza Aérea del Perú · Grupo Aéreo N.º 4</div>
+    <div style="color:var(--gold); font-weight:600;">SOMOS FAP</div>
+  </div>
+
+</div>
+
+<!-- ===================== LÓGICA ===================== -->
+
+<!-- Contador regresivo -->
+<script>
+  (function () {
+    var eventDate = new Date('2026-10-22T00:00:00');
+    var now = new Date();
+    var diffMs = eventDate.getTime() - now.getTime();
+    var daysLeft = Math.max(0, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
+    document.getElementById('countdown-days').textContent = daysLeft;
+  })();
+</script>
+
+<!-- Supabase: reemplaza estas dos constantes con las de TU proyecto (Settings > API en supabase.com) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  const SUPABASE_URL = 'https://TU-PROYECTO.supabase.co';
+  const SUPABASE_ANON_KEY = 'TU_ANON_KEY';
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const form = document.getElementById('form-inscripcion');
+  const btnSubmit = document.getElementById('btn-submit');
+  const msgOk = document.getElementById('form-msg-ok');
+  const msgErr = document.getElementById('form-msg-err');
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    msgOk.style.display = 'none';
+    msgErr.style.display = 'none';
+    btnSubmit.disabled = true;
+    btnSubmit.textContent = 'Enviando...';
+
+    try {
+      const data = new FormData(form);
+      const comprobanteFile = data.get('comprobante');
+      const carnetFile = data.get('carnet');
+
+      // 1. Subir la captura del comprobante y la foto del carnet al bucket "comprobantes"
+      const comprobantePath = `${Date.now()}_${data.get('dni')}_pago_${comprobanteFile.name}`;
+      const carnetPath = `${Date.now()}_${data.get('dni')}_carnet_${carnetFile.name}`;
+
+      const { error: uploadPagoError } = await supabaseClient
+        .storage.from('comprobantes').upload(comprobantePath, comprobanteFile);
+      if (uploadPagoError) throw uploadPagoError;
+
+      const { error: uploadCarnetError } = await supabaseClient
+        .storage.from('comprobantes').upload(carnetPath, carnetFile);
+      if (uploadCarnetError) throw uploadCarnetError;
+
+      const { data: comprobanteUrlData } = supabaseClient.storage.from('comprobantes').getPublicUrl(comprobantePath);
+      const { data: carnetUrlData } = supabaseClient.storage.from('comprobantes').getPublicUrl(carnetPath);
+
+      // 2. Insertar la inscripción en la tabla "inscripciones"
+      const { error: insertError } = await supabaseClient
+        .from('inscripciones')
+        .insert({
+          nombre_completo: data.get('nombre'),
+          dni: data.get('dni'),
+          telefono: data.get('telefono'),
+          correo: data.get('correo'),
+          categoria: data.get('categoria'),
+          talla_polo: data.get('talla'),
+          institucion: data.get('institucion'),
+          unidad: data.get('unidad'),
+          localidad: data.get('localidad'),
+          carnet_url: carnetUrlData.publicUrl,
+          comprobante_url: comprobanteUrlData.publicUrl,
+          estado: 'pendiente'
+        });
+
+      if (insertError) throw insertError;
+
+      msgOk.style.display = 'block';
+      form.reset();
+    } catch (err) {
+      console.error(err);
+      msgErr.style.display = 'block';
+    } finally {
+      btnSubmit.disabled = false;
+      btnSubmit.textContent = 'Enviar inscripción';
+    }
+  });
+</script>
+
+</body>
+</html>
