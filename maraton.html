@@ -50,7 +50,7 @@
   .hero-media { flex: 1 1 420px; display: flex; align-items: center; justify-content: center; min-width: 0; }
   .hero-media img { width: 100%; height: auto; max-height: 480px; object-fit: contain; filter: drop-shadow(0 25px 35px rgba(0,0,0,0.6)); }
   .hero h1 { font-size: 84px; line-height: 0.95; }
-  .info-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; max-width: 900px; }
+  .info-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; max-width: 700px; }
   @media (max-width: 720px) { .info-grid { grid-template-columns: 1fr; } .hero { flex-direction: column; } .hero-media { order: -1; } }
 
   /* VALORES */
@@ -142,10 +142,6 @@
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M12 22s7-7.4 7-13a7 7 0 1 0-14 0c0 5.6 7 13 7 13z"/><circle cx="12" cy="9" r="2.5"/></svg>
         <div><div style="font-size:12px; color:var(--text-faint);">Lugar</div><div style="font-size:17px; font-weight:600;">Base Aérea La Joya</div><div style="font-size:13px; color:#a89f8c;">"Cor. FAP Víctor Maldonado Begazo"</div></div>
       </div>
-      <div style="display:flex; gap:12px;">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-        <div><div style="font-size:12px; color:var(--text-faint);">Inscripción</div><div style="font-size:17px; font-weight:600;">S/ 5.00</div></div>
-      </div>
     </div>
     </div>
     <div class="hero-media">
@@ -222,7 +218,8 @@
   <div id="resultados" class="section" style="padding-top:0;">
     <div class="card" style="display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap; padding:32px;">
       <div><h2 style="font-size:24px; margin-bottom:6px;">Resultados de la carrera</h2><div style="font-size:14px; color:#a89f8c;">Se publican en vivo y al finalizar el evento.</div></div>
-      <div class="btn btn-red" style="padding:10px 20px; font-size:13px;">Disponible el día del evento</div>
+      <div id="res-texto" class="btn btn-red" style="padding:10px 20px; font-size:13px; cursor:default;">Disponible el día del evento</div>
+      <a id="res-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-gold" style="display:none; padding:14px 28px; font-size:15px;">Ver resultados</a>
     </div>
   </div>
 
@@ -275,6 +272,17 @@
     document.getElementById('live-btn').href = MEET_URL;
     document.getElementById('live-btn').style.display = 'inline-block';
     document.getElementById('live-texto').textContent = 'La transmisión se abre en una nueva pestaña (Google Meet).';
+  })();
+</script>
+
+<!-- Resultados: pega aquí la dirección de la página de resultados (https://...). Vacío = "Disponible el día del evento". -->
+<script>
+  const RESULTADOS_URL = 'https://goticket.pe/resultados.php?evento=41';
+  (function () {
+    if (!/^https:\/\//.test(RESULTADOS_URL)) return;
+    document.getElementById('res-btn').href = RESULTADOS_URL;
+    document.getElementById('res-btn').style.display = 'inline-block';
+    document.getElementById('res-texto').style.display = 'none';
   })();
 </script>
 
