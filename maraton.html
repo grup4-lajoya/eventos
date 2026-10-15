@@ -74,6 +74,10 @@
   .form-msg.ok { background: rgba(46,160,67,0.12); border: 1px solid #2ea043; color: #7ee08a; }
   .form-msg.err { background: rgba(192,57,43,0.12); border: 1px solid var(--red); color: #ff9c8f; }
 
+  /* MAPA */
+  .mapa-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+  @media (max-width: 900px) { .mapa-grid { grid-template-columns: 1fr; } }
+
   /* INSCRITOS */
   .insc-tools { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
   .insc-tools input { flex: 1 1 260px; max-width: 420px; background: var(--bg-card); border: 1px solid var(--line); border-radius: 4px; padding: 12px 14px; color: var(--text); font-size: 15px; }
@@ -193,10 +197,21 @@
         <div class="card"><div style="font-weight:600; font-size:15px; margin-bottom:6px;">Puntos de control</div><div style="font-size:13px; color:#a89f8c;">Ubicaciones de hidratación y seguridad en ruta.</div></div>
       </div>
     </div>
-    <!-- Reemplazar por assets/mapa-recorrido.jpg cuando esté disponible -->
-    <div class="card" style="aspect-ratio:21/9; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; background:#101010;">
-      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M9 20l-6-3V4l6 3 6-3 6 3v13l-6-3-6 3z"/><path d="M9 4v13M15 7v13"/></svg>
-      <div style="font-size:14px; color:var(--text-faint);">Mapa del recorrido — circuitos 5K y 10K</div>
+    <!-- MAPA DEL RECORRIDO -->
+    <div class="mapa-grid">
+      <a href="assets/icons/mapa-recorrido.jpg" target="_blank" rel="noopener" class="card" style="padding:0; overflow:hidden; display:block;">
+        <img src="assets/icons/mapa-recorrido.jpg" alt="Mapa del recorrido con partida, llegada y puntos de hidratación" style="width:100%; height:auto; display:block;">
+      </a>
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div>
+          <div style="font-size:13px; color:var(--gold); letter-spacing:2px; margin-bottom:8px;">MAPA</div>
+          <h3 style="font-size:26px;">Ruta y puntos de hidratación</h3>
+        </div>
+        <div class="card"><div style="font-weight:600; font-size:15px; margin-bottom:6px;">Partida y llegada</div><div style="font-size:13px; color:#a89f8c;">La carrera sale y termina en el mismo punto.</div></div>
+        <div class="card"><div style="font-weight:600; font-size:15px; margin-bottom:6px;">1.er punto de hidratación</div><div style="font-size:13px; color:#a89f8c;">En el extremo norte del circuito.</div></div>
+        <div class="card"><div style="font-weight:600; font-size:15px; margin-bottom:6px;">2.º punto de hidratación</div><div style="font-size:13px; color:#a89f8c;">En el tramo oeste del recorrido.</div></div>
+        <div style="font-size:12px; color:var(--text-faint);">Toca el mapa para verlo en tamaño completo.</div>
+      </div>
     </div>
   </div>
 
