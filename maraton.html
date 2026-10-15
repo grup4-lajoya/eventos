@@ -73,6 +73,19 @@
   .form-msg { font-size: 14px; padding: 14px 16px; border-radius: 6px; display: none; }
   .form-msg.ok { background: rgba(46,160,67,0.12); border: 1px solid #2ea043; color: #7ee08a; }
   .form-msg.err { background: rgba(192,57,43,0.12); border: 1px solid var(--red); color: #ff9c8f; }
+
+  /* INSCRITOS */
+  .insc-tools { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .insc-tools input { flex: 1 1 260px; max-width: 420px; background: var(--bg-card); border: 1px solid var(--line); border-radius: 4px; padding: 12px 14px; color: var(--text); font-size: 15px; }
+  .insc-chip { background: var(--bg-card); border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px; font-size: 13px; color: var(--text-dim); }
+  .insc-chip b { color: var(--gold); font-family: 'Oswald', sans-serif; font-size: 16px; margin-left: 4px; }
+  .insc-dist { font-size: 26px; color: var(--gold); margin: 12px 0 4px; }
+  .insc-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  @media (max-width: 900px) { .insc-grid { grid-template-columns: 1fr; } }
+  .insc-card h3 { font-size: 16px; letter-spacing: 1px; margin-bottom: 4px; }
+  .insc-card .insc-n { font-size: 12px; color: var(--text-faint); margin-bottom: 12px; }
+  .insc-card ol { margin: 0; padding-left: 26px; font-size: 14px; color: var(--text-dim); line-height: 1.8; }
+  .insc-card .insc-vacio { font-size: 13px; color: var(--text-faint); }
 </style>
 </head>
 <body>
@@ -92,8 +105,9 @@
       <a href="#recorrido">Recorrido</a>
       <a href="#fotos">Mis fotos</a>
       <a href="#resultados">Resultados</a>
+      <a href="#inscritos">Inscritos</a>
     </div>
-    <a href="#inscripcion" class="btn btn-red" style="padding:10px 22px; font-size:14px;">Inscríbete</a>
+    <a href="#inscritos" class="btn btn-red" style="padding:10px 22px; font-size:14px;">Corredores inscritos</a>
   </div>
 
   <!-- COUNTDOWN -->
@@ -211,55 +225,23 @@
     </div>
   </div>
 
-  <!-- INSCRIPCIÓN -->
-  <div id="inscripcion" class="section" style="background:var(--bg-soft); display:flex; flex-direction:column; gap:24px;">
+  <!-- CORREDORES INSCRITOS -->
+  <div id="inscritos" class="section" style="background:var(--bg-soft); display:flex; flex-direction:column; gap:24px;">
     <div>
-      <div style="font-size:13px; color:var(--gold); letter-spacing:2px; margin-bottom:8px;">INSCRIPCIÓN</div>
-      <h2 style="font-size:34px;">Inscríbete al Desafío La Joya</h2>
-      <div style="font-size:14px; color:#a89f8c; margin-top:8px; max-width:600px;">Completa tus datos, realiza el pago de S/ 5.00 por Yape o Plin, y sube la captura del comprobante. Tu inscripción quedará pendiente hasta que validemos el pago.</div>
+      <div style="font-size:13px; color:var(--gold); letter-spacing:2px; margin-bottom:8px;">PARTICIPANTES</div>
+      <h2 style="font-size:34px;">Corredores inscritos</h2>
+      <div style="font-size:14px; color:#a89f8c; margin-top:8px; max-width:620px;">Las inscripciones se gestionan de forma directa con la organización. Para participar o consultar tu inscripción, comunícate con <b style="color:var(--text);">Ten Capa</b> al <a href="https://wa.me/51947213663" target="_blank" rel="noopener">947 213 663</a>.</div>
     </div>
 
-    <form id="form-inscripcion" class="form-grid">
-      <div class="field"><label for="nombre">Nombre completo</label><input id="nombre" name="nombre" type="text" required></div>
-      <div class="field"><label for="dni">DNI</label><input id="dni" name="dni" type="text" required pattern="[0-9]{8}" maxlength="8"></div>
-      <div class="field"><label for="telefono">Teléfono (WhatsApp)</label><input id="telefono" name="telefono" type="tel" required></div>
-      <div class="field"><label for="correo">Correo electrónico</label><input id="correo" name="correo" type="email" required></div>
-      <div class="field"><label for="categoria">Categoría</label>
-        <select id="categoria" name="categoria" required>
-          <option value="">Selecciona una opción</option>
-          <option value="5K">5K</option>
-          <option value="10K">10K</option>
-        </select>
-      </div>
-      <div class="field"><label for="talla">Talla de polo</label>
-        <select id="talla" name="talla" required>
-          <option value="">Selecciona una opción</option>
-          <option value="S">S</option>
-          <option value="M">M</option>
-          <option value="L">L</option>
-          <option value="XL">XL</option>
-        </select>
-      </div>
-      <div class="field" style="grid-column: 1 / -1;">
-        <label for="institucion">Institución a la que perteneces</label>
-        <input id="institucion" name="institucion" type="text" placeholder="Ej. FAP, Ejército, Marina, PNP, personal civil FAP..." required>
-      </div>
-      <div class="field"><label for="unidad">Unidad</label><input id="unidad" name="unidad" type="text" placeholder="Ej. Grupo Aéreo N.º 4" required></div>
-      <div class="field"><label for="localidad">Localidad</label><input id="localidad" name="localidad" type="text" placeholder="Ej. Arequipa" required></div>
-      <div class="field" style="grid-column: 1 / -1;">
-        <label for="carnet">Foto de tu carnet militar / institucional / fotocheck laboral</label>
-        <input id="carnet" name="carnet" type="file" accept="image/*" required>
-      </div>
-      <div class="field" style="grid-column: 1 / -1;">
-        <label for="comprobante">Captura del pago (Yape / Plin)</label>
-        <input id="comprobante" name="comprobante" type="file" accept="image/*" required>
-      </div>
-      <div style="grid-column: 1 / -1; display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
-        <button type="submit" id="btn-submit" class="btn btn-gold" style="padding:14px 32px; font-size:15px;">Enviar inscripción</button>
-        <div id="form-msg-ok" class="form-msg ok">Tu inscripción fue recibida. Te avisaremos por correo cuando validemos tu pago.</div>
-        <div id="form-msg-err" class="form-msg err">Hubo un problema al enviar tu inscripción. Inténtalo de nuevo.</div>
-      </div>
-    </form>
+    <div class="insc-tools">
+      <input id="insc-buscar" type="search" placeholder="Buscar por apellidos o nombres..." aria-label="Buscar corredor">
+      <span class="insc-chip">Total<b id="insc-total">0</b></span>
+      <span class="insc-chip">5K<b id="insc-5k">0</b></span>
+      <span class="insc-chip">10K<b id="insc-10k">0</b></span>
+    </div>
+
+    <div id="insc-msg" style="font-size:14px; color:var(--text-faint);">Cargando lista...</div>
+    <div id="insc-lista"></div>
   </div>
 
   <!-- FOOTER -->
@@ -283,50 +265,93 @@
   })();
 </script>
 
-<!-- Reemplaza TU-PROYECTO y TU_ANON_KEY con los datos de tu proyecto Supabase (Settings > API) -->
+<!-- Lista pública de corredores (solo apellidos, nombres, distancia, sexo y categoría) -->
 <script>
   const SUPABASE_URL = 'https://qgbixgvidxeaoxxpyiyw.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFnYml4Z3ZpZHhlYW94eHB5aXl3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxOTU3NzMsImV4cCI6MjA3NTc3MTc3M30.NQ5n_vFnHDp8eNjV3I9vRujfWDWWGAywgyICpqX0OKQ';
-  const EDGE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/inscribir`;
+  const URL_LISTA = `${SUPABASE_URL}/functions/v1/listar-corredores-publicos`;
 
-  const form = document.getElementById('form-inscripcion');
-  const btnSubmit = document.getElementById('btn-submit');
-  const msgOk = document.getElementById('form-msg-ok');
-  const msgErr = document.getElementById('form-msg-err');
+  const DISTANCIAS = ['5K', '10K'];
+  const SEXOS = ['Varones', 'Mujeres'];
+  const CATEGORIAS = ['Libre', 'Mayores'];
+  let corredores = [];
 
-  form.addEventListener('submit', async function (e) {
-    e.preventDefault();
-    msgOk.style.display = 'none';
-    msgErr.style.display = 'none';
-    btnSubmit.disabled = true;
-    btnSubmit.textContent = 'Enviando...';
+  const norm = (t) => (t || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
+  function render() {
+    const q = norm(document.getElementById('insc-buscar').value.trim());
+    const visibles = q ? corredores.filter(c => norm(c.apellidos + ' ' + c.nombres).includes(q)) : corredores;
+
+    document.getElementById('insc-total').textContent = corredores.length;
+    document.getElementById('insc-5k').textContent = corredores.filter(c => c.distancia === '5K').length;
+    document.getElementById('insc-10k').textContent = corredores.filter(c => c.distancia === '10K').length;
+
+    const cont = document.getElementById('insc-lista');
+    const msg = document.getElementById('insc-msg');
+    cont.innerHTML = '';
+
+    if (corredores.length === 0) { msg.style.display = 'block'; msg.textContent = 'La lista de inscritos se publicará próximamente.'; return; }
+    if (visibles.length === 0) { msg.style.display = 'block'; msg.textContent = 'No se encontraron corredores con esa búsqueda.'; return; }
+    msg.style.display = 'none';
+
+    DISTANCIAS.forEach(dist => {
+      const delaDist = visibles.filter(c => c.distancia === dist);
+      if (delaDist.length === 0) return;
+
+      const titulo = document.createElement('h3');
+      titulo.className = 'insc-dist';
+      titulo.textContent = dist;
+      cont.appendChild(titulo);
+
+      const grid = document.createElement('div');
+      grid.className = 'insc-grid';
+
+      SEXOS.forEach(sexo => CATEGORIAS.forEach(cat => {
+        const grupo = delaDist.filter(c => c.sexo === sexo && c.categoria === cat);
+        if (grupo.length === 0) return;
+
+        const card = document.createElement('div');
+        card.className = 'card insc-card';
+        const h = document.createElement('h3');
+        h.textContent = `${sexo} · ${cat}`;
+        const n = document.createElement('div');
+        n.className = 'insc-n';
+        n.textContent = grupo.length + (grupo.length === 1 ? ' corredor' : ' corredores');
+        const ol = document.createElement('ol');
+        grupo.forEach(c => {
+          const li = document.createElement('li');
+          li.textContent = `${c.apellidos}, ${c.nombres}`;
+          ol.appendChild(li);
+        });
+        card.append(h, n, ol);
+        grid.appendChild(card);
+      }));
+
+      cont.appendChild(grid);
+    });
+  }
+
+  async function cargarInscritos() {
     try {
-      const formData = new FormData(form); // ya trae nombre, dni, telefono, correo, categoria,
-                                            // talla, institucion, unidad, localidad, carnet, comprobante
-
-      const response = await fetch(EDGE_FUNCTION_URL, {
+      const res = await fetch(URL_LISTA, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          'apikey': SUPABASE_ANON_KEY
-        },
-        body: formData
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+        body: '{}'
       });
-
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Error desconocido');
-
-      msgOk.style.display = 'block';
-      form.reset();
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Error');
+      corredores = json.data || [];
+      render();
     } catch (err) {
       console.error(err);
-      msgErr.style.display = 'block';
-    } finally {
-      btnSubmit.disabled = false;
-      btnSubmit.textContent = 'Enviar inscripción';
+      const msg = document.getElementById('insc-msg');
+      msg.style.display = 'block';
+      msg.textContent = 'No se pudo cargar la lista en este momento. Inténtalo más tarde.';
     }
-  });
+  }
+
+  document.getElementById('insc-buscar').addEventListener('input', render);
+  cargarInscritos();
 </script>
 
 </body>
