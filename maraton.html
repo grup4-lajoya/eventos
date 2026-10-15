@@ -345,11 +345,9 @@
         grid.appendChild(card);
       };
 
-      SEXOS.forEach(sexo => ['Libre', 'Mayores'].forEach(cat =>
+      SEXOS.forEach(sexo => ['Libre', 'Mayores', 'Única'].forEach(cat =>
         crearCard(`${sexo} · ${cat}`, delaDist.filter(c => c.sexo === sexo && c.categoria === cat))
       ));
-      // "Única": hombres y mujeres juntos
-      crearCard('Categoría única', delaDist.filter(c => c.categoria === 'Única'));
 
       cont.appendChild(grid);
     });
