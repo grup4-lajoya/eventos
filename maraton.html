@@ -186,10 +186,11 @@
       <h2 style="font-size:34px;">Recorrido y transmisión en vivo</h2>
     </div>
     <div class="grid-2" style="grid-template-columns: 1.3fr 1fr;">
-      <!-- Reemplazar este bloque por el <iframe> de YouTube Live el día del evento -->
-      <div class="card" style="aspect-ratio:16/9; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; background:#101010;">
+      <!-- Transmisión en vivo: se activa con el enlace MEET_URL (ver script al final) -->
+      <div id="live-card" class="card" style="aspect-ratio:16/9; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; background:#101010;">
         <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><rect x="2" y="6" width="15" height="12" rx="2"/><path d="M17 10l5-3v10l-5-3"/></svg>
-        <div style="font-size:14px; color:var(--text-faint);">Transmisión en vivo — disponible el 22 de octubre</div>
+        <div id="live-texto" style="font-size:14px; color:var(--text-faint); text-align:center; padding:0 16px;">Transmisión en vivo — disponible el 22 de octubre</div>
+        <a id="live-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-red" style="display:none; padding:14px 28px; font-size:15px;">▶ Ver transmisión en vivo</a>
       </div>
       <div style="display:flex; flex-direction:column; gap:16px;">
         <div class="card"><div style="font-weight:600; font-size:15px; margin-bottom:6px;">Video del recorrido</div><div style="font-size:13px; color:#a89f8c;">Grabado previamente con dron sobre toda la ruta de 5K y 10K.</div></div>
@@ -262,6 +263,18 @@
     var diffMs = eventDate.getTime() - now.getTime();
     var daysLeft = Math.max(0, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
     document.getElementById('countdown-days').textContent = daysLeft;
+  })();
+</script>
+
+<!-- Transmisión en vivo por Google Meet: pega aquí el enlace de la reunión (https://meet.google.com/xxx-xxxx-xxx).
+     Mientras esté vacío, la web muestra "disponible el 22 de octubre". -->
+<script>
+  const MEET_URL = '';
+  (function () {
+    if (!/^https:\/\/meet\.google\.com\//.test(MEET_URL)) return;
+    document.getElementById('live-btn').href = MEET_URL;
+    document.getElementById('live-btn').style.display = 'inline-block';
+    document.getElementById('live-texto').textContent = 'La transmisión se abre en una nueva pestaña (Google Meet).';
   })();
 </script>
 
