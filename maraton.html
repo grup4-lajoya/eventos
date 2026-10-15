@@ -193,14 +193,14 @@
         <a id="live-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-red" style="display:none; padding:14px 28px; font-size:15px;">▶ Ver transmisión en vivo</a>
       </div>
       <div style="display:flex; flex-direction:column; gap:16px;">
-        <div class="card"><div style="font-weight:600; font-size:15px; margin-bottom:6px;">Video del recorrido</div><div style="font-size:13px; color:#a89f8c;">Grabado previamente con dron sobre toda la ruta de 5K y 10K.</div></div>
+        <div id="video-card" class="card"><div style="font-weight:600; font-size:15px; margin-bottom:6px;">Video del recorrido</div><div style="font-size:13px; color:#a89f8c;">Grabado previamente con dron sobre toda la ruta de 5K y 10K.</div><div id="video-slot" style="margin-top:14px;"></div></div>
         <div class="card"><div style="font-weight:600; font-size:15px; margin-bottom:6px;">Puntos de control</div><div style="font-size:13px; color:#a89f8c;">Ubicaciones de hidratación y seguridad en ruta.</div></div>
       </div>
     </div>
     <!-- MAPA DEL RECORRIDO -->
     <div class="mapa-grid">
-      <a href="assets/icons/mapa-recorrido.jpg" target="_blank" rel="noopener" class="card" style="padding:0; overflow:hidden; display:block;">
-        <img src="assets/icons/mapa-recorrido.jpg" alt="Mapa del recorrido con partida, llegada y puntos de hidratación" style="width:100%; height:auto; display:block;">
+      <a href="assets/icons/mapa-recorrido.jpeg" target="_blank" rel="noopener" class="card" style="padding:0; overflow:hidden; display:block;">
+        <img src="assets/icons/mapa-recorrido.jpeg" alt="Mapa del recorrido con partida, llegada y puntos de hidratación" style="width:100%; height:auto; display:block;">
       </a>
       <div style="display:flex; flex-direction:column; gap:16px;">
         <div>
@@ -298,6 +298,26 @@
     document.getElementById('res-btn').href = RESULTADOS_URL;
     document.getElementById('res-btn').style.display = 'inline-block';
     document.getElementById('res-texto').style.display = 'none';
+  })();
+</script>
+
+<!-- Video del recorrido (YouTube, no listado). Para cambiarlo, pega aquí el código del video: lo que va después de youtu.be/ -->
+<script>
+  const VIDEO_ID = 'Hb7sUlFV6-Y';
+  (function () {
+    if (!/^[A-Za-z0-9_-]{11}$/.test(VIDEO_ID)) return;
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'position:relative; width:100%; aspect-ratio:16/9; border-radius:6px; overflow:hidden; background:#000;';
+    const f = document.createElement('iframe');
+    f.src = 'https://www.youtube-nocookie.com/embed/' + VIDEO_ID + '?rel=0&modestbranding=1&playsinline=1';
+    f.title = 'Video del recorrido - Desafío La Joya';
+    f.loading = 'lazy';
+    f.allow = 'accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen';
+    f.allowFullscreen = true;
+    f.referrerPolicy = 'strict-origin-when-cross-origin';
+    f.style.cssText = 'position:absolute; inset:0; width:100%; height:100%; border:0;';
+    wrap.appendChild(f);
+    document.getElementById('video-slot').appendChild(wrap);
   })();
 </script>
 
