@@ -74,6 +74,27 @@
   .form-msg.ok { background: rgba(46,160,67,0.12); border: 1px solid #2ea043; color: #7ee08a; }
   .form-msg.err { background: rgba(192,57,43,0.12); border: 1px solid var(--red); color: #ff9c8f; }
 
+  /* RECORRIDO */
+  .live-bar { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; padding: 24px 28px; }
+  .live-info { display: flex; align-items: center; gap: 16px; min-width: 0; }
+  .live-btn { padding: 14px 28px; font-size: 15px; text-align: center; }
+  .leyenda { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border-top: 1px solid var(--line); }
+  .leyenda div { background: var(--bg-card); padding: 16px 20px; display: flex; flex-direction: column; gap: 4px; }
+  .leyenda b { font-size: 14px; }
+  .leyenda span { font-size: 13px; color: #a89f8c; }
+  @media (max-width: 720px) {
+    .leyenda { grid-template-columns: 1fr; }
+    .live-bar { padding: 20px; }
+    .live-btn { width: 100%; }
+    .nav { padding: 14px 20px; }
+    .nav-links { gap: 16px; }
+    .countdown { padding: 22px 20px; }
+    .countdown-num { font-size: 52px; }
+    .section h2 { font-size: 26px !important; }
+    .hero { padding: 40px 20px 32px; gap: 28px; }
+    .valor-item { padding: 18px 12px; }
+  }
+
   /* MAPA */
   .mapa-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: start; }
   @media (max-width: 900px) { .mapa-grid { grid-template-columns: 1fr; } }
@@ -185,34 +206,38 @@
       <div style="font-size:13px; color:var(--gold); letter-spacing:2px; margin-bottom:8px;">EL DÍA DE LA CARRERA</div>
       <h2 style="font-size:34px;">Recorrido y transmisión en vivo</h2>
     </div>
-    <div class="grid-2" style="grid-template-columns: 1.3fr 1fr;">
-      <!-- Transmisión en vivo: se activa con el enlace MEET_URL (ver script al final) -->
-      <div id="live-card" class="card" style="aspect-ratio:16/9; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; background:#101010;">
-        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><rect x="2" y="6" width="15" height="12" rx="2"/><path d="M17 10l5-3v10l-5-3"/></svg>
-        <div id="live-texto" style="font-size:14px; color:var(--text-faint); text-align:center; padding:0 16px;">Transmisión en vivo — disponible el 22 de octubre</div>
-        <a id="live-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-red" style="display:none; padding:14px 28px; font-size:15px;">▶ Ver transmisión en vivo</a>
+
+    <!-- Transmisión en vivo: se activa con el enlace MEET_URL (ver script al final) -->
+    <div id="live-card" class="card live-bar">
+      <div class="live-info">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" style="flex:none;"><rect x="2" y="6" width="15" height="12" rx="2"/><path d="M17 10l5-3v10l-5-3"/></svg>
+        <div>
+          <div style="font-weight:600; font-size:17px;">Transmisión en vivo</div>
+          <div id="live-texto" style="font-size:13px; color:#a89f8c; margin-top:2px;">Disponible el 22 de octubre, día de la carrera.</div>
+        </div>
       </div>
-      <div style="display:flex; flex-direction:column; gap:16px;">
-        <div id="video-card" class="card"><div style="font-weight:600; font-size:15px; margin-bottom:6px;">Video del recorrido</div><div style="font-size:13px; color:#a89f8c;">Grabado previamente con dron sobre toda la ruta de 5K y 10K.</div><div id="video-slot" style="margin-top:14px;"></div></div>
-        <div class="card"><div style="font-weight:600; font-size:15px; margin-bottom:6px;">Puntos de control</div><div style="font-size:13px; color:#a89f8c;">Ubicaciones de hidratación y seguridad en ruta.</div></div>
-      </div>
+      <a id="live-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-red live-btn" style="display:none;">▶ Ver transmisión en vivo</a>
     </div>
-    <!-- MAPA DEL RECORRIDO -->
-    <div class="mapa-grid">
-      <a href="assets/icons/mapa-recorrido.jpeg" target="_blank" rel="noopener" class="card" style="padding:0; overflow:hidden; display:block;">
+
+    <!-- Video del recorrido (YouTube) -->
+    <div id="video-card" class="card">
+      <div style="font-weight:600; font-size:17px; margin-bottom:4px;">Video del recorrido</div>
+      <div style="font-size:13px; color:#a89f8c;">Grabado con dron sobre la ruta del Desafío La Joya.</div>
+      <div id="video-slot" style="margin-top:16px;"></div>
+    </div>
+
+    <!-- Mapa del recorrido -->
+    <div class="card" style="padding:0; overflow:hidden;">
+      <a href="assets/icons/mapa-recorrido.jpeg" target="_blank" rel="noopener" style="display:block;">
         <img src="assets/icons/mapa-recorrido.jpeg" alt="Mapa del recorrido con partida, llegada y puntos de hidratación" style="width:100%; height:auto; display:block;">
       </a>
-      <div style="display:flex; flex-direction:column; gap:16px;">
-        <div>
-          <div style="font-size:13px; color:var(--gold); letter-spacing:2px; margin-bottom:8px;">MAPA</div>
-          <h3 style="font-size:26px;">Ruta y puntos de hidratación</h3>
-        </div>
-        <div class="card"><div style="font-weight:600; font-size:15px; margin-bottom:6px;">Partida y llegada</div><div style="font-size:13px; color:#a89f8c;">La carrera sale y termina en el mismo punto.</div></div>
-        <div class="card"><div style="font-weight:600; font-size:15px; margin-bottom:6px;">1.er punto de hidratación</div><div style="font-size:13px; color:#a89f8c;">En el extremo norte del circuito.</div></div>
-        <div class="card"><div style="font-weight:600; font-size:15px; margin-bottom:6px;">2.º punto de hidratación</div><div style="font-size:13px; color:#a89f8c;">En el tramo oeste del recorrido.</div></div>
-        <div style="font-size:12px; color:var(--text-faint);">Toca el mapa para verlo en tamaño completo.</div>
+      <div class="leyenda">
+        <div><b>🏁 Partida y llegada</b><span>Salida y meta en el mismo punto.</span></div>
+        <div><b>💧 1.er punto de hidratación</b><span>Extremo norte del circuito.</span></div>
+        <div><b>💧 2.º punto de hidratación</b><span>Tramo oeste del recorrido.</span></div>
       </div>
     </div>
+    <div style="font-size:12px; color:var(--text-faint); margin-top:-16px;">Toca el mapa para verlo en tamaño completo.</div>
   </div>
 
   <!-- FOTOS (placeholder — se conecta cuando esté listo el sistema de fotos) -->
@@ -286,7 +311,7 @@
     if (!/^https:\/\/meet\.google\.com\//.test(MEET_URL)) return;
     document.getElementById('live-btn').href = MEET_URL;
     document.getElementById('live-btn').style.display = 'inline-block';
-    document.getElementById('live-texto').textContent = 'La transmisión se abre en una nueva pestaña (Google Meet).';
+    document.getElementById('live-texto').textContent = 'Se abre en una nueva pestaña (Google Meet).';
   })();
 </script>
 
@@ -307,7 +332,7 @@
   (function () {
     if (!/^[A-Za-z0-9_-]{11}$/.test(VIDEO_ID)) return;
     const wrap = document.createElement('div');
-    wrap.style.cssText = 'position:relative; width:100%; aspect-ratio:16/9; border-radius:6px; overflow:hidden; background:#000;';
+    wrap.style.cssText = 'position:relative; width:100%; max-width:960px; margin:0 auto; aspect-ratio:16/9; border-radius:6px; overflow:hidden; background:#000;';
     const f = document.createElement('iframe');
     f.src = 'https://www.youtube-nocookie.com/embed/' + VIDEO_ID + '?rel=0&modestbranding=1&playsinline=1';
     f.title = 'Video del recorrido - Desafío La Joya';
