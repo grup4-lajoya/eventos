@@ -294,7 +294,6 @@
 
   const DISTANCIAS = ['5K', '10K'];
   const SEXOS = ['Varones', 'Mujeres'];
-  const CATEGORIAS = ['Libre', 'Mayores'];
   let corredores = [];
 
   const norm = (t) => (t || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -327,14 +326,12 @@
       const grid = document.createElement('div');
       grid.className = 'insc-grid';
 
-      SEXOS.forEach(sexo => CATEGORIAS.forEach(cat => {
-        const grupo = delaDist.filter(c => c.sexo === sexo && c.categoria === cat);
+      const crearCard = (titulo, grupo) => {
         if (grupo.length === 0) return;
-
         const card = document.createElement('div');
         card.className = 'card insc-card';
         const h = document.createElement('h3');
-        h.textContent = `${sexo} · ${cat}`;
+        h.textContent = titulo;
         const n = document.createElement('div');
         n.className = 'insc-n';
         n.textContent = grupo.length + (grupo.length === 1 ? ' corredor' : ' corredores');
@@ -346,7 +343,13 @@
         });
         card.append(h, n, ol);
         grid.appendChild(card);
-      }));
+      };
+
+      SEXOS.forEach(sexo => ['Libre', 'Mayores'].forEach(cat =>
+        crearCard(`${sexo} · ${cat}`, delaDist.filter(c => c.sexo === sexo && c.categoria === cat))
+      ));
+      // "Única": hombres y mujeres juntos
+      crearCard('Categoría única', delaDist.filter(c => c.categoria === 'Única'));
 
       cont.appendChild(grid);
     });
