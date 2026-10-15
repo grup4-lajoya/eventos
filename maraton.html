@@ -95,6 +95,11 @@
     .valor-item { padding: 18px 12px; }
   }
 
+  /* FOTOS */
+  .fotos-form { display: grid; grid-template-columns: 2fr 1fr auto; gap: 16px; align-items: end; max-width: 760px; }
+  .fotos-form .btn:disabled { opacity: .5; cursor: not-allowed; }
+  @media (max-width: 720px) { .fotos-form { grid-template-columns: 1fr; } .fotos-form .btn { width: 100%; } }
+
   /* MAPA */
   .mapa-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: start; }
   @media (max-width: 900px) { .mapa-grid { grid-template-columns: 1fr; } }
@@ -240,18 +245,19 @@
     <div style="font-size:12px; color:var(--text-faint); margin-top:-16px;">Toca el mapa para verlo en tamaño completo.</div>
   </div>
 
-  <!-- FOTOS (placeholder — se conecta cuando esté listo el sistema de fotos) -->
-  <div id="fotos" class="section" style="display:flex; flex-direction:column; gap:28px;">
+  <!-- FOTOS: se solicitan por WhatsApp al encargado (número en FOTOS_WHATSAPP, al final del archivo) -->
+  <div id="fotos" class="section" style="display:flex; flex-direction:column; gap:24px;">
     <div>
-      <div style="font-size:13px; color:var(--gold); letter-spacing:2px; margin-bottom:8px;">DESPUÉS DE LA CARRERA</div>
-      <h2 style="font-size:34px;">Busca tus fotos</h2>
-      <div style="font-size:14px; color:#a89f8c; margin-top:8px; max-width:560px;">Ingresa tu número de dorsal para ver tus fotos del evento. Disponible después de la carrera.</div>
+      <div style="font-size:13px; color:var(--gold); letter-spacing:2px; margin-bottom:8px;">FOTOS DEL EVENTO</div>
+      <h2 style="font-size:34px;">Solicita tus fotos</h2>
+      <div style="font-size:14px; color:#a89f8c; margin-top:8px; max-width:600px;">Escribe tu nombre y tu número de dorsal y envía la solicitud por WhatsApp al encargado de las fotos. Él buscará tus fotos y te las enviará.</div>
     </div>
-    <div style="display:flex; gap:12px; max-width:480px; flex-wrap:wrap;">
-      <label for="dorsal-input" style="position:absolute; width:1px; height:1px; overflow:hidden;">Número de dorsal</label>
-      <input id="dorsal-input" type="text" placeholder="Ej. 042" style="flex-grow:1; background:var(--bg-card); border:1px solid var(--line); border-radius:4px; padding:14px 16px; color:var(--text); font-size:15px;">
-      <button type="button" class="btn btn-gold" style="padding:14px 26px; font-size:15px;">Buscar</button>
-    </div>
+    <form id="fotos-form" class="fotos-form" novalidate>
+      <div class="field"><label for="fotos-nombre">Nombres y apellidos</label><input id="fotos-nombre" type="text" autocomplete="name" maxlength="80"></div>
+      <div class="field"><label for="fotos-dorsal">N.º de dorsal</label><input id="fotos-dorsal" type="text" inputmode="numeric" placeholder="Ej. 042" maxlength="6"></div>
+      <button type="submit" id="fotos-btn" class="btn btn-gold" style="padding:14px 26px; font-size:15px;">Solicitar por WhatsApp</button>
+    </form>
+    <div id="fotos-msg" style="font-size:13px; color:var(--text-faint);"></div>
   </div>
 
   <!-- RESULTADOS -->
@@ -343,6 +349,48 @@
     f.style.cssText = 'position:absolute; inset:0; width:100%; height:100%; border:0;';
     wrap.appendChild(f);
     document.getElementById('video-slot').appendChild(wrap);
+  })();
+</script>
+
+<!-- Solicitud de fotos por WhatsApp.
+     FOTOS_WHATSAPP: número del encargado con código de país, solo dígitos (ej. '51947213663'). Vacío = "Próximamente".
+     FOTOS_DESDE: fecha desde la cual se pueden solicitar (AAAA-MM-DD). -->
+<script>
+  const FOTOS_WHATSAPP = '51951038753';
+  const FOTOS_DESDE = '2026-10-15';
+  (function () {
+    const form = document.getElementById('fotos-form');
+    const btn = document.getElementById('fotos-btn');
+    const msg = document.getElementById('fotos-msg');
+    const nombre = document.getElementById('fotos-nombre');
+    const dorsal = document.getElementById('fotos-dorsal');
+    const hoy = new Date();
+    const desde = new Date(FOTOS_DESDE + 'T00:00:00');
+    const numeroOk = /^[0-9]{11,13}$/.test(FOTOS_WHATSAPP);
+
+    if (!numeroOk) {
+      [nombre, dorsal, btn].forEach(e => e.disabled = true);
+      msg.textContent = 'La solicitud de fotos estará disponible próximamente.';
+    } else if (hoy < desde) {
+      [nombre, dorsal, btn].forEach(e => e.disabled = true);
+      msg.textContent = 'Podrás solicitar tus fotos desde el ' + desde.toLocaleDateString('es-PE', { day: 'numeric', month: 'long' }) + '.';
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!numeroOk || hoy < desde) return;
+      const n = nombre.value.trim().replace(/\s+/g, ' ');
+      const d = dorsal.value.trim();
+      if (n.length < 3 || d === '') {
+        msg.style.color = '#ff9c8f';
+        msg.textContent = 'Escribe tu nombre y tu número de dorsal.';
+        return;
+      }
+      msg.style.color = '';
+      msg.textContent = 'Se abrirá WhatsApp con tu solicitud lista para enviar.';
+      const texto = 'Hola, soy ' + n + ', dorsal ' + d + '. Solicito mis fotos del Desafío La Joya.';
+      window.open('https://wa.me/' + FOTOS_WHATSAPP + '?text=' + encodeURIComponent(texto), '_blank', 'noopener');
+    });
   })();
 </script>
 
